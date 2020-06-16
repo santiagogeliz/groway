@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Candal|Sawarabi+Gothic" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Anton|Muli:300,400" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/groway.css' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script src="https://kit.fontawesome.com/c898819835.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        $(function (){
+            $('.navscroll').addClass("mate");
+            $('.links').addClass("mate");
+            $('.login').addClass("mate");
+        });
+    </script>
+    <script type="text/javascript">
+        $(function() {
+            var links = $(".links");
+            links.click(function() {
+                links.removeClass("active");
+                $(this).addClass("active");
+            });
+            var btn = $(".login");
+            btn.click(function() {
+                btn.removeClass("active");
+                $(this).addClass("active");
+            });
+        });
+    </script>
+    <title>Groway - Software Contable, Facturación, Crecimiento</title>
+</head>
+<body>
+    <div class="usuario_fondo">
+        <div class="formulario_nuevo_usuario">
+            <form method="post" action="{% url 'login' %}">{% csrf_token %}
+                <div class="form-content-nuevo-usuario">
+                    <div class="titulo_nuevo_usuario">
+                        <div class="logo-groway-newuser">
+                            <img src="{% static 'img/growaylogoversion2.png' %}"alt="Groway" width="230" height="120">
+                        </div>
+                        <div class="mensajes-user">
+                            <h3>Ingresa a tu cuenta</h3>
+                        </div>
+                    </div>
+                    <div class="newuserfields">
+                        <label for="nombre_usuario">Nombre de Usuario</label>
+                        <div class="username" id="nombre_usuario">
+                            {{form.username}}
+                        </div>
+                        <label class="label-contraseña" for="contraseña">Contraseña</label>
+                        <div class="username" id="contraseña">
+                            {{form.password}}
+                        </div>
+                    </div>
+                    {% if form.errors %}
+                    <div class="mensaje_error">
+                        <p>Tu nombre de usuario y contraseña no coinciden.<br>Porfavor intenta otra vez.</p>
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="crear_cuenta save" value="login">INGRESAR</button>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <div class="olvido_contraseña">
+                        <a href="{% url 'password_reset' %}"><p>¿Olvidaste tu contraseña?</p></a>
+                    </div>
+                    <div class="no_tiene_cuenta">
+                        <p>Si aun no tienes una cuenta, <a href="{% url 'nuevo_usuario' %}">CREAR CUENTA</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="imagen_mensaje_ingreso">
+            <h4 class="mensaje_nu">Groway es una herramienta que te ayuda a administrar tu negocio de manera fácil y práctica, con una forma intuitiva de crear documentos financieros y brindándote toda la información necesaria sobre el crecimiento de tus ventas.</h4>
+        </div>
+    </div>
+</body>

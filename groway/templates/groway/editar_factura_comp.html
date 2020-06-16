@@ -1,0 +1,272 @@
+{% extends 'groway/facturas_compra.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>Cambios para {{factura_comp.consecutivo_interno}}</h2>
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo container">
+			<div class="datos-generales">
+				<div class="datos-gnles fecha">
+					<label for="fecha">Fecha</label>
+					<div id="fecha">
+						{{form.fecha_emision}} {{form.hora_emision}} 
+					</div>
+				</div>
+				<div class="datos-gnles medio_de_pago">
+					<label for="medio_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Medio de Pago</label>
+					<div id="medio_de_pago">
+						{{form.medio_de_pago}}
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones">
+				<div class="datos-paob proveedor">
+					<label for="proveedor"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Proveedor</label>
+					<div id="proveedor">
+						<select name="proveedores_fco" id="proveedor">
+							<option value="{{factura_comp.proveedor}}">{{factura_comp.proveedor}}</option>
+							<option value="0">----------</option>
+						{% for proveedores in proveedores_fco %}
+							<option value="{{proveedores.nombre_legal}}">{{proveedores.nombre_legal}}</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="datos-paob anticipo">
+					<label for="anticipo">Anticipo</label>
+					<div id="anticipo">
+						{{form.anticipo}}
+					</div>
+				</div>
+				<div class="datos-paob descripcion_detallada">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div class="descripcion_detallada" id="descripcion_detallada">
+						<a class="descripcion-dropdown">Agregar</a>
+					</div>
+				</div>
+				<div class="datos-paob observacion">
+					<label for="observacion">Nota</label>
+					<div id="observacion">
+						{{form.observacion}}
+					</div>
+				</div>	
+			</div>
+			<div class="referencias-documento">
+				<div class="datos-paob referencia_orden_compra">
+					<label for="cliente">Referencia Orden de Compra</label>
+					<div id="cliente" class="client-selec">
+						{{form.referencia_orden_compra}}
+					</div>
+				</div>
+				<div class="datos-paob referencia_otro_documento">
+					<label for="anticipo">Referencia Otro Documento</label>
+					<div id="anticipo">
+						{{form.referencia_otro_documento}}
+					</div>
+				</div>
+			</div>
+			<div class="items-totales row">
+				<div class="linea-documento">
+					<table>
+						<tr>
+							<th style="text-align: center;"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Item</th>
+							<th style="text-align: center;">Descripcion</th>
+							<th style="text-align: center;">UM</th>
+							<th style="text-align: center;"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Cant.</th>
+							<th style="text-align: center;">Precio Unidad</th>
+							<th style="text-align: center;">% Dcto.</th>
+							<th style="text-align: center;">Valor Dcto.</th>
+							<th style="text-align: center;">IVA</th>
+							{% if factura_comp.ico_total %}
+							<th style="text-align: center;">ICO</th>
+							{% endif %}
+							<th style="text-align: center;">Valor Total</th>
+						</tr>
+						<tr>
+							<td class="producto-servicio">
+								<select name="items_1">
+									<option value="{{factura_comp.item_1}}">{{factura_comp.item_1}} | {{factura_comp.descripcion_1}}</option>
+									<option value="0">----------</option>
+								{% for item in insumos_fco %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+							<td class="descrip">{{form.descripcion_1}}</td>
+							<td class="medida">{{form.UM_1}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_1}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_1}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_1}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_1}}</td>
+							<td class="impuesto" align="right">{{form.iva_1}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="impuesto" align="right">{{form.ico_1}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_1}}</td>
+						</tr>
+						<tr>
+							<td class="producto-servicio">
+								<select name="items_2">
+								{% if factura_comp.item_2 == None %}
+									<option value="0">----------</option>
+								{% endif %}
+								{% if factura_comp.item_2 != None %}
+									<option value="{{factura_comp.item_2}}">{{factura_comp.item_2}} | {{factura_comp.descripcion_2}}</option>
+									<option value="0">----------</option>
+								{% endif %}
+								{% for item in insumos_fco %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+							<td class="descrip">{{form.descripcion_2}}</td>
+							<td class="medida">{{form.UM_2}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_2}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_2}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_2}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_2}}</td>
+							<td class="impuesto" align="right">{{form.iva_2}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="impuesto" align="right">{{form.ico_2}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_2}}</td>
+						</tr>
+						<tr>
+							<td class="producto-servicio">
+								<select name="items_3">
+								{% if factura_comp.item_3 == None %}
+									<option value="0">----------</option>
+								{% endif %}
+								{% if factura_comp.item_3 != None %}
+									<option value="{{factura_comp.item_3}}">{{factura_comp.item_3}} | {{factura_comp.descripcion_3}}</option>
+									<option value="0">----------</option>
+								{% endif %}
+								{% for item in insumos_fco %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+							<td class="descrip">{{form.descripcion_3}}</td>
+							<td class="medida">{{form.UM_3}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_3}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_3}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_3}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_3}}</td>
+							<td class="impuesto" align="right">{{form.iva_3}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="impuesto" align="right">{{form.ico_3}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_3}}</td>
+						</tr>
+						<tr>
+							<td class="producto-servicio">
+								<select name="items_4">
+								{% if factura_comp.item_4 == None %}
+									<option value="0">----------</option>
+								{% endif %}
+								{% if factura_comp.item_4 != None %}
+									<option value="{{factura_comp.item_4}}">{{factura_comp.item_4}} | {{factura_comp.descripcion_4}}</option>
+									<option value="0">----------</option>
+								{% endif %}
+								{% for item in insumos_fco %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+							<td class="descrip">{{form.descripcion_4}}</td>
+							<td align="right" class="medida">{{form.UM_4}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_4}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_4}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_4}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_4}}</td>
+							<td class="impuesto" align="right">{{form.iva_4}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="impuesto" align="right">{{form.ico_4}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_4}}</td>
+						</tr>
+						<tr>
+							<td class="producto-servicio">
+								<select name="items_5">
+								{% if factura_comp.item_5 == None %}
+									<option value="0">----------</option>
+								{% endif %}
+								{% if factura_comp.item_5 != None %}
+									<option value="{{factura_comp.item_5}}">{{factura_comp.item_5}} | {{factura_comp.descripcion_5}}</option>
+									<option value="0">----------</option>
+								{% endif %}
+								{% for item in insumos_fco %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+							<td class="descrip">{{form.descripcion_5}}</td>
+							<td class="medida">{{form.UM_5}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_5}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_5}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_5}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_5}}</td>
+							<td class="impuesto" align="right">{{form.iva_5}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="impuesto" align="right">{{form.ico_5}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_5}}</td>
+						</tr>
+					</table>
+				</div>
+				<div class="total-documento-editar">
+					<table>
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{form.sub_total}}</td>
+						</tr>
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{form.iva_total}}</td>
+						</tr>
+						{% if factura_comp.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{form.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{form.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{form.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{form.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="text-align: right;">Total: </th>
+							<td align="right" class="totales">{{form.total_documento}}</td>
+						</tr>
+						{% if factura_comp.anticipo %}
+						<tr>
+							<th style="text-align: right; padding-top: 10px;">Saldo Pendiente: </th>
+							<td style="padding-top: 10px;" align="right" class="totales">{{form.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			<button type="submit" class="terminar terminar-edicion save">Terminar</button>
+		</div>
+		<div class="descripcion-form descripcion-pos">      
+			{{form.descripcion_detallada}}
+			<a class="descrip-btn-listo">Listo</a>
+		</div>
+	</form>
+{% endblock %}  

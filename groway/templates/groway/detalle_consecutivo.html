@@ -1,0 +1,98 @@
+{% extends 'groway/consecutivos.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{consecutivo.pre_fijo}} {{consecutivo.tipo_de_documento}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-consecutivo">
+			<div class="consecutivo">
+				<div class="img-cat tipo_de_documento">
+					<label for="tipo_de_documento">Tipo de Documento</label>
+					<div id="tipo_de_documento">
+						{{consecutivo.tipo_de_documento}}
+					</div>
+				</div>
+				{% if consecutivo.tipo_de_documento %}
+				<div class="img-cat pre_fijo">
+					<label for="pre_fijo">Prefijo</label>
+					<div id="pre_fijo">
+						{{consecutivo.pre_fijo}}
+					</div>
+				</div>
+				<div class="img-cat numero">
+					<label for="numero">Número de Inicio</label>
+					<div id="numero">
+						{{consecutivo.numero}}
+					</div>
+				</div>
+				{% if consecutivo.tipo_de_documento == "Factura de Venta" %}
+				<div class="img-cat aut_num_facturacion">
+					<label for="aut_num_facturacion">Autorización Numeración de Factuación</label>
+					<div id="aut_num_facturacion">
+						{{consecutivo.aut_num_facturacion}}
+					</div>
+				</div>
+				<div class="img-cat num_inicio">
+					<label for="num_inicio">Del Nro.</label>
+					<div id="num_inicio">
+						{{consecutivo.num_inicio}}
+					</div>
+				</div>
+				<div class="img-cat num_final">
+					<label for="num_final">Al Nro.</label>
+					<div id="num_final">
+						{{consecutivo.num_final}}
+					</div>
+				</div>
+			</div>
+			<div class="fechas" style="margin-top: 10px;">
+				<div class="img-cat num_inicio">
+					<label for="num_inicio">Desde</label>
+					<div id="num_inicio">
+						{{consecutivo.fecha_inicio}}
+					</div>
+				</div>
+				<div class="img-cat num_final">
+					<label for="num_final">Hasta</label>
+					<div id="num_final">
+						{{consecutivo.fecha_fin}}
+					</div>
+				</div>
+			</div>
+				{% endif %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios Dinámicos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a este <strong>Consecutivo.</strong><br>
+		¿Deseas Editarlo de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_consecutivo' pk=consecutivo.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva.<br>
+		¿Seguro que deseas Eliminar este <strong>Consecutivo</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_consecutivo' pk=consecutivo.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

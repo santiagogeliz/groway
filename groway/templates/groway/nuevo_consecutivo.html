@@ -1,0 +1,78 @@
+{% extends 'groway/consecutivos.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if edit_form == False %}
+		<h2>Nuevo Consecutivo</h2>
+		{% endif %}
+		{% if edit_form == True %}
+		<h2>Cambios para {{consecutivo.pre_fijo}} {{consecutivo.tipo_de_documento}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-consec">
+			<div class="nuevo-consecutivo">
+				<div class="img-cat tipo_de_documento">
+					<label for="tipo_de_documento"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Tipo de Documento</label>
+					<div id="tipo_de_documento">
+						{{form.tipo_de_documento}}
+					</div>
+				</div>
+				{% if consecutivo.tipo_de_documento %}
+				<div class="img-cat pre_fijo">
+					<label for="pre_fijo"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Prefijo</label>
+					<div id="pre_fijo">
+						{{form.pre_fijo}}
+					</div>
+				</div>
+				<div class="img-cat numero-inicial">
+					<label for="numero"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Número de Inicio</label>
+					<div id="numero">
+						{{form.numero}}
+					</div>
+				</div>
+				{% if consecutivo.tipo_de_documento == "FVE" or consecutivo.tipo_de_documento == "Factura de Venta" %}
+				<div class="img-cat aut_num_facturacion">
+					<label for="aut_num_facturacion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Autorización Numeración de Factuación</label>
+					<div id="aut_num_facturacion">
+						{{form.aut_num_facturacion}}
+					</div>
+				</div>
+				<div class="img-cat num_inicio">
+					<label for="num_inicio"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Del Nro.</label>
+					<div id="num_inicio">
+						{{form.num_inicio}}
+					</div>
+				</div>
+				<div class="img-cat num_final">
+					<label for="num_final"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Al Nro.</label>
+					<div id="num_final">
+						{{form.num_final}}
+					</div>
+				</div>
+			</div>
+			<div class="inicio-fin" style="margin-top: 10px;">
+				<div class="img-cat num_inicio">
+					<label for="num_inicio"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Desde</label>
+					<div id="num_inicio">
+						{{form.fecha_inicio}}
+					</div>
+				</div>
+				<div class="img-cat num_final">
+					<label for="num_final"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Hasta</label>
+					<div id="num_final">
+						{{form.fecha_fin}}
+					</div>
+				</div>
+			</div>
+				{% endif %}
+				{% endif %}
+			{% if consecutivo.tipo_de_documento == None %}
+			<button type="submit" class="siguiente siguiente-consec save">Siguiente</button>
+			{% endif %}
+			{% if consecutivo.tipo_de_documento %}
+			<button type="submit" class="terminar terminar-consec save">Terminar</button>
+			{% endif %}
+		</div>
+	</form>
+{% endblock %}

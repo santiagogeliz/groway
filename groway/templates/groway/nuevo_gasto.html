@@ -1,0 +1,39 @@
+{% extends 'groway/gastos_registro.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if gasto.fecha_emision == None %}
+		<h2>Nuevo Registro de Gasto</h2>
+		{% endif %}
+		{% if gasto.fecha_emision != None %}
+		<h2>Cambios para Gasto {{gasto.fecha_emision}} {{gasto.fecha_emision|date:"a"}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-note">
+			<div class="datos-transportador-id-vehiculo">
+				<div class="concepto-notas">
+					<div class="datos-idcontac concepto-nd">
+						<label for="concep_gastos"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Concepto del Gasto</label>
+						<div class="descrip-cargos" id="concep_gastos">
+							{{form.concepto_gasto}}
+						</div>
+					</div>
+					<div class="descrip-cargos" style="margin-top: 10px;">
+						<label for="descrip_gastos">Descripción del Gasto</label>
+						<div class="descrip-cargos" id="descrip_gastos" style="color: black;">      
+							{{form.descripcion_gasto}}
+						</div>
+					</div>
+					<div class="cargos-intereses-valor" style="margin-top: 10px;">
+						<label for="valor_gastos"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Valor del Gasto</label>
+						<div class="descrip-cargos" id="valor_gastos">      
+							{{form.valor_gasto}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar terminar-edicion save" style="margin-top: 10px;">Terminar</button>
+		</div>
+	</form>
+{% endblock %}  

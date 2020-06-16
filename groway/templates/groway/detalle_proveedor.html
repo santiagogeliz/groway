@@ -1,0 +1,188 @@
+{% extends 'groway/proveedores.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{contacto.nombre_legal}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-contacto">
+			<div class="datos-generales-contacto-detalle">
+				<div class="datos-gnlescontac-detalle naturaleza">
+					<label for="naturaleza">Naturaleza</label>
+					<div class="info-detalle" id="naturaleza">
+						{{contacto.naturaleza}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac-detalle codigo_actividad_economica">
+					<label for="codigo_actividad_economica">Actividad Económica</label>
+					<div class="info-detalle" id="codigo_actividad_economica">
+						{{contacto.activad_economica}} | {{contacto.codigo_actividad_economica}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac-detalle regimen_tributario">
+					<label for="regimen_tributario">Régimen Tributario</label>
+					<div class="info-detalle" id="regimen_tributario">
+						{{contacto.regimen_tributario}}
+					</div>
+				</div>
+			</div>
+			<div class="datos-identificacion-contacto-detalle">
+				<div class="datos-idcontac-detalle nombre_legal">
+					<label for="nombre_legal">Nombre Legal</label>
+					<div class="info-detalle" id="nombre_legal">
+						{{contacto.nombre_legal}}
+					</div>
+				</div>
+				<div class="datos-idcontac-detalle identificacion">
+					<label for="identificacion">Identificación</label>
+					<div class="info-detalle" id="identificacion">
+						{{contacto.identificacion}}
+					</div>
+				</div>
+				<div class="datos-idcontac-detalle numero_identificacion">
+					<label for="numero_identificacion">Número</label>
+					<div class="info-detalle" id="numero_identificacion">
+						{{contacto.numero_identificacion}} -{% if contacto.numero_id_adicional %} {{contacto.numero_id_adicional}} {% endif %}
+					</div>
+				</div>
+				<div class="datos-idcontac-detalle relacion_activa">
+					<label for="relacion_activa">Relación Comercial</label>
+					<div class="info-detalle" id="relacion_activa">
+						{{contacto.relacion_activa}}
+					</div>
+				</div>
+			</div>
+			<div class="responsabilidades-fiscales-detalle">
+				<div class="resp-fiscales gran_contribuyente">
+					{{contacto.gran_contribuyente}}
+					<label for="gran_contribuyente"> | Gran Contribuyente</label>
+				</div>
+				<div class="resp-fiscales autoretenedor_impuesto_renta">
+					{{contacto.autoretenedor_impuesto_renta}}
+					<label for="autoretenedor_impuesto_renta"> | En Compras Autorretenedor del Impuesto de Renta</label>
+				</div>
+				<div class="resp-fiscales exento_de_reterenta">
+					{{contacto.exento_de_reterenta}}
+					<label for="exento_de_reterenta"> | En Compras Exento de Retención en la Fuente por Renta</label>
+				</div>
+				<div class="resp-fiscales declarante_impuesto_renta">
+					{{contacto.declarante_impuesto_renta}}
+					<label for="declarante_impuesto_renta"> | En Compras Declarante del Impuesto de Renta</label> {% if contacto.base_reterenta and contacto.tarifa_reterenta %} | Base Reterenta: {{contacto.base_reterenta}} | Tarifa Reterenta (%): {{contacto.tarifa_reterenta}} {% endif %}
+				</div>
+				<div class="resp-fiscales declarante_impuesto_renta">
+					{{contacto.declarante_impuesto_ICA}}
+					<label for="declarante_impuesto_renta"> | En Compras Declarante del Impuesto ICA</label> {% if contacto.tarifa_reteica %} | Tarifa Reteica (Por Mil): {{contacto.tarifa_reteica}} {% endif %}
+				</div>
+			</div>
+			<div class="informacion-contacto-detalle">
+				<div class="info-contac-detalle direccion">
+					<label for="direccion">Dirección</label>
+					<div id="direccion">
+						<div class="ubicacion">
+							{{contacto.direccion}}
+						</div>
+						<div class="ubicacion">
+							{{contacto.ciudad}}
+						</div>
+						<div class="ubicacion">
+							{{contacto.departamento}}
+						</div>
+						<div class="ubicacion">
+							{{contacto.pais}}
+						</div>
+					<label for="codigo_pais"></label>
+				</div>
+			</div>
+			<div class="codigo-telefono-email-detalle">
+				<div class="info-contac-detalle cod_postal">
+					<label for="cod_postal">Código Postal</label>
+					<div class="info-detalle" id="cod_postal">
+						{{contacto.cod_postal}}
+					</div>
+				</div>
+				<div class="info-contac-detalle telefono">
+					<label for="telefono">Teléfono</label>
+					<div class="info-detalle" id="telefono">
+						{{contacto.telefono}}
+					</div>
+				</div>
+				<div class="info-contac-detalle email">
+					<label for="email">E-mail</label>
+					<div class="info-detalle" id="email">
+						{{contacto.email}}
+					</div>
+				</div>
+			</div>
+			<div class="personas-contacto-detalle">
+				<div class="info-contac-detalle perona-contacto">
+					<label for="perona-contacto">Persona Contacto (Admon)</label>
+					<div class="info-detalle" id="perona-contacto">
+						{{contacto.persona_contacto}}
+					</div>
+				</div>
+				<div class="info-contac-detalle telefono_dos">
+					<label for="telefono_dos">Teléfono Contacto</label>
+					<div class="info-detalle" id="telefono_dos">
+						{{contacto.telefono_dos}}
+					</div>
+				</div>
+				<div class="info-contac-detalle persona_contacto_adicional">
+					<label for="persona_contacto_adicional">Persona Contacto (Ventas)</label>
+					<div class="info-detalle" id="persona_contacto_adicional">
+						{{contacto.persona_contacto_adicional}}
+					</div>
+				</div>
+			</div>
+			<div class="info-bancaria-detalle">
+				<div class="info-contac-detalle numero_cuenta">
+					<label for="persona_contacto_adicional">Número de Cuenta</label>
+					<div class="info-detalle" id="persona_contacto_adicional">
+						{{contacto.numero_cuenta}}
+					</div>
+				</div>
+				<div class="info-contac-detalle tipo_cuenta">
+					<label for="persona_contacto_adicional">Tipo de Cuenta</label>
+					<div class="info-detalle" id="persona_contacto_adicional">
+						{{contacto.tipo_cuenta}}
+					</div>
+				</div>
+				<div class="info-contac-detalle entidad_financiera">
+					<label for="persona_contacto_adicional">Entidad Financiera</label>
+					<div class="info-detalle" id="persona_contacto_adicional">
+						{{contacto.entidad_financiera}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios Dinámicos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a este <strong>Contacto</strong><br>
+		¿Deseas Editarlo de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_contacto' pk=contacto.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva<br>
+		¿Seguro que deseas Eliminar este <strong>Contacto</strong>?</p>
+		<dir class="row botones-mensaje-eliminacion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_contacto' pk=contacto.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

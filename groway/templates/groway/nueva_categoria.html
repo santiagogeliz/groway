@@ -1,0 +1,47 @@
+{% extends 'groway/categorias.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if categoria.org_creadora == None %}
+		<h2>Nueva Categoría</h2>
+		{% endif %}
+		{% if categoria.org_creadora %}
+		<h2>Cambios para {{categoria.nombre}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo container">
+			<div class="nueva-categoria">
+				<div class="nueva-categ destino_item">
+					<label for="destino_item"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Categoría válida para</label>
+					<div id="destino_item">
+						{{form.destino_item}}
+					</div>
+				</div>
+				<div class="nueva-categ nombre">
+					<label for="nombre"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Nombre</label>
+					<div id="nombre">
+						{{form.nombre}}
+					</div>
+				</div>
+				<div class="nueva-categ pre_fijo">
+					<label for="pre_fijo"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Prefijo de la Categoría</label>
+					<div id="pre_fijo">
+						{{form.pre_fijo}}
+					</div>
+				</div>
+				<div class="nueva-categ descripcion">
+					<label for="descripcion">Descripción</label>
+					<div id="descripcion">
+						<a class="descripcion-dropdown">Agregar</a>
+					</div>
+				</div>
+				<button type="submit" class="terminar guardar-categoria save">Terminar</button>
+			</div>
+		</div>
+		<div class="descripcion-form descripcion-pos">      
+			{{form.descripcion}}
+			<a class="descrip-btn-listo">Listo</a>
+		</div>
+	</form>
+{% endblock %}

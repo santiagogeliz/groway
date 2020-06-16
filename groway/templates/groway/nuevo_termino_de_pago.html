@@ -1,0 +1,31 @@
+{% extends 'groway/terminos_de_pago.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if terminopago.activa != True %}
+		<h2>Nuevo Término de Pago</h2>
+		{% endif %}
+		{% if terminopago.activa == True %}
+		<h2>Cambios para {{terminopago.descripcion}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-consec">
+			<div class="terminopago">
+				<div class="img-cat descripcion_terminos">
+					<label for="descripcion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Descripcion</label>
+					<div id="descripcion">
+						{{form.descripcion}}
+					</div>
+				</div>
+				<div class="img-cat plazo_dias">
+					<label for="plazo_dias"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Plazo de Pago</label>
+					<div id="plazo_dias">
+						{{form.plazo_dias}}
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar terminar-consec save">Terminar</button>
+		</div>
+	</form>
+{% endblock %}

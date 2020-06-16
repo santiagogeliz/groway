@@ -1,0 +1,61 @@
+{% extends 'groway/categorias.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{categoria.nombre}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-categoria">
+			<div class="destino-prefijo-descripcion">
+				<div class="dest-pre-desc destino_item">
+					<label for="destino_item">Categoría válida para</label>
+					<div id="destino_item">
+						{{categoria.destino_item}}
+					</div>
+				</div>
+				<div class="dest-pre-desc pre_fijo">
+					<label for="pre_fijo">Prefijo de la Categoría</label>
+					<div id="pre_fijo">
+						{{categoria.pre_fijo}}
+					</div>
+				</div>
+				<div class="dest-pre-desc descripcion">
+					<label for="descripcion">Descripción</label>
+					<div id="descripcion" class="descripcion-categoria">
+						{{categoria.descripcion}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios Dinámicos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a esta <strong>Categoría.</strong><br>
+		¿Deseas Editarla de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_categoria' pk=categoria.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva.<br>
+		¿Seguro que deseas Eliminar esta <strong>Categoría</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_categoria' pk=categoria.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

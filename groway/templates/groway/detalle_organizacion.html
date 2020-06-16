@@ -1,0 +1,237 @@
+{% extends 'groway/organizacion.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{organizacion.nombre_legal}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+			{% if organizacion.activa == False %}
+			<a class="acciones accion-activar" href="{% url 'estado_org' pk=organizacion.pk %}">Activar</a>
+			{% endif %}
+			{% if organizacion.activa == True %}
+			<a class="acciones accion-desactivar" href="{% url 'estado_org' pk=organizacion.pk %}">Desactivar</a>
+			{% endif %}
+		</div>
+		<div class="form-content-detalle-contacto">
+			<div class="datos-generales-contacto">
+				<div class="datos-gnlescontac naturaleza">
+					<label for="naturaleza">Naturaleza</label>
+					<div id="naturaleza">
+						{{organizacion.naturaleza}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac codigo_actividad_economica">
+					<label for="codigo_actividad_economica">Actividad Económica</label>
+					<div id="codigo_actividad_economica">
+						{{organizacion.activad_economica}} | {{organizacion.codigo_actividad_economica}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac regimen_tributario">
+					<label for="regimen_tributario">Régimen Tributario</label>
+					<div id="regimen_tributario">
+						{{organizacion.regimen_tributario}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac moneda_base">
+					<label for="moneda_base">Moneda Base</label>
+					<div id="moneda_base">
+						{{organizacion.moneda_base}}
+					</div>
+				</div>
+			</div>
+			<div class="datos-identificacion-contacto">
+				<div class="datos-idcontac nombre_legal">
+					<label for="nombre_legal">Nombre Legal</label>
+					<div id="nombre_legal">
+						{{organizacion.nombre_legal}}
+					</div>
+				</div>
+				<div class="datos-idcontac nombre_visible_cia">
+					<label for="nombre_visible_cia">Nombre Visible Cia.</label>
+					<div id="nombre_visible_cia">
+						{{organizacion.nombre_visible_cia}}
+					</div>
+				</div>
+				<div class="datos-idcontac identificacion">
+					<label for="identificacion">Identificación</label>
+					<div id="identificacion">
+						{{organizacion.identificacion}}
+					</div>
+				</div>
+				<div class="datos-idcontac numero_identificacion">
+					<label for="numero_identificacion">Número</label>
+					<div id="numero_identificacion">
+						{{organizacion.numero_identificacion}} {% if organizacion.numero_id_adicional %} - {{organizacion.numero_id_adicional}} {% endif %}
+					</div>
+				</div>
+				{% if organizacion.descripcion != "No Registrado" %}
+				<div class="datos-idcontac descripcion">
+					<label for="descripcion">Descripción Detallada</label>
+					<div id="descripcion">
+						{{organizacion.descripcion}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="informacion-contacto">
+				<div class="info-contac direccion">
+					<label for="direccion">Dirección</label>
+					<div id="direccion">
+						<div class="ubicacion">
+							{{organizacion.direccion}}
+						</div>
+						<div class="ubicacion">
+							{{organizacion.ciudad}}
+						</div>
+						<div class="ubicacion">
+							{{organizacion.departamento}}
+						</div>
+						<div class="ubicacion">
+							{{organizacion.pais}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="codigo-telefono-email">
+				<div class="cod-tel cod_postal">
+					<label for="cod_postal">Código Postal</label>
+					<div id="cod_postal">
+						{{organizacion.cod_postal}}
+					</div>
+				</div>
+				<div class="cod-tel telefono">
+					<label for="telefono">Teléfono</label>
+					<div id="telefono">
+						{{organizacion.telefono}}
+					</div>
+				</div>
+				<div class="cod-tel email">
+					<label for="email">E-mail</label>
+					<div id="email">
+						{{organizacion.email}}
+					</div>
+				</div>
+				<div class="cod-tel website">
+					<label for="website">Website</label>
+					<div id="website">
+						{{organizacion.website}}
+					</div>
+				</div>
+			</div>
+			<div class="personas-contacto">
+				<div class="per-contac perona-contacto">
+					<label for="perona-contacto">Persona Contacto (Admon)</label>
+					<div id="perona-contacto">
+						{{organizacion.persona_contacto}}
+					</div>
+				</div>
+				<div class="per-contac telefono_dos">
+					<label for="telefono_dos">Teléfono Contacto</label>
+					<div id="telefono_dos">
+						{{organizacion.telefono_dos}}
+					</div>
+				</div>
+			</div>
+			<div class="info-bancaria">
+				<div class="info-bank numero_cuenta">
+					<label for="persona_contacto_adicional">Número de Cuenta</label>
+					<div id="persona_contacto_adicional">
+						{{organizacion.numero_cuenta}}
+					</div>
+				</div>
+				<div class="info-bank tipo_cuenta">
+					<label for="persona_contacto_adicional">Tipo de Cuenta</label>
+					<div id="persona_contacto_adicional">
+						{{organizacion.tipo_cuenta}}
+					</div>
+				</div>
+				<div class="info-bank entidad_financiera">
+					<label for="persona_contacto_adicional">Entidad Financiera</label>
+					<div id="persona_contacto_adicional">
+						{{organizacion.entidad_financiera}}
+					</div>
+				</div>
+			</div>
+			<div class="responsabilidades-fiscales-org">
+				<div class="resp-fiscales gran_contribuyente">
+					{{organizacion.gran_contribuyente}}
+					<label for="gran_contribuyente"> | Gran Contribuyente</label>
+				</div>
+				<div class="resp-fiscales declarante_impuesto_renta">
+					{{organizacion.declarante_impuesto_renta}}
+					<label for="declarante_impuesto_renta"> | Declarante del Impuesto de Renta</label>
+				</div>
+				<div class="resp-fiscales compras_consumidor_final">
+					{{organizacion.compras_consumidor_final}}
+					<label for="compras_consumidor_final"> | En Compras es comsumidor final / Liquidar Impuesto Nacional al Consumo</label>
+				</div>
+				<div class="resp-fiscales compras_practicar_reteiva">
+					{{organizacion.compras_practicar_reteiva}}
+					<label for="compras_practicar_reteiva"> | En Compras Practicar Retención en la Fuente por IVA a Proveedores de Régimen Común</label>
+				</div>
+				<div class="resp-fiscales compras_practicar_reterenta">
+					{{organizacion.compras_practicar_reterenta}}
+					<label for="compras_practicar_reterenta"> | En Compras Practicar Retención en la Fuente por Renta</label>
+				</div>
+				<div class="resp-fiscales compras_practicar_reteica">
+					{{organizacion.compras_practicar_reteica}}
+					<label for="compras_practicar_reteica"> | En Compras Practicar Retención en la Fuente por ICA</label>
+				</div>
+				<div class="resp-fiscales ventas_liquidar_autoretencion_renta">
+					{{organizacion.ventas_liquidar_autoretencion_renta}}
+					<label for="ventas_liquidar_autoretencion_renta"> | En Ventas o Ingresos liquidar Autorretención Especial por Renta</label> {% if organizacion.tarifa_autoreterenta %} | Tarifa Autorreterenta (%): {{organizacion.tarifa_autoreterenta}} {% endif %}
+				</div>
+				<div class="resp-fiscales ventas_liquidar_reterenta">
+					{{organizacion.ventas_liquidar_reterenta}}
+					<label for="ventas_liquidar_reterenta"> | En Ventas liquidar Retención en la Fuente por Renta</label> {% if organizacion.base_reterenta and organizacion.tarifa_reterenta %} | Base Reterenta: {{organizacion.base_reterenta}} | Tarifa Reterenta (%): {{organizacion.tarifa_reterenta}} {% endif %}
+				</div>
+				<div class="resp-fiscales ventas_liquidar_reteica">
+					{{organizacion.ventas_liquidar_reteica}}
+					<label for="ventas_liquidar_reteica"> | En Ventas liquidar Retencion en la Fuente por ICA</label> {% if organizacion.tarifa_reteica %} | Tarifa Reteica (Por Mil): {{organizacion.tarifa_reteica}} {% endif %}
+				</div>
+			</div>
+			<div class="activa">
+				<label for="persona_contacto_adicional">Estado</label>
+					{% if organizacion.activa == True %}
+					<div id="persona_contacto_adicional">
+						<p style="width: 100px; text-align: center; color: green; font-size: 15px; padding: 5px; border-radius: 20px; background-color: white"><strong>ACTIVA</strong></p>
+					</div>
+					{% endif %}
+					{% if organizacion.activa == False %}
+					<div id="persona_contacto_adicional">
+						<p style="width: 100px; text-align: center; color: red; font-size: 15px; padding: 5px; border-radius: 20px; background-color: white"><strong>INACTIVA</strong></p>
+					</div>
+					{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios Dinámicos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a esta <strong>Organización.</strong><br>
+		¿Deseas Editarla de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_organizacion' pk=organizacion.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva.<br>
+		¿Seguro que deseas Eliminar esta <strong>Organización</strong>?</p>
+		<dir class="row botones-mensaje-eliminacion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_organizacion' pk=organizacion.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

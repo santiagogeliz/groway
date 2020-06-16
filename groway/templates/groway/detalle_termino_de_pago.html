@@ -1,0 +1,61 @@
+{% extends 'groway/terminos_de_pago.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{terminopago.descripcion}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-terminos">
+			<div class="terminopago">
+				<div class="img-cat codigo">
+					<label for="codigo">Código</label>
+					<div id="codigo">
+						{{terminopago.codigo}}
+					</div>
+				</div>
+				<div class="img-cat descripcion">
+					<label for="descripcion">Descripcion</label>
+					<div id="descripcion">
+						{{terminopago.descripcion}}
+					</div>
+				</div>
+				<div class="img-cat plazo_dias">
+					<label for="plazo_dias">Plazo de Pago (Días)</label>
+					<div id="plazo_dias">
+						{{terminopago.plazo_dias}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Los Cambios Afectarán a los Documentos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a este <strong>Término de Pago</strong><br>
+		¿Deseas Editarlo de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_termino_de_pago' pk=terminopago.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span>Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva<br>
+		¿Seguro que deseas Eliminar este <strong>Término de Pago</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_termino_de_pago' pk=terminopago.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

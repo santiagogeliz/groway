@@ -1,0 +1,373 @@
+{% extends 'groway/cotizaciones.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>COTIZACIÓN {{cotizacion.consecutivo_interno}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto-documento row">
+			{% if remisionesgeneradas < 1 and facturasgeneradas < 1 %}
+			<a class="acciones accion-editar">Editar</a>
+			{% endif %}
+			{% if nohayconsecutivo_rsm == 1 and remisionesgeneradas == 0 %}
+			<a class="acciones accion-remision">Generar Remisión</a>
+			{% endif %}
+			{% if nohayconsecutivo_rsm == 0 and remisionesgeneradas == 0 %}
+			<a class="acciones-disable">Generar Remisión</a>
+			{% endif %}
+			{% if nohayconsecutivo_fve == 1 and facturasgeneradas == 0 %}
+			<a class="acciones accion-factura">Generar Factura</a>
+			{% endif %}
+			{% if nohayconsecutivo_fve == 0 and facturasgeneradas == 0 %}
+			<a class="acciones-disable">Generar Factura</a>
+			{% endif %}
+			<a class="acciones accion-pdf" href="{% url 'pdf_cotizacion' pk=cotizacion.pk %}" target="_blank">Generar PDF</a>
+		</div>
+		<div class="form-content-detalle-cotizacion">
+			<div class="datos-generales-detalle">
+				<div class="generales" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle consecutivo">
+						<label for="consecutivo">Consecutivo</label>
+						<div id="consecutivo">
+							{{cotizacion.consecutivo_interno}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha">
+						<label for="fecha">Fecha</label>
+						<div id="fecha">
+							{{cotizacion.fecha_emision|date:"d F Y"}} {{cotizacion.fecha_emision|date:"f a"}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle terminos_de_pago">
+						<label for="terminos_de_pago">Terminos de Pago</label>
+						<div id="terminos_de_pago">
+							{{cotizacion.terminos_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle medio_de_pago">
+						<label for="medio_de_pago">Medio de Pago</label>
+						<div id="medio_de_pago">
+							{{cotizacion.medio_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle moneda">
+						<label for="moneda">Moneda</label>
+						<div id="moneda">
+							{{cotizacion.moneda}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="referencias-documentos">
+				<div class="referencias" style="margin-right: 10px; margin-left: 10px;">
+					{% if cotizacion.referencia_factura != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_factura">
+						<label for="referencia_factura">Referencia Factura</label>
+						<div id="referencia_factura">
+							<a class="enlace-documentos" href="{% url 'detalle_factura_venta' pk=facturasgeneradas.pk %}">{{cotizacion.referencia_factura}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if cotizacion.referencia_remision != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Remisión</label>
+						<div id="referencia_remision">
+							<a class="enlace-documentos" href="{% url 'detalle_remision' pk=remisionesgeneradas.pk %}">{{cotizacion.referencia_remision}}</a>
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle referencia_orden_compra">
+						<label for="referencia_orden_compra">Referencia Orden de Compra</label>
+						<div id="referencia_orden_compra">
+							{{cotizacion.referencia_orden_compra}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_otro_documento">
+						<label for="referencia_otro_documento">Referencia a Documento (Otro)</label>
+						<div id="referencia_otro_documento">
+							{{cotizacion.referencia_otro_documento}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones-detalle">
+				<div class="datos-cliente" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Cliente</label>
+						<div id="cliente">
+							{{cotizacion.cliente}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{cotizacion.id_cliente}} {{cotizacion.numero_id_cliente}} {% if cotizacion.numero_id_cli_adicional %} - {{cotizacion.numero_id_cli_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{cotizacion.telefono_cliente}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{cotizacion.dir_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{cotizacion.ciudad_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{cotizacion.departamento_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{cotizacion.pais_cliente}}
+						</div>
+					</div>
+				</div>
+				<div class="datos-organizacion" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Proveedor</label>
+						<div id="cliente">
+							{{cotizacion.org_creadora}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{cotizacion.id_organizacion}} {{cotizacion.numero_id_organizacion}} -{% if cotizacion.numero_id_org_adicional %} {{cotizacion.numero_id_org_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{cotizacion.telefono_organizacion}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{cotizacion.dir_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{cotizacion.ciudad_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{cotizacion.departamento_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{cotizacion.pais_organizacion}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if cotizacion.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-observaciones">
+				{% if cotizacion.descripcion_detallada != "No Registrado" %}
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div style="text-align: justify;" class="descripcion-content" id="descripcion_detallada">      
+						{{cotizacion.descripcion_detallada|linebreaksbr}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			{% endif %}
+			<div class="items-totales-detalle">
+				<div class="row">
+					<table class="linea-documento">
+						<tr>
+							<th class="titulo-tabla" style="text-align: center;">Item</th>
+							<th class="titulo-tabla" style="text-align: center;">Descripción</th>
+							<th class="titulo-tabla" style="text-align: center;">UM</th>
+							<th class="titulo-tabla" style="text-align: center;">Cant.</th>
+							<th class="titulo-tabla" style="text-align: center;">Precio Unidad</th>
+							<th class="titulo-tabla" style="text-align: center;">% Dcto.</th>
+							<th class="titulo-tabla" style="text-align: center;">Valor Dcto.</th>
+							{% if cotizacion.iva_total %}
+							<th class="titulo-tabla" style="text-align: center;">IVA</th>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<th class="titulo-tabla" style="text-align: center;">ICO</th>
+							{% endif %}
+							<th class="titulo-tabla" style="text-align: center;">Valor Total</th>
+						</tr>
+						<tr>
+							<td class="valor-tabla">{{cotizacion.item_1}}</td>
+							<td class="valor-tabla descrip_item">{{cotizacion.descripcion_1}}</td>
+							<td class="valor-tabla">{{cotizacion.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.cantidad_1}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_unitario_1}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.porcentaje_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_descuento_1}}</td>
+							{% if cotizacion.iva_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.iva_1}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.ico_1}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{cotizacion.valor_total_1}}</td>
+						</tr>
+						{% if cotizacion.item_2 != None %}
+						<tr>
+							<td class="valor-tabla">{{cotizacion.item_2}}</td>
+							<td class="valor-tabla descrip_item">{{cotizacion.descripcion_2}}</td>
+							<td class="valor-tabla">{{cotizacion.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.cantidad_2}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_unitario_2}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.porcentaje_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_descuento_2}}</td>
+							{% if cotizacion.iva_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.iva_2}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.ico_2}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{cotizacion.valor_total_2}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_3 != None %}
+						<tr>
+							<td class="valor-tabla">{{cotizacion.item_3}}</td>
+							<td class="valor-tabla descrip_item">{{cotizacion.descripcion_3}}</td>
+							<td class="valor-tabla">{{cotizacion.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.cantidad_3}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_unitario_3}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.porcentaje_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_descuento_3}}</td>
+							{% if cotizacion.iva_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.iva_3}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.ico_3}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{cotizacion.valor_total_3}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_4 != None %}
+						<tr>
+							<td class="valor-tabla">{{cotizacion.item_4}}</td>
+							<td class="valor-tabla descrip_item">{{cotizacion.descripcion_4}}</td>
+							<td class="valor-tabla">{{cotizacion.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.cantidad_4}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_unitario_4}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.porcentaje_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_descuento_4}}</td>
+							{% if cotizacion.iva_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.iva_4}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.ico_4}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{cotizacion.valor_total_4}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_5 != None %}
+						<tr>
+							<td class="valor-tabla">{{cotizacion.item_5}}</td>
+							<td class="valor-tabla descrip_item">{{cotizacion.descripcion_5}}</td>
+							<td class="valor-tabla">{{cotizacion.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.cantidad_5}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_unitario_5}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.porcentaje_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{cotizacion.valor_descuento_5}}</td>
+							{% if cotizacion.iva_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.iva_5}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td class="valor-tabla" align="right">{{cotizacion.ico_5}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{cotizacion.valor_total_5}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				<div class="row">
+					<table class="total-documento">
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{cotizacion.sub_total}}</td>
+						</tr>
+						{% if cotizacion.iva_total %}
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{cotizacion.iva_total}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{cotizacion.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{cotizacion.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{cotizacion.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{cotizacion.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="padding-bottom: 5px; text-align: right;">Total: </th>
+							<td style="padding-bottom: 5px;" align="right" class="totales">{{cotizacion.total_documento}}</td>
+						</tr>
+						{% if cotizacion.anticipo %}
+						<tr>
+							<th style="padding-top: 5px; border-top: solid white 2px; text-align: right;">Anticipo: </th>
+							<td style="padding-top: 5px; border-top: solid white 2px;" align="right" class="totales">{{cotizacion.anticipo}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Pendiente: </th>
+							<td align="right" class="totales">{{cotizacion.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			{% if cotizacion.observacion != "No Registrado" %}
+			<div class="datos-paob-detalle observacion" style="margin-right: 10px; margin-left: 10px;">
+				<strong>Nota:</strong> {{cotizacion.observacion}}
+			</div>	
+			{% endif %}
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion-documento">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios en Documentos</h2>
+		<p>Podrá hacer cambios en esta <strong>Cotización</strong> siempre y cuando no se haya generado otro documento a partir de ella o exista un documento que la referencie por medio de su <strong>Consecutivo.</strong><br>
+		¿Desea Editarla de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_cotizacion' pk=cotizacion.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-generar-documento">
+		<h2><span class="glyphicon glyphicon-alert"></span> Generar Documento</h2>
+		<p>Se generará una nueva <strong>Remisión</strong> utilizando los datos de esta <strong>Cotización.</strong><br>Esto desabilitará la opcion EDITAR del documento actual.<br>
+		¿Desea generar un documento de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'generar_remision_cotiz' pk=cotizacion.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-generar-documento-fac">
+		<h2><span class="glyphicon glyphicon-alert"></span> Generar Documento</h2>
+		<p>Se generará una nueva <strong>Factura de Venta</strong> utilizando los datos de esta <strong>Cotización.</strong><br>Esto desabilitará la opcion EDITAR del documento actual.<br>
+		¿Desea generar un documento de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'generar_factura_cotiz' pk=cotizacion.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}  

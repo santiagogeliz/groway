@@ -1,0 +1,147 @@
+{% extends 'groway/clientes.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if contacto.org_creadora == None %}
+		<h2>Nuevo Cliente</h2>
+		{% endif %}
+		{% if contacto.org_creadora %}
+		<h2>Cambios para {{contacto.nombre_legal}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-contacto">
+			<div class="datos-generales-contacto">
+				<div class="datos-gnlescontac naturaleza">
+					<label for="naturaleza"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Naturaleza</label>
+					<div id="naturaleza">
+						{{form.naturaleza}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac">
+					<label for="activad_economica">Actividad Económica</label>
+					<div id="activad_economica">
+						<div class="activad_economica" style="display: inline;">{{form.activad_economica}}</div><div class="codigo_actividad_economica" style="display: inline;">{{form.codigo_actividad_economica}}</div>
+					</div>
+				</div>
+				<div class="datos-gnlescontac regimen_tributario">
+					<label for="regimen_tributario"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Régimen Tributario</label>
+					<div id="regimen_tributario">
+						{{form.regimen_tributario}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac consumidor_final">
+					{{form.consumidor_final}}
+					<label for="consumidor_final">Es Consumidor Final / Liquidar Impuesto Nacional al Consumo</label>
+				</div>
+			</div>
+			<div class="datos-identificacion-contacto">
+				<div class="datos-idcontac nombre_legal">
+					<label for="nombre_legal"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Nombre Legal</label>
+					<div id="nombre_legal">
+						{{form.nombre_legal}}
+					</div>
+				</div>
+				<div class="datos-idcontac identificacion">
+					<label for="identificacion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Identificación</label>
+					<div id="identificacion">
+						{{form.identificacion}}
+					</div>
+				</div>
+				<div class="datos-idcontac numero_identificacion">
+					<label for="numero_identificacion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Número de Identificación</label>
+					<div id="numero_identificacion" class="numero_identificacion">
+						{{form.numero_identificacion}}<div class="numero_id_adicional" style="float: right;">{{form.numero_id_adicional}}</div>
+					</div>
+				</div>
+			</div>
+			<div class="responsabilidades-fiscales">
+				<h4><strong>Responsabilidades Fiscales</strong></h4>
+				<div class="resp-fiscales gran_contribuyente">
+					{{form.gran_contribuyente}}
+					<label for="gran_contribuyente">Gran Contribuyente</label>
+				</div>
+				<div class="resp-fiscales liquidar_retefuente">
+					{{form.liquidar_reterenta}}
+					<label for="liquidar_retefuente">Liquidar Retencion en la Fuente por Renta</label>
+				</div>
+				<div class="resp-fiscales retencion_por_ICA">
+					{{form.liquidar_reteica}}
+					<label for="retencion_por_ICA">Liquidar retencion en la Fuente por ICA</label>
+				</div>
+			</div>
+			<div class="informacion-contacto">
+				<div class="info-contac direccion">
+					<label for="direccion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Dirección</label>
+					<div id="direccion">
+						{{form.direccion}}
+						{{form.ciudad}}
+						{{form.departamento}}
+						{{form.pais}}
+					</div>
+				</div>
+			</div>
+			<div class="codigo-telefono-email">
+				<div class="cod-tel cod_postal">
+					<label for="cod_postal">Código Postal</label>
+					<div id="cod_postal">
+						{{form.cod_postal}}
+					</div>
+				</div>
+				<div class="cod-tel telefono">
+					<label for="telefono"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Teléfono</label>
+					<div id="telefono">
+						{{form.telefono}}
+					</div>
+				</div>
+				<div class="cod-tel email">
+					<label for="email">E-mail</label>
+					<div id="email">
+						{{form.email}}
+					</div>
+				</div>
+			</div>
+			<div class="personas-contacto">
+				<div class="per-contac perona-contacto">
+					<label for="perona-contacto">Persona Contacto (Admon)</label>
+					<div id="perona-contacto">
+						{{form.persona_contacto}}
+					</div>
+				</div>
+				<div class="per-contac telefono_dos">
+					<label for="telefono_dos">Teléfono Contacto</label>
+					<div id="telefono_dos">
+						{{form.telefono_dos}}
+					</div>
+				</div>
+				<div class="per-contac persona_contacto_adicional">
+					<label for="persona_contacto_adicional">Persona Contacto (Ventas)</label>
+					<div id="persona_contacto_adicional">
+						{{form.persona_contacto_adicional}}
+					</div>
+				</div>
+			</div>
+			<div class="info-bancaria">
+				<div class="info-bank numero_cuenta">
+					<label for="persona_contacto_adicional">Número de Cuenta</label>
+					<div id="persona_contacto_adicional">
+						{{form.numero_cuenta}}
+					</div>
+				</div>
+				<div class="info-bank tipo_cuenta">
+					<label for="persona_contacto_adicional">Tipo de Cuenta</label>
+					<div id="persona_contacto_adicional">
+						{{form.tipo_cuenta}}
+					</div>
+				</div>
+				<div class="info-bank entidad_financiera">
+					<label for="persona_contacto_adicional">Entidad Financiera</label>
+					<div id="persona_contacto_adicional">
+						{{form.entidad_financiera}}
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar guardar-contacto save">Terminar</button>
+		</div>
+	</form>
+{% endblock %}

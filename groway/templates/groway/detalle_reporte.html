@@ -1,0 +1,175 @@
+{% extends 'groway/reportes_crecimiento.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{reporte.nombre}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar" href="{% url 'editar_reporte' pk=reporte.pk %}">Editar</a>
+		</div>
+		<div class="form-content-detalle-grafico" style="margin-bottom: 20px;">
+			<div class="nuevo-consecutivo">
+				<div class="img-cat fecha_inicio">
+					<label for="fecha_inicio">Métrica de Crecimiento</label>
+					<div id="fecha_inicio">
+						{{reporte.metrica_crecimiento}}
+					</div>
+				</div>
+				<div class="img-cat fecha_inicio">
+					<label for="fecha_inicio">Fecha inicial</label>
+					<div id="fecha_inicio">
+						{{reporte.fecha_inicio}}
+					</div>
+				</div>
+				{% if reporte.fecha_fin %}
+				<div class="img-cat fecha_fin">
+					<label for="fecha_fin">Fecha final</label>
+					<div id="fecha_fin">
+						{{reporte.fecha_fin}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="datos-reporte">
+				{% if reporte.ventas_dia %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ventas del Día</label>
+					<div id="total_dia">
+						{{reporte.ventas_dia}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Día</label>
+					<div id="total_dia">
+						{{reporte.ganancias_dia}}
+					</div>
+				</div>
+				{% endif %}
+				{% endif %}
+				{% if reporte.ventas_semana and reporte.tasa_crecimiento_diaria %}
+				<div class="img-cat total_semana">
+					<label for="total_semana">Ventas de la Semana</label>
+					<div id="total_semana">
+						{{reporte.ventas_semana}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias de la Semana</label>
+					<div id="total_dia">
+						{{reporte.ganancias_semana}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_diaria">
+					<label for="tasa_crecimiento_diaria">Crecimiento Diario (%)</label>
+					<div id="tasa_crecimiento_diaria">
+						{{reporte.tasa_crecimiento_diaria}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.ventas_mes and reporte.tasa_crecimiento_semana %}
+				<div class="img-cat total_mes">
+					<label for="total_mes">Ventas del Mes</label>
+					<div id="total_mes">
+						{{reporte.ventas_mes}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Mes</label>
+					<div id="total_dia">
+						{{reporte.ganancias_mes}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_semana">
+					<label for="tasa_crecimiento_semana">Crecimiento Semanal (%)</label>
+					<div id="tasa_crecimiento_semana">
+						{{reporte.tasa_crecimiento_semana}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.ventas_año and reporte.tasa_crecimiento_semana and reporte.tasa_crecimiento_mensual %}
+				<div class="img-cat total_año">
+					<label for="total_año">Ventas del Año</label>
+					<div id="total_año">
+						{{reporte.ventas_año}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Año</label>
+					<div id="total_dia">
+						{{reporte.ganancias_año}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas' %}
+				<div class="img-cat tasa_crecimiento_semana">
+					<label for="tasa_crecimiento_semana">Crecimiento Semanal (%)</label>
+					<div id="tasa_crecimiento_semana">
+						{{reporte.tasa_crecimiento_semana}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_mensual">
+					<label for="tasa_crecimiento_mensual">Crecimiento Mensual (%)</label>
+					<div id="tasa_crecimiento_mensual">
+						{{reporte.tasa_crecimiento_mensual}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.ventas_periodo and reporte.tasa_crecimiento_mensual and reporte.tasa_crecimiento_anual %}
+				<div class="img-cat total_periodo">
+					<label for="total_periodo">Ventas del Periodo</label>
+					<div id="total_periodo">
+						{{reporte.ventas_periodo}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Periodo</label>
+					<div id="total_dia">
+						{{reporte.ganancias_periodo}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas' %}
+				<div class="img-cat tasa_crecimiento_mensual">
+					<label for="tasa_crecimiento_mensual">Crecimiento Mensual (%)</label>
+					<div id="tasa_crecimiento_mensual">
+						{{reporte.tasa_crecimiento_mensual}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_anual">
+					<label for="tasa_crecimiento_anual">Crecimiento Anual (%)</label>
+					<div id="tasa_crecimiento_anual">
+						{{reporte.tasa_crecimiento_anual}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="imgagen-grafico" style="margin-top: 10px; padding-right: 10px;">
+				<img src="{% url 'grafica_detalle' %}">
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva.<br>
+		¿Seguro que deseas Eliminar este <strong>Reporte de Crecimiento</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_reporte' pk=reporte.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

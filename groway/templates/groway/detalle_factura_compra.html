@@ -1,0 +1,288 @@
+{% extends 'groway/facturas_compra.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>FACTURA DE COMPRA {{factura_comp.consecutivo_interno}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto-documento row">
+			<a class="acciones accion-editar" href="{% url 'editar_factura_comp' pk=factura_comp.pk %}">Editar</a>
+			<a class="acciones accion-pdf" href="{% url 'pdf_factura_compra' pk=factura_comp.pk %}" target="_blank">Generar PDF</a>
+		</div>
+		<div class="form-content-detalle-cotizacion">
+			<div class="datos-generales-detalle">
+				<div class="generales" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle consecutivo">
+						<label for="consecutivo">Consecutivo</label>
+						<div id="consecutivo">
+							{{factura_comp.consecutivo_interno}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha">
+						<label for="fecha">Fecha</label>
+						<div id="fecha">
+							{{factura_comp.fecha_emision|date:"d F Y"}} {{factura_comp.fecha_emision|date:"f a"}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle terminos_de_pago">
+						<label for="terminos_de_pago">Terminos de Pago</label>
+						<div id="terminos_de_pago">
+							{{factura_comp.terminos_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle medio_de_pago">
+						<label for="medio_de_pago">Medio de Pago</label>
+						<div id="medio_de_pago">
+							{{factura_comp.medio_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle moneda">
+						<label for="moneda">Moneda</label>
+						<div id="moneda">
+							{{factura_comp.moneda}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones-detalle">
+				<div class="datos-proveedor" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle proveedor">
+						<label for="proveedor">Proveedor</label>
+						<div id="proveedor">
+							{{factura_comp.proveedor}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_proveedor">
+						<strong>Identificación:</strong> {{factura_comp.id_proveedor}} {{factura_comp.numero_id_proveedor}} -{% if factura_comp.numero_id_proveedor_adicional %} {{factura_comp.numero_id_proveedor_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{factura_comp.telefono_proveedor}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{factura_comp.dir_proveedor}}
+						</div>
+						<div class="ubicacion">
+							{{factura_comp.ciudad_proveedor}}
+						</div>
+						<div class="ubicacion">
+							{{factura_comp.departamento_proveedor}}
+						</div>
+						<div class="ubicacion">
+							{{factura_comp.pais_proveedor}}
+						</div>
+					</div>
+				</div>
+				<div class="datos-organizacion" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Comprador</label>
+						<div id="cliente">
+							{{factura_comp.org_creadora}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{factura_comp.id_organizacion}} {{factura_comp.numero_id_organizacion}} -{% if factura_comp.numero_id_org_adicional %} {{factura_comp.numero_id_org_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{factura_comp.telefono_organizacion}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{factura_comp.dir_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{factura_comp.ciudad_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{factura_comp.departamento_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{factura_comp.pais_organizacion}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if factura_comp.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-observaciones">
+				{% if factura_comp.descripcion_detallada != "No Registrado" %}
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div style="text-align: justify;" class="descripcion-content" id="descripcion_detallada">      
+						{{factura_comp.descripcion_detallada|linebreaksbr}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			{% endif %}
+			<div class="items-totales-detalle">
+				<div class="row">
+					<table class="linea-documento">
+						<tr>
+							<th class="titulo-tabla" style="text-align: center;">Item</th>
+							<th class="titulo-tabla" style="text-align: center;">Descripción</th>
+							<th class="titulo-tabla" style="text-align: center;">UM</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">Cant.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Precio Unidad</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">% Dcto.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Valor Dcto.</th>
+							{% if factura_comp.iva_total %}
+							<th class="titulo-tabla" style="text-align: center;">IVA</th>
+							{% endif %}
+							{% if factura_comp.ico_total %}
+							<th class="titulo-tabla" style="text-align: center;">ICO</th>
+							{% endif %}
+							<th class="titulo-tabla" style="text-align: center;">Valor Total</th>
+						</tr>
+						<tr>
+							<td class="valor-tabla">{{factura_comp.item_1}}</td>
+							<td class="valor-tabla descrip_item">{{factura_comp.descripcion_1}}</td>
+							<td class="valor-tabla">{{factura_comp.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_1}}</td>
+							{% if factura_comp.iva_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.iva_1}}</td>
+							{% endif %}
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_1}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_1}}</td>
+						</tr>
+						{% if factura_comp.item_2 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura_comp.item_2}}</td>
+							<td class="valor-tabla descrip_item">{{factura_comp.descripcion_2}}</td>
+							<td class="valor-tabla">{{factura_comp.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_2}}</td>
+							{% if factura_comp.iva_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.iva_2}}</td>
+							{% endif %}
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_2}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_2}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.item_3 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura_comp.item_3}}</td>
+							<td class="valor-tabla descrip_item">{{factura_comp.descripcion_3}}</td>
+							<td class="valor-tabla">{{factura_comp.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_3}}</td>
+							{% if factura_comp.iva_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.iva_3}}</td>
+							{% endif %}
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_3}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_3}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.item_4 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura_comp.item_4}}</td>
+							<td class="valor-tabla descrip_item">{{factura_comp.descripcion_4}}</td>
+							<td class="valor-tabla">{{factura_comp.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_4}}</td>
+							{% if factura_comp.iva_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.iva_4}}</td>
+							{% endif %}
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_4}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_4}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.item_5 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura_comp.item_5}}</td>
+							<td class="valor-tabla descrip_item">{{factura_comp.descripcion_5}}</td>
+							<td class="valor-tabla">{{factura_comp.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_5}}</td>
+							{% if factura_comp.iva_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.iva_5}}</td>
+							{% endif %}
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_5}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_5}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				<div class="row">
+					<table class="total-documento">
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{factura_comp.sub_total}}</td>
+						</tr>
+						{% if factura_comp.iva_total %}
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{factura_comp.iva_total}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{factura_comp.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{factura_comp.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{factura_comp.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{factura_comp.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="padding-bottom: 5px; text-align: right;">Total: </th>
+							<td style="padding-bottom: 5px;" align="right" class="totales">{{factura_comp.total_documento}}</td>
+						</tr>
+						{% if factura_comp.anticipo %}
+						<tr>
+							<th style="padding-top: 5px; border-top: solid white 2px; text-align: right;">Anticipo: </th>
+							<td style="padding-top: 5px; border-top: solid white 2px;" align="right" class="totales">{{factura_comp.anticipo}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Pendiente: </th>
+							<td align="right" class="totales">{{factura_comp.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			{% if factura_comp.observacion != "No Registrado" %}
+			<div class="datos-paob-detalle observacion" style="margin-right: 10px; margin-left: 10px;">
+				<strong>Nota:</strong> {{factura_comp.observacion}}
+			</div>	
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}  

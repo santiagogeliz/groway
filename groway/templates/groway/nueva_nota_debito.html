@@ -1,0 +1,35 @@
+{% extends 'groway/facturas_venta.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>Nueva Nota Débito</h2>
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-note">
+			<div class="datos-transportador-id-vehiculo">
+				<div class="concepto-notas">
+					<div class="datos-idcontac concepto-nd">
+						<label for="concepto-nd"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Concepto de Nota Débito</label>
+						<select name="note-concept" id="concepto-nd">
+							<option value="0">Seleccionar</option>
+							<option value="1">1 | Intereses</option>
+							<option value="2">2 | Gastos por cobrar</option>
+							<option value="3">3 | Cambio del Valor</option>
+						</select>
+					</div>
+					<div class="descrip-cargos" style="margin-top: 10px;">
+						<label for="descrip-cargos">Descripción de los Cargos / Intereses</label>
+						<div class="descrip-cargos" id="descrip-cargos">      
+							<textarea name="descripcion_cargo_interes" rows="10" cols="35" style="color: black;"></textarea>
+						</div>
+					</div>
+					<div class="cargos-intereses-valor" style="margin-top: 10px;">
+						<label for="cargos"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Ingrese el valor que se sumará a la cuenta</label>
+						<input type="number" name="intereses_gastos" id="cargos" placeholder="Valor cargos (COP)">
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar terminar-edicion save" style="margin-top: 10px;">Terminar</button>
+		</div>
+	</form>
+{% endblock %}  

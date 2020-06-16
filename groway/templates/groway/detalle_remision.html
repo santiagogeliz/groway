@@ -1,0 +1,198 @@
+{% extends 'groway/remisiones.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>REMISIÓN {{remision.consecutivo_interno}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto-documento row">
+			<a class="acciones accion-editar" href="{% url 'agregar_datos_remision' pk=remision.pk %}">Agregar Datos</a>
+			<a class="acciones accion-pdf" href="{% url 'pdf_remision' pk=remision.pk %}" target="_blank">Generar PDF</a>
+		</div>
+		<div class="form-content-detalle-cotizacion">
+			<div class="datos-generales-detalle">
+				<div class="generales" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle consecutivo">
+						<label for="consecutivo">Consecutivo</label>
+						<div id="consecutivo">
+							{{remision.consecutivo_interno}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha">
+						<label for="fecha">Fecha</label>
+						<div id="fecha">
+							{{remision.fecha_emision|date:"d F Y"}} {{remision.fecha_emision|date:"f a"}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if remision.referencia_orden_compra != "No Registrado" or remision.referencia_factura != "No Registrado" or remision.referencia_otro_documento != "No Registrado" or remision.referencia_cotizacion != "No Registrado"  %}
+			<div class="referencias-documentos">
+				<div class="referencias" style="margin-right: 10px; margin-left: 10px;">
+					{% if remision.referencia_cotizacion != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_orden_compra">
+						<label for="referencia_orden_compra">Referencia Cotización</label>
+						<div id="referencia_orden_compra">
+							<a class="enlace-documentos" href="{% url 'detalle_cotizacion' pk=cotizacion_generadora.pk %}">{{remision.referencia_cotizacion}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if remision.referencia_factura != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_factura">
+						<label for="referencia_factura">Referencia Factura</label>
+						<div id="referencia_factura">
+							<a class="enlace-documentos" href="{% url 'detalle_factura_venta' pk=factura_relacionada.pk %}">{{remision.referencia_factura}}</a>
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Orden de Compra</label>
+						<div id="referencia_remision">
+							{{remision.referencia_orden_compra}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_otro_documento">
+						<label for="referencia_otro_documento">Referencia a Documento (Otro)</label>
+						<div id="referencia_otro_documento">
+							{{remision.referencia_otro_documento}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div class="datos-participantes-observaciones-detalle">
+				<div class="datos-cliente" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Cliente</label>
+						<div id="cliente">
+							{{remision.cliente}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{remision.id_cliente}} {{remision.numero_id_cliente}} -{% if remision.numero_id_cli_adicional %} {{remision.numero_id_cli_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{remision.telefono_cliente}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{remision.dir_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{remision.ciudad_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{remision.departamento_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{remision.pais_cliente}}
+						</div>
+					</div>
+				</div>
+				<div class="datos-organizacion" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Proveedor</label>
+						<div id="cliente">
+							{{remision.org_creadora}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{remision.id_organizacion}} {{remision.numero_id_organizacion}} -{% if remision.numero_id_org_adicional %} {{remision.numero_id_org_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{remision.telefono_organizacion}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{remision.dir_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{remision.ciudad_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{remision.departamento_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{remision.pais_organizacion}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="descripcion-transportador">
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Datos Transportador</label>
+					<div class="descripcion-content" id="descripcion_detallada">      
+						{{remision.datos_transportador|linebreaksbr}}
+					</div>
+				</div>
+			</div>
+			<div class="items-totales-detalle">
+				<div class="lineas">
+					<table class="linea-documento-remision">
+						<tr>
+							<th class="titulo-tabla" style="text-align: center;">Item</th>
+							<th class="titulo-tabla" style="text-align: center;">Descripción</th>
+							<th class="titulo-tabla" style="text-align: center;">UM</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">Cant.</th>
+						</tr>
+						<tr>
+							<td class="valor-tabla">{{remision.item_1}}</td>
+							<td class="valor-tabla descrip_item">{{remision.descripcion_1}}</td>
+							<td class="valor-tabla">{{remision.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{remision.cantidad_1}}</td>
+						</tr>
+						{% if remision.item_2 != None %}
+						<tr>
+							<td class="valor-tabla">{{remision.item_2}}</td>
+							<td class="valor-tabla descrip_item">{{remision.descripcion_2}}</td>
+							<td class="valor-tabla">{{remision.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{remision.cantidad_2}}</td>
+						</tr>
+						{% endif %}
+						{% if remision.item_3 != None %}
+						<tr>
+							<td class="valor-tabla">{{remision.item_3}}</td>
+							<td class="valor-tabla descrip_item">{{remision.descripcion_3}}</td>
+							<td class="valor-tabla">{{remision.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{remision.cantidad_3}}</td>
+						</tr>
+						{% endif %}
+						{% if remision.item_4 != None %}
+						<tr>
+							<td class="valor-tabla">{{remision.item_4}}</td>
+							<td class="valor-tabla descrip_item">{{remision.descripcion_4}}</td>
+							<td class="valor-tabla">{{remision.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{remision.cantidad_4}}</td>
+						</tr>
+						{% endif %}
+						{% if remision.item_5 != None %}
+						<tr>
+							<td class="valor-tabla">{{remision.item_5}}</td>
+							<td class="valor-tabla descrip_item">{{remision.descripcion_5}}</td>
+							<td class="valor-tabla">{{remision.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{remision.cantidad_5}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			{% if remision.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-detalle-remision">
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div class="descripcion-content-remision" id="descripcion_detallada">      
+						{{remision.descripcion_detallada|linebreaksbr}}
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			{% if remision.observacion != "No Registrado" %}
+			<div class="datos-paob-detalle observacion remision_ob" style="margin-right: 10px; margin-left: 10px;">
+				<strong>Nota:</strong> {{remision.observacion}}
+			</div>	
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}  

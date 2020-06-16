@@ -1,0 +1,100 @@
+{% extends 'groway/insumos.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if insumo.org_creadora == None %}
+		<h2>Nuevo Insumo</h2>
+		{% endif %}
+		{% if insumo.org_creadora %}
+		<h2>Cambios para {{insumo.descripcion}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+		<div class="form-content-nuevo-insumo">
+			<div class="imagen-categoria">
+				<div class="img-cat imagen-insumo">
+					<label for="imagen">Imagen del Insumo (300 X 200)</label>
+					<div id="imagen">
+						{{form.imagen}}
+					</div>
+				</div>
+				<div class="img-cat categoria">
+					<label for="categoria"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Categoria de Insumo</label>
+					<div id="categoria">
+						<select name="categoria_insumo" id="categoria">
+						{% if insumo.categoria == None %}
+							<option value="0">----------</option>
+						{% endif %}
+						{% if insumo.categoria != None %}
+							<option value="{{insumo.categoria}}">{{insumo.categoria}}</option>
+							<option value="0">----------</option>
+						{% endif %}
+						{% for categorias in categorias_insumo %}
+							<option value="{{categorias}}">{{categorias}}</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="desc-item tipo_item">
+					<label for="tipo_item"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Tipo de Insumo</label>
+					<div id="tipo_item">
+						{{form.tipo_item}}
+					</div>
+				</div>
+				{% if insumo.tipo_item == 'IN' %}
+				<div class="desc-item tipo_item">
+					<label for="tipo_item">Cantidad</label>
+					<div id="tipo_item" class="cantidad-invent">
+						{{form.cantidad}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="descripcion-item">
+				<div class="desc-item descripcion">
+					<label for="descripcion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Descripción</label>
+					<div id="descripcion">
+						{{form.descripcion}}
+					</div>
+				</div>
+				<div class="desc-item descripcion_detalle">
+					<label for="descripcion_detalle">Descripción Detallada</label>
+					<div id="descripcion_detalle">
+						<a class="descripcion-dropdown">Agregar</a>
+					</div>
+				</div>
+				<div class="desc-item unidad_medida">
+					<label for="unidad_medida"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Unidad de Medida</label>
+					<div id="unidad_medida">
+						{{form.unidad_medida}}
+					</div>
+				</div>
+			</div>
+			<div class="costo-impuestos">
+				<div class="cost-imp precio_compra">
+					<label for="precio_compra"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Precio por Unidad</label>
+					<div id="precio_compra">
+						{{form.precio_compra}}
+					</div>
+				</div>
+				<div class="cost-imp iva_compras">
+					<label for="iva_compras"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> % IVA (Compras)</label>
+					<div id="iva_compras">
+						{{form.iva_compras}}
+					</div>
+				</div>
+				<div class="cost-imp impuesto_consumo_compras">
+					<label for="impuesto_consumo_compras"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> % Impuesto al Consumo (Compras)</label>
+					<div id="impuesto_consumo_compras">
+						{{form.impuesto_consumo_compras}}
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar guardar-item save">Terminar</button>
+		</div>
+		<div class="descripcion-form descripcion-pos">      
+			{{form.descripcion_detalle}}
+			<a class="descrip-btn-listo">Listo</a>
+		</div>
+	</form>
+{% endblock %}

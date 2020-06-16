@@ -1,0 +1,172 @@
+{% extends 'groway/reportes_crecimiento.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if reporte.org_creadora == None %}
+		<h2>Nuevo Reporte de Crecimiento</h2>
+		{% endif %}
+		{% if reporte.org_creadora %}
+		<h2>Cambios para {{reporte.nombre}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-grafico">
+			<div class="nuevo-consecutivo" style="margin-top: 10px;">
+				<div class="img-cat fecha_inicio">
+					<label for="fecha_inicio"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Métrica de Crecimiento</label>
+					<div id="fecha_inicio">
+						{{form.metrica_crecimiento}}
+					</div>
+				</div>
+				<div class="img-cat fecha_inicio">
+					<label for="fecha_inicio"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Fecha inicial</label>
+					<div id="fecha_inicio">
+						{{form.fecha_inicio}}
+					</div>
+				</div>
+				<div class="img-cat fecha_fin">
+					<label for="fecha_fin">Fecha final</label>
+					<div id="fecha_fin">
+						{{form.fecha_fin}}
+					</div>
+				</div>
+				{% if reporte.org_creadora == None %}
+				<button type="submit" class="terminar terminar-edicion save" style="margin-top: 10px;">Generar</button>
+				{% endif %}
+			</div>
+			<div class="datos-reporte" style="margin-top: 10px;">
+				{% if reporte.ventas_dia %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ventas del Día</label>
+					<div id="total_dia">
+						{{form.ventas_dia}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'G' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Día</label>
+					<div id="total_dia">
+						{{form.ganancias_dia}}
+					</div>
+				</div>
+				{% endif %}
+				{% endif %}
+				{% if reporte.ventas_semana != None and reporte.tasa_crecimiento_diaria != None %}
+				<div class="img-cat total_semana">
+					<label for="total_semana">Ventas de la Semana</label>
+					<div id="total_semana">
+						{{form.ventas_semana}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'G' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias de la Semana</label>
+					<div id="total_dia">
+						{{form.ganancias_semana}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_diaria">
+					<label for="tasa_crecimiento_diaria">Crecimiento Diario (%)</label>
+					<div id="tasa_crecimiento_diaria">
+						{{form.tasa_crecimiento_diaria}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.ventas_mes != None and reporte.tasa_crecimiento_semana != None %}
+				<div class="img-cat total_mes">
+					<label for="total_mes">Ventas del Mes</label>
+					<div id="total_mes">
+						{{form.ventas_mes}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'G' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Mes</label>
+					<div id="total_dia">
+						{{form.ganancias_mes}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_semana">
+					<label for="tasa_crecimiento_semana">Crecimiento Semanal (%)</label>
+					<div id="tasa_crecimiento_semana">
+						{{form.tasa_crecimiento_semana}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.ventas_año != None and reporte.tasa_crecimiento_semana != None and reporte.tasa_crecimiento_mensual != None %}
+				<div class="img-cat total_año">
+					<label for="total_año">Ventas del Año</label>
+					<div id="total_año">
+						{{form.ventas_año}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'G' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Año</label>
+					<div id="total_dia">
+						{{form.ganancias_año}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.metrica_crecimiento == 'V' %}
+				<div class="img-cat tasa_crecimiento_semana">
+					<label for="tasa_crecimiento_semana">Crecimiento Semanal (%)</label>
+					<div id="tasa_crecimiento_semana">
+						{{form.tasa_crecimiento_semana}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_mensual">
+					<label for="tasa_crecimiento_mensual">Crecimiento Mensual (%)</label>
+					<div id="tasa_crecimiento_mensual">
+						{{form.tasa_crecimiento_mensual}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.ventas_periodo != None and reporte.tasa_crecimiento_mensual != None and reporte.tasa_crecimiento_anual != None %}
+				<div class="img-cat total_periodo">
+					<label for="total_periodo">Ventas del Periodo</label>
+					<div id="total_periodo">
+						{{form.ventas_periodo}}
+					</div>
+				</div>
+				{% if reporte.metrica_crecimiento == 'G' %}
+				<div class="img-cat total_dia">
+					<label for="total_dia">Ganancias del Periodo</label>
+					<div id="total_dia">
+						{{form.ganancias_periodo}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.metrica_crecimiento == 'V' %}
+				<div class="img-cat tasa_crecimiento_mensual">
+					<label for="tasa_crecimiento_mensual">Crecimiento Mensual (%)</label>
+					<div id="tasa_crecimiento_mensual">
+						{{form.tasa_crecimiento_mensual}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="img-cat tasa_crecimiento_anual">
+					<label for="tasa_crecimiento_anual">Crecimiento Anual (%)</label>
+					<div id="tasa_crecimiento_anual">
+						{{form.tasa_crecimiento_anual}}
+					</div>
+				</div>
+				{% endif %}
+				{% if reporte.org_creadora %}
+				<div class="botones-grafico">
+					<a href="{% url 'atras_reporte' pk=reporte.pk %}" class="siguiente">Atras</a>
+					<button type="submit" class="terminar save" style="margin-left: 10px;">Guardar</button>
+				</div>
+				{% endif %}
+			</div>
+			{% if reporte.org_creadora %}
+			<div class="imgagen-grafico" style="margin-top: 10px; padding-right: 10px;">
+				<img src="{% url 'grafica_nueva' %}">
+			</div>
+			{% endif %}
+		</div>
+	</form>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Candal|Sawarabi+Gothic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Anton|Muli:300,400" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static 'css/groway.css' %}">
+	<link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  	<script src="https://kit.fontawesome.com/c898819835.js" crossorigin="anonymous"></script>
+  	<script type="text/javascript">
+  		$(function (){
+  			$(window).scroll(function(){
+  				if ($(this).scrollTop() > 10) {
+  					$('.navscroll').addClass("mate");
+  					$('.links').addClass("mate");
+  					$('.login').addClass("mate");
+  					$('.navbar-brand').addClass("mate");
+  					$('.brand-white').addClass("mate");
+         		} else {
+         			$(".navscroll").removeClass("mate");
+         			$(".links").removeClass("mate");
+         			$(".login").removeClass("mate");
+         			$(".navbar-brand").removeClass("mate");
+         			$(".brand-white").removeClass("mate");
+         		}
+      		});
+  		});
+  	</script>
+  	<script type="text/javascript">
+  		$(function() {
+  			var links = $(".links");
+  			links.click(function() {
+  				links.removeClass("active");
+  				$(this).addClass("active");
+  			});
+  			var btn = $(".login");
+  			btn.click(function() {
+  				btn.removeClass("active");
+  				$(this).addClass("active");
+  			});
+  		});
+  	</script>
+  	<title>Groway - Software Contable, Facturación, Crecimiento</title>
+</head>
+<body>
+	<header class="block">
+		<nav class="navscroll navbar navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle menu_toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a href="{% url 'home_page' %}" class="navbar-brand brand-white">
+						<img src="{% static 'img/growaylogoversion2.png' %}"alt="Groway" width="180" height="100">
+					</a>
+					<a href="{% url 'home_page' %}" class="navbar-brand">
+						<img src="{% static 'img/growaylogoversion2_blanco_contorno.png' %}"alt="Groway" width="180" height="100">
+					</a>
+				</div>
+				<div class="liks-webpage collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<a class="active links" href="{% url 'home_page' %}">Inicio</a>
+						<a class="links" href="{% url 'caracteristicas' %}">Características</a>
+						<a class="login" href="{% url 'login' %}" target="_blank">Ingresar</a>
+						<a class="login" href="{% url 'nuevo_usuario' %}" target="_blank">Prueba Gratuita</a>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="hero">
+		<div class="hero-content">
+			<div class="hero-image">
+				<div class="hero-message">
+					<div class="hero-text">
+						<h1 class="heading info">Facturación y Crecimiento</h1>
+						<p class="text info">Groway es un Software de Facturación Electrónica que ademas te brinda toda la información sobre el Crecimiento de tu negocio.</p>
+						<div class="log_hero_btn">
+							<a class="comenzar_btn" href="{% url 'nuevo_usuario' %}" target="_blank">COMENZAR</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>

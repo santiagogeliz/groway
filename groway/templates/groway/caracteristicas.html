@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Candal|Sawarabi+Gothic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Anton|Muli:300,400" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static 'css/groway.css' %}">
+	<link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  	<script src="https://kit.fontawesome.com/c898819835.js" crossorigin="anonymous"></script>
+  	<script type="text/javascript">
+  		$(function (){
+  			$('.navscroll').addClass("mate");
+  			$('.links').addClass("mate");
+  			$('.login').addClass("mate");
+  		});
+  	</script>
+  	<script type="text/javascript">
+  		$(function() {
+  			var links = $(".links");
+  			links.click(function() {
+  				links.removeClass("active");
+  				$(this).addClass("active");
+  			});
+  			var btn = $(".login");
+  			btn.click(function() {
+  				btn.removeClass("active");
+  				$(this).addClass("active");
+  			});
+  		});
+  	</script>
+  	<title>Groway - Software Contable, Facturación, Crecimiento</title>
+</head>
+<body>
+	<header class="block">
+		<nav class="navscroll navbar navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle menu_toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a href="{% url 'home_page' %}" class="navbar-brand caracteristicas-brand">
+						<img src="{% static 'img/growaylogoversion2.png' %}"alt="Groway" width="180" height="100">
+					</a>
+				</div>
+				<div class="liks-webpage collapse navbar-collapse" id="myNavbar">
+					<ul class="nav navbar-nav navbar-right">
+						<a class="links" href="{% url 'home_page' %}">Inicio</a>
+						<a class="active links" href="{% url 'caracteristicas' %}">Características</a>
+						<a class="login" href="{% url 'login' %}"target="_blank">Ingresar</a>
+						<a class="login" href="{% url 'nuevo_usuario' %}" target="_blank">Prueba Gratuita</a>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="hero">
+		<div class="hero-content">
+			<div class="hero-image-caract">
+				<div class="features_content">
+					<h1 class="title_features" style="text-align: center;">Contabilidad, Facturación y Crecimiento</h1>
+					<div class="features_box">
+						<div class="features_line_one row">
+							<div class="facturacion" style="float: left;">
+								<div class="feature_info">
+									<h3><span class="glyphicon glyphicon-duplicate"></span> Documentos Financieros</h3>
+									<p>Realiza cotizaciones, conviértelas en remisiones o en facturas. Genera notas crédito y débito y registra los gastos de tu empresa.</p>
+								</div>
+							</div>
+							<div class="inventario" style="float: left;">
+								<div class="feature_info">
+									<h3><span class="glyphicon glyphicon-list-alt"></span> Inventario de Productos y Servicios</h3>
+									<p>Ordena tus ítems de venta y tus insumos en categorías. Administra la cantidad de productos en bodega.</p>
+								</div>
+							</div>
+						</div>
+						<div class="features_line_two row">
+							<div class="contactos" style="float: left;">
+								<div class="feature_info">
+									<h3><span class="glyphicon glyphicon-user"></span> Lista de Contactos</h3>
+									<p>Gestiona tu lista de clientes y proveedores. Conserva la información de tus contactos siempre actualizada.</p>
+								</div>
+							</div>
+							<div class="crecimiento" style="float: left;">
+								<div class="feature_info">
+									<h3><span class="glyphicon glyphicon-stats"></span> Reportes de Crecimiento</h3>
+									<p>Realiza reportes de crecimiento en las ventas y en las ganancias. Registra la tasa de crecimiento diaria, semanal, mensual y anual de tu negocio.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>

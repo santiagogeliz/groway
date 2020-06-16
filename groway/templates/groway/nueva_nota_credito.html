@@ -1,0 +1,70 @@
+{% extends 'groway/facturas_venta.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>Nueva Nota Crédito</h2>
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-note">
+			<div class="datos-transportador-id-vehiculo">
+				<div class="concepto-notas">
+					<div class="datos-idcontac concepto-nc">
+						<label for="concepto-nc"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Concepto de Nota Crédito</label>
+						<select name="note-concept" id="concepto-nc">
+							<option value="0">Seleccionar</option>
+							<option value="1">1 | No aceptación de parte del producto / servicio</option>
+							<option value="2">2 | Anulación de la factura por incumplimiento de detalles reglamentarios</option>
+							<option value="3">3 | Rebaja voluntaria al saldo por cobrar</option>
+							<option value="4">4 | Descuento total aplicado en la factura</option>
+							<option value="5">5 | Anulación de la factura por decisión administrativa o judicial</option>
+							<option value="6">6 | Incumplimiento de lo pactado por las partes</option>
+						</select>
+					</div>
+					<div class="items-afectados" style="margin-top: 10px;">
+						<label for="seleccion_item">Si el Concepto de NC seleccionado es 1, indique los ítems afectados</label>
+						<div id="seleccion_item">
+							<label for="item_1">{{factura.item_1}}</label>
+							<select name="item_1" id="item_1" style="display: block;">
+								<option value="0">No Afectado</option>
+								<option value="1">Afectado</option>
+							</select>
+							{% if factura.item_2 %}
+							<label for="item_2">{{factura.item_2}}</label>
+							<select name="item_2" id="item_2" style="display: block;">
+								<option value="0">No Afectado</option>
+								<option value="1">Afectado</option>
+							</select>
+							{% endif %}
+							{% if factura.item_3 %}
+							<label for="item_3">{{factura.item_3}}</label>
+							<select name="item_3" id="item_3" style="display: block;">
+								<option value="0">No Afectado</option>
+								<option value="1">Afectado</option>
+							</select>
+							{% endif %}
+							{% if factura.item_4 %}
+							<label for="item_4">{{factura.item_4}}</label>
+							<select name="item_4" id="item_4" style="display: block;">
+								<option value="0">No Afectado</option>
+								<option value="1">Afectado</option>
+							</select>
+							{% endif %}
+							{% if factura.item_5 %}
+							<label for="item_5">{{factura.item_5}}</label>
+							<select name="item_5" id="item_5" style="display: block;">
+								<option value="0">No Afectado</option>
+								<option value="1">Afectado</option>
+							</select>
+							{% endif %}
+						</div>
+					</div>
+					<div class="descuento-rebaja" style="margin-top: 10px;">
+						<label for="rebaja-descuento">Si el Concepto de NC seleccionado es 3 o 4, ingrese el valor del descuento</label>
+						<input type="number" name="descuento_rebaja" id="rebaja-descuento" placeholder="Valor descuento (COP)" value="0">
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar terminar-edicion save" style="margin-top: 10px;">Terminar</button>
+		</div>
+	</form>
+{% endblock %}  

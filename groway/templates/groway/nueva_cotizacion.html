@@ -1,0 +1,455 @@
+{% extends 'groway/cotizaciones.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>Nueva Cotización</h2>
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo container">
+			<div class="datos-generales">
+				{% if cotizacion.fecha_emision != None %}
+				<div class="datos-gnles fecha">
+					<label for="fecha">Fecha</label>
+					<div id="fecha">
+						{{form.fecha_emision}}
+					</div>
+				</div>
+				{% endif %}
+				{% if cotizacion.terminos_de_pago == None %}
+				<div class="datos-gnles terminos_de_pago">
+					<label for="terminos_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Terminos de Pago</label>
+					<div id="terminos_de_pago">
+						<select name="terminospago_cotiz" id="terminos_de_pago">
+							<option value="0">----------</option>
+						{% for terminos in terminospago_cotiz %}
+							<option value="{{terminos.descripcion}}">{{terminos.descripcion}}</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
+				{% endif %}
+				{% if cotizacion.terminos_de_pago != None %}
+				<div class="datos-gnles terminos_de_pago">
+					<label for="terminos_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Terminos de Pago</label>
+					<div id="terminos_de_pago">
+						<input type="text" name="terminospago_cotiz" value="{{cotizacion.terminos_de_pago}}">
+					</div>
+				</div>
+				{% endif %}
+				<div class="datos-gnles medio_de_pago">
+					<label for="medio_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Medio de Pago</label>
+					<div id="medio_de_pago">
+						{{form.medio_de_pago}}
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones">
+				{% if cotizacion.cliente == None %}
+				<div class="datos-paob cliente">
+					<label for="cliente"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Cliente</label>
+					<div id="cliente" class="client-selec">
+						<select name="clientes_cotiz" id="cliente">
+							<option value="0">----------</option>
+						{% for clientes in clientes_cotiz %}
+							<option value="{{clientes.nombre_legal}}">{{clientes.nombre_legal}}</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
+				{% endif %}
+				{% if cotizacion.cliente != None %}
+				<div class="datos-paob cliente">
+					<label for="cliente"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Cliente</label>
+					<div id="cliente" class="client-selec">
+						<input type="text" name="clientes_cotiz" value="{{cotizacion.cliente}}">
+					</div>
+				</div>
+				{% endif %}
+				<div class="datos-paob anticipo">
+					<label for="anticipo">Anticipo</label>
+					<div id="anticipo">
+						{{form.anticipo}}
+					</div>
+				</div>
+				{% if cotizacion.total_documento == None %}
+				<div class="datos-paob descripcion_detallada">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div class="descripcion_detallada" id="descripcion_detallada">
+						<a class="descripcion-dropdown">Agregar</a>
+					</div>
+				</div>
+				<div class="datos-paob observacion">
+					<label for="observacion">Nota</label>
+					<div id="observacion">
+						{{form.observacion}}
+					</div>
+				</div>
+				{% endif %}	
+			</div>
+			<div class="referencias-documento">
+				<div class="datos-paob referencia_orden_compra">
+					<label for="cliente">Referencia Orden de Compra</label>
+					<div id="cliente" class="client-selec">
+						{{form.referencia_orden_compra}}
+					</div>
+				</div>
+				<div class="datos-paob referencia_otro_documento">
+					<label for="anticipo">Referencia Otro Documento</label>
+					<div id="anticipo">
+						{{form.referencia_otro_documento}}
+					</div>
+				</div>
+			</div>
+			<div class="items-totales">
+				{% if cotizacion.total_documento == None %}
+				<div class="linea-ingitem">
+					<table>
+						<tr>
+							<th style="text-align: center;"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Item</th>
+							{% if cotizacion.descripcion_1 != None %}
+							<th style="text-align: center;">Descripcion</th>
+							<th style="text-align: center;">UM</th>
+							<th style="text-align: center;"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Cant.</th>
+							<th style="text-align: center;">Precio Unidad</th>
+							<th style="text-align: center;">% Dcto.</th>
+							{% endif %}
+						</tr>
+						{% if cotizacion.descripcion_1 == None %}
+						<tr class="lineauno">
+							<td class="ingresar-producto-servicio">
+								<select name="items_1">
+									<option value="0">----------</option>
+								{% for item in items_cotiz %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+						{% endif %}
+						{% if cotizacion.descripcion_1 != None %}
+						<tr>
+							<td class="producto-servicio">
+								<input type="text" name="items_1" value="{{cotizacion.item_1}}" style="width: 50px;">
+							</td>
+							<td class="descrip-ing">{{form.descripcion_1}}</td>
+							<td class="medida">{{form.UM_1}}</td>
+							<td align="right" class="cantidad-ing">{{form.cantidad_1}}</td>
+							<td align="right" class="valor-ing">{{form.valor_unitario_1}}</td>
+							<td align="right" class="descuento-porciento-ing">{{form.porcentaje_descuento_1}}</td>
+						{% endif %}
+						</tr>
+						{% if cotizacion.descripcion_2 == None %}
+						<tr class="lineados">
+							<td class="ingresar-producto-servicio">
+								<select name="items_2">
+									<option value="0">----------</option>
+								{% for item in items_cotiz %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+						{% endif %}
+						{% if cotizacion.item_2 != None %}
+						{% if cotizacion.descripcion_2 != None %}
+						<tr>
+							<td class="producto-servicio">
+								<input type="text" name="items_2" value="{{cotizacion.item_2}}" style="width: 50px;">
+							</td>
+							<td class="descrip-ing">{{form.descripcion_2}}</td>
+							<td class="medida">{{form.UM_2}}</td>
+							<td align="right" class="cantidad-ing">{{form.cantidad_2}}</td>
+							<td align="right" class="valor-ing">{{form.valor_unitario_2}}</td>
+							<td align="right" class="descuento-porciento-ing">{{form.porcentaje_descuento_2}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+						{% if cotizacion.descripcion_3 == None %}
+						<tr class="lineatres">
+							<td class="ingresar-producto-servicio">
+								<select name="items_3">
+									<option value="0">----------</option>
+								{% for item in items_cotiz %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+						{% endif %}
+						{% if cotizacion.item_3 != None %}
+						{% if cotizacion.descripcion_3 != None %}
+						<tr>
+							<td class="producto-servicio">
+								<input type="text" name="items_3" value="{{cotizacion.item_3}}" style="width: 50px;">
+							</td>
+							<td class="descrip-ing">{{form.descripcion_3}}</td>
+							<td class="medida">{{form.UM_3}}</td>
+							<td align="right" class="cantidad-ing">{{form.cantidad_3}}</td>
+							<td align="right" class="valor-ing">{{form.valor_unitario_3}}</td>
+							<td align="right" class="descuento-porciento-ing">{{form.porcentaje_descuento_3}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+						{% if cotizacion.descripcion_4 == None %}
+						<tr class="lineacuatro">
+							<td class="ingresar-producto-servicio">
+								<select name="items_4">
+									<option value="0">----------</option>
+								{% for item in items_cotiz %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+						{% endif %}
+						{% if cotizacion.item_4 != None %}
+						{% if cotizacion.descripcion_4 != None %}
+						<tr>
+							<td class="producto-servicio">
+								<input type="text" name="items_4" value="{{cotizacion.item_4}}" style="width: 50px;">
+							</td>
+							<td class="descrip-ing">{{form.descripcion_4}}</td>
+							<td align="right" class="medida">{{form.UM_4}}</td>
+							<td align="right" class="cantidad-ing">{{form.cantidad_4}}</td>
+							<td align="right" class="valor-ing">{{form.valor_unitario_4}}</td>
+							<td align="right" class="descuento-porciento-ing">{{form.porcentaje_descuento_4}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+						{% if cotizacion.descripcion_5 == None %}
+						<tr class="lineacinco">
+							<td class="ingresar-producto-servicio">
+								<select name="items_5">
+									<option value="0">----------</option>
+								{% for item in items_cotiz %}
+									<option value="{{item.codigo}}">{{item.codigo}} | {{item.descripcion}}</option>
+								{% endfor %}
+								</select>
+							</td>
+						{% endif %}
+						{% if cotizacion.item_5 != None %}
+						<tr>
+						{% if cotizacion.descripcion_5 != None %}
+							<td class="producto-servicio">
+								<input type="text" name="items_5" value="{{cotizacion.item_5}}" style="width: 50px;">
+							</td>
+							<td class="descrip-ing">{{form.descripcion_5}}</td>
+							<td class="medida">{{form.UM_5}}</td>
+							<td align="right" class="cantidad-ing">{{form.cantidad_5}}</td>
+							<td align="right" class="valor-ing">{{form.valor_unitario_5}}</td>
+							<td align="right" class="descuento-porciento-ing">{{form.porcentaje_descuento_5}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				{% endif %}
+				{% if cotizacion.descripcion_1 == None %}
+				<div class="row botones-lineas">
+					<div class="boton-pone">
+						<button class="pone agregar-lineados" type="button"><span class="glyphicon glyphicon-plus-sign"></button>
+						<button class="pone agregar-lineatres" type="button"><span class="glyphicon glyphicon-plus-sign"></button>
+						<button class="pone agregar-lineacuatro" type="button"><span class="glyphicon glyphicon-plus-sign"></button>
+						<button class="pone agregar-lineacinco" type="button"><span class="glyphicon glyphicon-plus-sign"></button>
+					</div>
+					<div class="boton-quita">
+						<button class="quita quitar-lineados" type="button"><span class="glyphicon glyphicon-remove-sign"></span></button>
+						<button class="quita quitar-lineatres" type="button"><span class="glyphicon glyphicon-remove-sign"></span></button>
+						<button class="quita quitar-lineacuatro" type="button"><span class="glyphicon glyphicon-remove-sign"></span></button>
+						<button class="quita quitar-lineacinco" type="button"><span class="glyphicon glyphicon-remove-sign"></span></button>
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			<div class="items-totales row">
+				<div class="linea-documento">
+					<table>
+						<tr>
+							{% if cotizacion.total_documento %}
+							<th style="text-align: center;"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Item</th>
+							<th style="text-align: center;">Descripcion</th>
+							<th style="text-align: center;">UM</th>
+							<th style="text-align: center;"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Cant.</th>
+							<th style="text-align: center;">Precio Unidad</th>
+							<th style="text-align: center;">% Dcto.</th>
+							<th style="text-align: center;">Valor Dcto.</th>
+							{% if cotizacion.iva_total %}
+							<th style="text-align: center;">IVA</th>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<th style="text-align: center;">ICO</th>
+							{% endif %}
+							<th style="text-align: center;">Valor Total</th>
+							{% endif %}
+						</tr>
+						{% if cotizacion.total_documento %}
+						<tr>
+							<td class="producto-servicio">
+								<input type="text" name="items_1" value="{{cotizacion.item_1}}">
+							</td>
+							<td class="descrip">{{form.descripcion_1}}</td>
+							<td class="medida">{{form.UM_1}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_1}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_1}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_1}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_1}}</td>
+							{% if cotizacion.iva_total %}
+							<td align="right" class="impuesto">{{form.iva_1}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td align="right" class="impuesto">{{form.ico_1}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_1}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_2 != None %}
+						<tr>
+						{% if cotizacion.total_documento %}
+							<td class="producto-servicio">
+								<input type="text" name="items_2" value="{{cotizacion.item_2}}">
+							</td>
+							<td class="descrip">{{form.descripcion_2}}</td>
+							<td class="medida">{{form.UM_2}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_2}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_2}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_2}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_2}}</td>
+							{% if cotizacion.iva_total %}
+							<td align="right" class="impuesto">{{form.iva_2}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td align="right" class="impuesto">{{form.ico_2}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_2}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_3 != None %}
+						<tr>
+						{% if cotizacion.total_documento %}
+							<td class="producto-servicio">
+								<input type="text" name="items_3" value="{{cotizacion.item_3}}">
+							</td>
+							<td class="descrip">{{form.descripcion_3}}</td>
+							<td class="medida">{{form.UM_3}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_3}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_3}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_3}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_3}}</td>
+							{% if cotizacion.iva_total %}
+							<td align="right" class="impuesto">{{form.iva_3}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td align="right" class="impuesto">{{form.ico_3}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_3}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_4 != None %}
+						<tr>
+						{% if cotizacion.total_documento %}
+							<td class="producto-servicio">
+								<input type="text" name="items_4" value="{{cotizacion.item_4}}">
+							</td>
+							<td class="descrip">{{form.descripcion_4}}</td>
+							<td align="right" class="medida">{{form.UM_4}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_4}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_4}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_4}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_4}}</td>
+							{% if cotizacion.iva_total %}
+							<td align="right" class="impuesto">{{form.iva_4}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td align="right" class="impuesto">{{form.ico_4}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_4}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+						{% if cotizacion.item_5 != None %}
+						<tr>
+						{% if cotizacion.total_documento %}
+							<td class="producto-servicio">
+								<input type="text" name="items_5" value="{{cotizacion.item_5}}">
+							</td>
+							<td class="descrip">{{form.descripcion_5}}</td>
+							<td class="medida">{{form.UM_5}}</td>
+							<td align="right" class="cantidad">{{form.cantidad_5}}</td>
+							<td align="right" class="valor">{{form.valor_unitario_5}}</td>
+							<td align="right" class="descuento-porciento">{{form.porcentaje_descuento_5}}</td>
+							<td align="right" class="descuento-valor">{{form.valor_descuento_5}}</td>
+							{% if cotizacion.iva_total %}
+							<td align="right" class="impuesto">{{form.iva_5}}</td>
+							{% endif %}
+							{% if cotizacion.ico_total %}
+							<td align="right" class="impuesto">{{form.ico_5}}</td>
+							{% endif %}
+							<td align="right" class="valor-total">{{form.valor_total_5}}</td>
+						{% endif %}
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				{% if cotizacion.total_documento %}
+				<div class="total-documento">
+					<table>
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{form.sub_total}}</td>
+						</tr>
+						{% if cotizacion.iva_total %}
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{form.iva_total}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{form.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{form.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{form.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if cotizacion.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{form.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="text-align: right;">Total: </th>
+							<td align="right" class="totales">{{form.total_documento}}</td>
+						</tr>
+						{% if cotizacion.anticipo %}
+						<tr>
+							<th style="text-align: right; padding-top: 10px;">Saldo Pendiente: </th>
+							<td style="padding-top: 10px;" align="right" class="totales">{{form.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				{% endif %}
+			</div>
+			{% if cotizacion.total_documento == None %}
+			<button type="submit" class="siguiente siguiente_documento save">Siguiente</button>
+			{% endif %}
+			{% if cotizacion.total_documento %}
+			<a href="{% url 'atras_cotizacion' pk=cotizacion.pk %}" class="siguiente atras_documento">Atras</a>
+			<a href="{% url 'nueva_cotizacion_fin' pk=cotizacion.pk %}" class="terminar terminar_documento save">Terminar</a>
+			{% endif %}
+		</div>
+		<div class="descripcion-form descripcion-pos">      
+			{{form.descripcion_detallada}}
+			<a class="descrip-btn-listo">Listo</a>
+		</div>
+	</form>
+{% endblock %}  

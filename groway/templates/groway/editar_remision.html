@@ -1,0 +1,54 @@
+{% extends 'groway/remisiones.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>Cambios para {{remision.consecutivo_interno}}</h2>
+	</div>
+	<form method="POST" class="post-form">{% csrf_token %}
+		<div class="form-content-nuevo-remision">
+			<div class="datos-transportador-id-vehiculo">
+				<div class="referencias_remision">
+					{% if remision.referencia_orden_compra == 'No Registrado' or remision.referencia_orden_compra == None %}
+					<div class="datos-idcontac orden_compra">
+						<label for="orden_compra">Referencia Orden de Compra</label>
+						<div class="datos_transportador" id="orden_compra">      
+							<input type="text" name="orden_compra" placeholder="Número">
+						</div>
+					</div>
+					{% endif %}
+					{% if remision.referencia_orden_compra != 'No Registrado' %}
+					<div class="datos-idcontac orden_compra">
+						<label for="orden_compra">Referencia Orden de Compra</label>
+						<div class="datos_transportador" id="orden_compra">      
+							<input type="text" name="orden_compra" placeholder="Número" value="{{remision.referencia_orden_compra}}">
+						</div>
+					</div>
+					{% endif %}
+					{% if remision.referencia_otro_documento == 'No Registrado' or remision.referencia_otro_documento == None %}
+					<div class="datos-idcontac otro_documento">
+						<label for="otro_documento">Referencia Otro Documento</label>
+						<div class="datos_transportador" id="otro_documento">      
+							<input name="otro_documento" placeholder="Documento: Número">
+						</div>
+					</div>
+					{% endif %}
+					{% if remision.referencia_otro_documento != 'No Registrado' %}
+					<div class="datos-idcontac otro_documento">
+						<label for="otro_documento">Referencia Otro Documento</label>
+						<div class="datos_transportador" id="otro_documento">      
+							<input name="otro_documento" placeholder="Documento: Número" value="{{remision.referencia_otro_documento}}">
+						</div>
+					</div>
+					{% endif %}
+				</div>
+				<div class="datos-paob descripcion_transport">
+					<label for="datos_transportador">Datos del Transportador</label>
+					<div class="datos_transportador" id="datos_transportador">      
+						<textarea name="transport_data" rows="10" cols="40"></textarea>
+					</div>
+				</div>
+			</div>
+			<button type="submit" class="terminar terminar-edicion save">Terminar</button>
+		</div>
+	</form>
+{% endblock %}  

@@ -1,0 +1,196 @@
+{% extends 'groway/organizacion.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		{% if organizacion.administrador == None %}
+		<h2>Nueva Organización</h2>
+		{% endif %}
+		{% if organizacion.administrador %}
+		<h2>Cambios para {{organizacion.nombre_legal}}</h2>
+		{% endif %}
+	</div>
+	<form method="POST" class="post-form" enctype="multipart/form-data">{% csrf_token %}
+		<div class="form-content-nuevo-contacto">
+			<div class="datos-generales-contacto">
+				<div class="datos-gnlescontac naturaleza">
+					<label for="naturaleza"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Naturaleza</label>
+					<div id="naturaleza">
+						{{form.naturaleza}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac">
+					<label for="activad_economica"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Actividad Económica</label>
+					<div id="activad_economica">
+						<div class="activad_economica" style="display: inline;">{{form.activad_economica}}</div><div class="codigo_actividad_economica" style="display: inline;">{{form.codigo_actividad_economica}}</div>
+					</div>
+				</div>
+				<div class="datos-gnlescontac regimen_tributario">
+					<label for="regimen_tributario"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Régimen Tributario</label>
+					<div id="regimen_tributario">
+						{{form.regimen_tributario}}
+					</div>
+				</div>
+			</div>
+			<div class="datos-identificacion-contacto">
+				<div class="datos-idcontac nombre_legal">
+					<label for="nombre_legal"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Nombre Legal</label>
+					<div id="nombre_legal">
+						{{form.nombre_legal}}
+					</div>
+				</div>
+				<div class="datos-idcontac nombre_visible_cia">
+					<label for="nombre_visible_cia"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Nombre Visible Cia.</label>
+					<div id="nombre_visible_cia">
+						{{form.nombre_visible_cia}}
+					</div>
+				</div>
+				<div class="datos-idcontac identificacion">
+					<label for="identificacion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span>Tipo de Identificación</label>
+					<div id="identificacion">
+						{{form.identificacion}}
+					</div>
+				</div>
+				<div class="datos-idcontac numero_identificacion" style="margin-top: 5px;">
+					<label for="numero_identificacion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Número de Identificación</label>
+					<div id="numero_identificacion" class="numero_identificacion">
+						{{form.numero_identificacion}}<div class="numero_id_adicional" style="float: right;">{{form.numero_id_adicional}}</div>
+					</div>
+				</div>
+				<div class="datos-idcontac descripcion">
+					<label for="descripcion">Descripción Detallada</label>
+					<div id="descripcion">
+						<a class="descripcion-dropdown">Agregar</a>
+					</div>
+				</div>
+				<div class="datos-idcontac logo_organizacion">
+					<label for="logo_organizacion">Logo Organización (300 X 60)</label>
+					<div id="logo_organizacion">
+						{{form.logo_organizacion}}
+					</div>
+				</div>
+				<div class="datos-gnlescontac moneda_base" style="margin-top: 5px;">
+					<label for="moneda_base"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Moneda Base</label>
+					<div id="moneda_base">
+						{{form.moneda_base}}
+					</div>
+				</div>
+			</div>
+			<div class="informacion-contacto">
+				<div class="info-contac direccion">
+					<label for="direccion"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Dirección</label>
+					<div id="direccion">
+						{{form.direccion}}
+						{{form.ciudad}}
+						{{form.departamento}}
+						{{form.pais}}
+					</div>
+				</div>
+			</div>
+			<div class="codigo-telefono-email">
+				<div class="cod-tel cod_postal">
+					<label for="cod_postal">Código Postal</label>
+					<div id="cod_postal">
+						{{form.cod_postal}}
+					</div>
+				</div>
+				<div class="cod-tel telefono">
+					<label for="telefono"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Teléfono</label>
+					<div id="telefono">
+						{{form.telefono}}
+					</div>
+				</div>
+				<div class="cod-tel email">
+					<label for="email">E-mail</label>
+					<div id="email">
+						{{form.email}}
+					</div>
+				</div>
+				<div class="cod-tel website">
+					<label for="website">Website</label>
+					<div id="website">
+						{{form.website}}
+					</div>
+				</div>
+				<div class="per-contac perona-contacto">
+					<label for="perona-contacto">Persona Contacto (Admon)</label>
+					<div id="perona-contacto">
+						{{form.persona_contacto}}
+					</div>
+				</div>
+				<div class="per-contac telefono_dos">
+					<label for="telefono_dos">Teléfono Contacto</label>
+					<div id="telefono_dos">
+						{{form.telefono_dos}}
+					</div>
+				</div>
+			</div>
+			<div class="info-bancaria">
+				<div class="info-bank numero_cuenta">
+					<label for="persona_contacto_adicional">Número de Cuenta</label>
+					<div id="persona_contacto_adicional">
+						{{form.numero_cuenta}}
+					</div>
+				</div>
+				<div class="info-bank tipo_cuenta">
+					<label for="persona_contacto_adicional">Tipo de Cuenta</label>
+					<div id="persona_contacto_adicional">
+						{{form.tipo_cuenta}}
+					</div>
+				</div>
+				<div class="info-bank entidad_financiera">
+					<label for="persona_contacto_adicional">Entidad Financiera</label>
+					<div id="persona_contacto_adicional">
+						{{form.entidad_financiera}}
+					</div>
+				</div>
+			</div>
+			<div class="responsabilidades-fiscales-org">
+				<h4><strong>Responsabilidades Fiscales</strong></h4>
+				<div class="resp-fiscales gran_contribuyente">
+					{{form.gran_contribuyente}}
+					<label for="gran_contribuyente">Gran Contribuyente</label>
+				</div>
+				<div class="resp-fiscales declarante_impuesto_renta">
+					{{form.declarante_impuesto_renta}}
+					<label for="declarante_impuesto_renta">Declarante del Impuesto de Renta</label>
+				</div>
+				<div class="resp-fiscales compras_consumidor_final">
+					{{form.compras_consumidor_final}}
+					<label for="compras_consumidor_final">En Compras es comsumidor final / Liquidar Impuesto Nacional al Consumo</label>
+				</div>
+				<div class="resp-fiscales compras_practicar_reteiva">
+					{{form.compras_practicar_reteiva}}
+					<label for="compras_practicar_reteiva">En Compras Practicar Retención en la Fuente por IVA a Proveedores de Régimen Común</label>
+				</div>
+				<div class="resp-fiscales compras_practicar_reterenta">
+					{{form.compras_practicar_reterenta}}
+					<label for="compras_practicar_reterenta">En Compras Practicar Retención en la Fuente por Renta</label>
+				</div>
+				<div class="resp-fiscales compras_practicar_reteica">
+					{{form.compras_practicar_reteica}}
+					<label for="compras_practicar_reteica">En Compras Practicar Retención en la Fuente por ICA</label>
+				</div>
+				<div class="resp-fiscales ventas_liquidar_autoretencion_renta">
+					{{form.ventas_liquidar_autoretencion_renta}}
+					<label for="ventas_liquidar_autoretencion_renta">En Ventas o Ingresos liquidar Autorretención Especial por Renta</label>
+					{{form.tarifa_autoreterenta}}
+				</div>
+				<div class="resp-fiscales ventas_liquidar_reterenta">
+					{{form.ventas_liquidar_reterenta}}
+					<label for="ventas_liquidar_reterenta">En Ventas liquidar Retención en la Fuente por Renta</label>
+					{{form.base_reterenta}}{{form.tarifa_reterenta}}
+				</div>
+				<div class="resp-fiscales ventas_liquidar_reteica">
+					{{form.ventas_liquidar_reteica}}
+					<label for="ventas_liquidar_reteica">En Ventas liquidar Retencion en la Fuente por ICA</label>
+					{{form.tarifa_reteica}}
+				</div>
+			</div>
+			<button type="submit" class="terminar guardar-contacto save">Terminar</button>
+		</div>
+		<div class="descripcion-form descripcion-pos">      
+			{{form.descripcion}}
+			<a class="descrip-btn-listo">Listo</a>
+		</div>
+	</form>
+{% endblock %}

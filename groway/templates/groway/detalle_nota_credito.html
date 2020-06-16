@@ -1,0 +1,373 @@
+{% extends 'groway/notas_credito.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>NOTA CRÉDITO {{creditnote.consecutivo_interno}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto-documento row">
+			<a class="acciones accion-pdf" href="{% url 'pdf_nota_credito' pk=creditnote.pk %}" target="_blank">Generar PDF</a>
+		</div>
+		<div class="form-content-detalle-cotizacion">
+			<div class="datos-generales-detalle">
+				<div class="generales" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle consecutivo">
+						<label for="consecutivo">Consecutivo</label>
+						<div id="consecutivo">
+							{{creditnote.consecutivo_interno}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha">
+						<label for="fecha">Fecha</label>
+						<div id="fecha">
+							{{creditnote.fecha_emision|date:"d F Y"}} {{creditnote.fecha_emision|date:"f a"}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_factura">
+						<label for="referencia_factura">Referencia Factura</label>
+						<div id="referencia_factura">
+							<a class="enlace-documentos" href="{% url 'detalle_factura_venta' pk=factura_generadora.pk %}">{{creditnote.referencia_factura}}</a>
+						</div>
+					</div>
+					{% if creditnote.referencia_factura_DIAN != 'No Registrado' %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Factura DIAN</label>
+						<div id="referencia_remision">
+							{{creditnote.referencia_factura_DIAN}}
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle fecha_emision_factura">
+						<label for="fecha_emision_factura">Fecha de la Factura</label>
+						<div id="fecha_emision_factura">
+							{{creditnote.fecha_emision_factura|date:"d F Y"}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-generales-detalle">
+				<div class="concepto-item_afec">
+					<div class="datos-gnles-detalle concepto_nota_credito" style="margin-right: 10px; margin-left: 10px;">
+						<label for="concepto_nota_credito">Concepto de Nota Crédito</label>
+						<div id="concepto_nota_credito">
+							{{creditnote.concepto_nota_credito}}
+						</div>
+					</div>
+					{% if creditnote.item_1_afec or creditnote.item_2_afec or creditnote.item_3_afec or creditnote.item_4_afec or creditnote.item_5_afec %}
+					<div class="datos-gnles-detalle item_afec" style="margin-right: 10px; margin-left: 10px;">
+						<label for="item_afec">Ítems afectados</label>
+						<div id="item_afec">
+							{% if creditnote.item_1_afec %}{{creditnote.item_1_afec}}{% endif %}
+							{% if creditnote.item_2_afec %}{{creditnote.item_2_afec}}{% endif %}
+							{% if creditnote.item_3_afec %}{{creditnote.item_3_afec}}{% endif %}
+							{% if creditnote.item_4_afec %}{{creditnote.item_4_afec}}{% endif %}
+							{% if creditnote.item_5_afec %}{{creditnote.item_5_afec}}{% endif %}
+						</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="datos-generales-detalle">
+				<div class="terminos_medios_pagos" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle terminos_de_pago">
+						<label for="terminos_de_pago">Terminos de Pago</label>
+						<div id="terminos_de_pago">
+							{{creditnote.terminos_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle medio_de_pago">
+						<label for="medio_de_pago">Medio de Pago</label>
+						<div id="medio_de_pago">
+							{{creditnote.medio_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle moneda">
+						<label for="moneda">Moneda</label>
+						<div id="moneda">
+							{{creditnote.moneda}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="referencias-documentos">
+				<div class="referencias" style="margin-right: 10px; margin-left: 10px;">
+					{% if creditnote.referencia_cotizacion != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_cotizacion">
+						<label for="referencia_cotizacion">Referencia Cotización</label>
+						<div id="referencia_cotizacion">
+							<a class="enlace-documentos" href="{% url 'detalle_cotizacion' pk=cotizacion_generadora.pk %}">{{creditnote.referencia_cotizacion}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if creditnote.referencia_remision != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Remisión</label>
+						<div id="referencia_remision">
+							<a class="enlace-documentos" href="{% url 'detalle_remision' pk=remisionesgeneradas.pk %}">{{creditnote.referencia_remision}}</a>
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle referencia_orden_compra">
+						<label for="referencia_orden_compra">Referencia Orden de Compra</label>
+						<div id="referencia_orden_compra">
+							{{creditnote.referencia_orden_compra}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_otro_documento">
+						<label for="referencia_otro_documento">Referencia a Documento (Otro)</label>
+						<div id="referencia_otro_documento">
+							{{creditnote.referencia_otro_documento}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones-detalle">
+				<div class="datos-cliente" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Cliente</label>
+						<div id="cliente">
+							{{creditnote.cliente}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{creditnote.id_cliente}} {{creditnote.numero_id_cliente}} -{% if creditnote.numero_id_cli_adicional %} {{creditnote.numero_id_cli_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{creditnote.telefono_cliente}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{creditnote.dir_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{creditnote.ciudad_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{creditnote.departamento_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{creditnote.pais_cliente}}
+						</div>
+					</div>
+				</div>
+				<div class="datos-organizacion" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Proveedor</label>
+						<div id="cliente">
+							{{creditnote.org_creadora}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{creditnote.id_organizacion}} {{creditnote.numero_id_organizacion}} -{% if creditnote.numero_id_org_adicional %} {{creditnote.numero_id_org_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{creditnote.telefono_organizacion}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{creditnote.dir_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{creditnote.ciudad_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{creditnote.departamento_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{creditnote.pais_organizacion}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if creditnote.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-observaciones">
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div style="text-align: justify;" class="descripcion-content" id="descripcion_detallada">      
+						{{creditnote.descripcion_detallada|linebreaksbr}}
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div class="items-totales-detalle">
+				<div class="row">
+					<table class="linea-documento">
+						<tr>
+							<th class="titulo-tabla" style="text-align: center;">Item</th>
+							<th class="titulo-tabla" style="text-align: center;">Descripción</th>
+							<th class="titulo-tabla" style="text-align: center;">UM</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">Cant.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Precio Unidad</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">% Dcto.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Valor Dcto.</th>
+							{% if creditnote.iva_total %}
+							<th class="titulo-tabla" style="text-align: center;">IVA</th>
+							{% endif %}
+							{% if creditnote.ico_total %}
+							<th class="titulo-tabla" style="text-align: center;">ICO</th>
+							{% endif %}
+							<th class="titulo-tabla" style="text-align: center;">Valor Total</th>
+						</tr>
+						<tr>
+							<td class="valor-tabla">{{creditnote.item_1}}</td>
+							<td class="valor-tabla descrip_item">{{creditnote.descripcion_1}}</td>
+							<td class="valor-tabla">{{creditnote.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.cantidad_1}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_unitario_1}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.porcentaje_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_descuento_1}}</td>
+							{% if creditnote.iva_total %}
+							<td class="valor-tabla" align="right">{{creditnote.iva_1}}</td>
+							{% endif %}
+							{% if creditnote.ico_total %}
+							<td class="valor-tabla" align="right">{{creditnote.ico_1}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{creditnote.valor_total_1}}</td>
+						</tr>
+						{% if creditnote.item_2 != None %}
+						<tr>
+							<td class="valor-tabla">{{creditnote.item_2}}</td>
+							<td class="valor-tabla descrip_item">{{creditnote.descripcion_2}}</td>
+							<td class="valor-tabla">{{creditnote.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.cantidad_2}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_unitario_2}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.porcentaje_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_descuento_2}}</td>
+							{% if creditnote.iva_total %}
+							<td class="valor-tabla" align="right">{{creditnote.iva_2}}</td>
+							{% endif %}
+							{% if creditnote.ico_total %}
+							<td class="valor-tabla" align="right">{{creditnote.ico_2}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{creditnote.valor_total_2}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.item_3 != None %}
+						<tr>
+							<td class="valor-tabla">{{creditnote.item_3}}</td>
+							<td class="valor-tabla descrip_item">{{creditnote.descripcion_3}}</td>
+							<td class="valor-tabla">{{creditnote.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.cantidad_3}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_unitario_3}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.porcentaje_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_descuento_3}}</td>
+							{% if creditnote.iva_total %}
+							<td class="valor-tabla" align="right">{{creditnote.iva_3}}</td>
+							{% endif %}
+							{% if creditnote.ico_total %}
+							<td class="valor-tabla" align="right">{{creditnote.ico_3}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{creditnote.valor_total_3}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.item_4 != None %}
+						<tr>
+							<td class="valor-tabla">{{creditnote.item_4}}</td>
+							<td class="valor-tabla descrip_item">{{creditnote.descripcion_4}}</td>
+							<td class="valor-tabla">{{creditnote.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.cantidad_4}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_unitario_4}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.porcentaje_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_descuento_4}}</td>
+							{% if creditnote.iva_total %}
+							<td class="valor-tabla" align="right">{{creditnote.iva_4}}</td>
+							{% endif %}
+							{% if creditnote.ico_total %}
+							<td class="valor-tabla" align="right">{{creditnote.ico_4}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{creditnote.valor_total_4}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.item_5 != None %}
+						<tr>
+							<td class="valor-tabla">{{creditnote.item_5}}</td>
+							<td class="valor-tabla descrip_item">{{creditnote.descripcion_5}}</td>
+							<td class="valor-tabla">{{creditnote.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.cantidad_5}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_unitario_5}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.porcentaje_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{creditnote.valor_descuento_5}}</td>
+							{% if creditnote.iva_total %}
+							<td class="valor-tabla" align="right">{{creditnote.iva_5}}</td>
+							{% endif %}
+							{% if creditnote.ico_total %}
+							<td class="valor-tabla" align="right">{{creditnote.ico_5}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{creditnote.valor_total_5}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				<div class="row">
+					<table class="total-documento">
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{creditnote.sub_total}}</td>
+						</tr>
+						{% if creditnote.iva_total %}
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{creditnote.iva_total}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{creditnote.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{creditnote.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{creditnote.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{creditnote.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="padding-bottom: 5px; text-align: right;">Total: </th>
+							<td style="padding-bottom: 5px;" align="right" class="totales">{{creditnote.total_documento}}</td>
+						</tr>
+						{% if creditnote.anticipo %}
+						<tr>
+							<th style="padding-top: 5px; border-top: solid white 2px; text-align: right;">Anticipo: </th>
+							<td style="padding-top: 5px; border-top: solid white 2px;" align="right" class="totales">{{creditnote.anticipo}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Pendiente: </th>
+							<td align="right" class="totales">{{creditnote.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+						{% if creditnote.descuento_rebaja %}
+						<tr>
+							<th>Rebaja / Descuento: </th>
+							<td align="right" class="totales">{{creditnote.descuento_rebaja}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Total: </th>
+							<td align="right" class="totales">{{creditnote.saldo_total}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			{% if creditnote.observacion != "No Registrado" %}
+			<div class="datos-paob-detalle observacion" style="margin-right: 10px; margin-left: 10px;">
+				<strong>Nota:</strong> {{creditnote.observacion}}
+			</div>	
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}  

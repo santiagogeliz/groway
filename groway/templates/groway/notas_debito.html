@@ -1,0 +1,358 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Candal|Sawarabi+Gothic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Anton|Muli:300,400" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static 'css/groway.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+      $(function() {
+        $( ".datepicker" ).datepicker({
+          changeMonth: true,
+          changeYear: true,
+          yearRange: "1900:2012",
+        });
+      });
+    </script>
+  	<script type="text/javascript">
+  		$(function() {
+  			var body = $("body")
+  			var user = $(".user");
+  			var tool = $(".tool");
+  			var subtool = $(".subtool");
+  			var subuser = $(".subuser");
+  			var drop1 = $(".drop1");
+  			var down1 = $(".down1");
+  			var drop2 = $(".drop2");
+  			var down2 = $(".down2");
+  			var drop3 = $(".drop3");
+  			var down3 = $(".down3");
+  			var page_header = $("header");
+  			var content = $(".content");
+        var detalle = $(".detalle");
+        var lista_objetos = $(".lista-objetos");
+        var volver = $(".volver_consectermin");
+        var volver_dropdown = $(".dropdown-volver-consectermin");
+        var link_volver = $(".volver-link");
+        var mensaje_edicion = $(".mensaje-confirmacion-edicion-documento");
+        var mensaje_generacion = $(".mensaje-confirmacion-generar-documento");
+        var accion_editar = $(".accion-editar");
+        var accion_remision = $(".accion-remision");
+        var respuesta_no = $(".respuesta-no");
+  			var descripcion = $(".descripcion-dropdown");
+  			var descripcion_form = $(".descripcion-form");
+  			var descripcion_listo = $(".descrip-btn-listo");
+  			var nota = $(".nota-dropdown");
+  			var nota_form = $(".nota-form");
+  			var nota_listo = $(".nota-btn-listo");
+  			var nueva_lineados = $(".agregar-lineados")
+  			var nueva_lineatres = $(".agregar-lineatres")
+  			var nueva_lineacuatro = $(".agregar-lineacuatro")
+  			var nueva_lineacinco = $(".agregar-lineacinco")
+  			var quitar_lineados = $(".quitar-lineados")
+  			var quitar_lineatres = $(".quitar-lineatres")
+  			var quitar_lineacuatro = $(".quitar-lineacuatro")
+  			var quitar_lineacinco = $(".quitar-lineacinco")
+  			var lineados = $(".lineados")
+  			var lineatres = $(".lineatres")
+  			var lineacuatro = $(".lineacuatro")
+  			var lineacinco = $(".lineacinco")
+  			tool.click(function() {
+  				tool.removeClass("active");
+  				user.removeClass("active");
+  				down1.removeClass("solid");
+  				down2.removeClass("solid");
+  				down3.removeClass("solid");
+  				$(this).addClass("active");
+  			});
+  			user.click(function() {
+  				user.removeClass("active");
+  				tool.removeClass("active");
+  				down1.removeClass("solid");
+  				down2.removeClass("solid");
+  				down3.removeClass("solid");
+  				$(this).addClass("active");
+  			});
+
+  			subtool.click(function() {
+  				down1.removeClass("solid");
+  				down2.removeClass("solid");
+  				down3.removeClass("solid");
+  				$(this).addClass("active");
+  			});
+  			content.click(function() {
+  				user.removeClass("active");
+  				tool.removeClass("active");
+  				down1.removeClass("solid");
+  				down2.removeClass("solid");
+  				down3.removeClass("solid");
+  				drop1.addClass("active");
+  			});
+  			subuser.click(function() {
+  				user.removeClass("active");
+  			});
+  			drop1.click(function() {
+  				down1.addClass("solid");
+  			});
+  			drop2.click(function() {
+  				down2.addClass("solid");
+  			});
+  			drop3.click(function() {
+  				down3.addClass("solid");
+  			});
+  			descripcion.click(function() {
+  				descripcion_form.addClass("agregar");
+  			});
+  			descripcion_listo.click(function() {
+  				descripcion_form.removeClass("agregar");
+  			});
+  			nota.click(function() {
+  				nota_form.addClass("agregar");
+  			});
+  			nota_listo.click(function() {
+  				nota_form.removeClass("agregar");
+  			});
+  			nueva_lineados.click(function() {
+  				lineados.addClass("agregada");
+  				nueva_lineados.addClass("sustitucion")
+  				quitar_lineados.addClass("sustitucion")
+  				nueva_lineatres.addClass("sustitucion")
+  			});
+  			nueva_lineatres.click(function() {
+  				lineatres.addClass("agregada");
+  				nueva_lineatres.removeClass("sustitucion")
+  				nueva_lineacuatro.addClass("sustitucion")
+  				quitar_lineados.removeClass("sustitucion")
+  				quitar_lineatres.addClass("sustitucion")
+  			});
+  			nueva_lineacuatro.click(function() {
+  				lineacuatro.addClass("agregada");
+  				nueva_lineacuatro.removeClass("sustitucion")
+  				nueva_lineacinco.addClass("sustitucion")
+  				quitar_lineatres.removeClass("sustitucion")
+  				quitar_lineacuatro.addClass("sustitucion")
+  			});
+  			nueva_lineacinco.click(function() {
+  				lineacinco.addClass("agregada");
+  				nueva_lineacinco.removeClass("sustitucion")
+  				quitar_lineacuatro.removeClass("sustitucion")
+  				quitar_lineacinco.addClass("sustitucion")
+  			});
+  			quitar_lineados.click(function() {
+  				lineados.removeClass("agregada");
+  				quitar_lineados.removeClass("sustitucion")
+  				nueva_lineados.removeClass("sustitucion")
+  				nueva_lineatres.removeClass("sustitucion")
+  			});
+  			quitar_lineatres.click(function() {
+  				lineatres.removeClass("agregada");
+  				nueva_lineatres.addClass("sustitucion")
+  				nueva_lineacuatro.removeClass("sustitucion")
+  				quitar_lineatres.removeClass("sustitucion")
+  				quitar_lineados.addClass("sustitucion")
+  			});
+  			quitar_lineacuatro.click(function() {
+  				lineacuatro.removeClass("agregada");
+  				nueva_lineacuatro.addClass("sustitucion")
+  				nueva_lineacinco.removeClass("sustitucion")
+  				quitar_lineacuatro.removeClass("sustitucion")
+  				quitar_lineatres.addClass("sustitucion")
+  			});
+  			quitar_lineacinco.click(function() {
+  				lineacinco.removeClass("agregada");
+  				nueva_lineacinco.addClass("sustitucion")
+  				quitar_lineacinco.removeClass("sustitucion")
+  				quitar_lineacuatro.addClass("sustitucion")
+  			});
+        volver.click(function() {
+          volver_dropdown.addClass("agregar");
+          volver.addClass("semicurvo");
+        });
+        link_volver.click(function () {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        detalle.click(function() {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        page_header.click(function() {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        lista_objetos.click(function() {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        accion_editar.click(function() {
+          mensaje_edicion.addClass("editar");
+        });
+        accion_remision.click(function() {
+          mensaje_generacion.addClass("editar");
+        });
+        respuesta_no.click(function() {
+          mensaje_edicion.removeClass("editar");
+          mensaje_generacion.removeClass("editar");
+        });
+  		});
+  	</script>
+  	
+  	<title>Groway - Software Contable, Facturación, Crecimiento</title>
+</head>
+<body>
+	<header class="block">
+		<nav class="growaynav navbar navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<div class="row">
+						<div class="colum brand">
+              <div class="logo-nombre-org">
+                {% if orgactivas.logo_organizacion %}
+                <div class="logo_org">
+                  <img src="{{orgactivas.logo_organizacion.url}}" alt="Groway" width="300" height="60">
+                </div>
+                {% endif %}
+                {% if orgactivas.logo_organizacion == "" %}
+                <h2 class="nombre-org">{{orgactivas.nombre_visible_cia}}</h2>
+                {% endif %}
+                {% if orgactivas == None %}
+                <h2 class="nombre-default">ORGANIZACIÓN</h2>
+                {% endif %}
+              </div>
+            </div>
+            <div class="colum mini-brand">
+              <a href="{% url 'dashboard' %}"><img src="{% static 'img/growayminilogo.png' %}"alt="Groway" width="70" height="40" class="minilogo_groway"></a>
+            </div>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="tools navbar-nav">
+            <a class="drop1 tool active">Documentos <span class="caret"></span></a>
+              <ul class="down1 subtools">
+                <a class="subtool" href="{% url 'cotizaciones' %}">Cotizaciones</a>
+                <a class="subtool" href="{% url 'remisiones' %}">Remisiones</a>
+                <a class="subtool" href="{% url 'facturas_venta' %}">Facturas de Venta</a>
+                <a class="subtool" href="{% url 'notas_credito' %}">Notas Crédito</a>
+                <a class="subtool" href="{% url 'notas_debito' %}">Notas Débito</a>
+                <a class="subtool" href="{% url 'facturas_compra' %}">Compras / Gastos</a>
+              </ul>
+            <a class="drop2 tool">Contactos <span class="caret"></span></a>
+              <ul class="down2 subtools">
+                <a class="subtool" href="{% url 'clientes' %}">Clientes</a>
+                <a class="subtool" href="{% url 'proveedores' %}">Proveedores</a>
+              </ul>
+            <a class="drop3 tool">Inventario <span class="caret"></span></a>
+              <ul class="down3 subtools">
+                <a class="subtool" href="{% url 'items' %}">Items de Venta</a>
+                <a class="subtool" href="{% url 'insumos' %}">Insumos</a>
+              </ul>
+            <a class="tool" href="{% url 'reportes_crecimiento' %}">Crecimiento <span class="glyphicon glyphicon-stats"></span></a>
+          </ul>
+					<ul class="user-tools navbar-nav navbar-right row">
+            <a class="user dropdown dropdown-toggle" data-toggle="dropdown" href="#">{{user.username}} <span class="glyphicon glyphicon-user"></span></a>
+              <ul class="dropdown-menu">
+                <a class="subuser" href="{% url 'organizacion' %}">Organización</a>
+                <a class="subuser" href="{% url 'logout' %}">Cerrar Sesión</a>
+              </ul>
+          </ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="content">
+		<div class="tool-actions">
+			<div class="lista">
+				<div class="lista-header">
+					<div class="titulo-controles">
+						<h3 class="titulo-controles">Gestión de Notas Débito</h3>
+					</div>
+					<div class="filtro-ordenador">
+						<div class="filtro-content container-fluid">
+							<div class="minitools">
+                <div class="consecterms">
+                  <a class="minitool-consecutivo-remision" href="{% url 'consecutivos' %}"><span class="glyphicon glyphicon-list-alt"></span> Consec</a>
+                </div>
+              </div>
+							<form method="POST" action="">{% csrf_token %}
+                <div class="finder">
+                  <input type="text" name="buscar" placeholder="Buscar">
+                  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+                <div class="order-by">
+                  <select name="ordenar">
+                    <option value="-consecutivo_interno">Ordenar por Consecutivo</option>
+                    <option value="-fecha_emision">Ordenar por Fecha</option>
+                    <option value="nombre_cliente">Ordenar por Cliente</option>
+                    <option value="total_documento">Ordenar por Valor Total</option>
+                  </select>
+                </div>
+              </form>
+						</div>
+					</div>
+				</div>
+				<div class="lista-objetos obj-list">
+					<div class="list-group">
+          {% if orgactivas == None %}
+            <div class="noobject-alert">
+              <h4><span class="glyphicon glyphicon-alert"></span><strong> No hay Organización activa</strong></h4>
+              <p>Para crear y ver los Documentos es necesario que haya una <strong>ORGANIZACIÓN ACTIVA.</strong><br>
+              Puedes crear y activar una Organización desde las opciones de usuario, haciendo click en tu <strong>Nombre de Usuario.</strong></p>
+            </div>
+          {% endif %}
+          {% if nohayconsecutivo == 0 %}
+            <div class="noobject-alert">
+              <h4><span class="glyphicon glyphicon-alert"></span><strong> Debes crear un Consecutivo</strong></h4>
+              <p>Antes de crear una nota débito necesitaremos crear consecutivos que se asignarán a cada documento.<br>Puedes crear y editar consecutivos haciendo click en <strong>CONSEC.</strong>
+            </div>
+          {% endif %}
+          {% if nohaynotas == 0 %}
+            <div class="noobject-alert">
+              <h4><span class="glyphicon glyphicon-alert"></span><strong> Crear un Documento Base</strong></h4>
+              <p>Las notas débito deben ser generadas a partir de un documento base como una <strong>Factura de Venta.</strong><br>Puedes crear y consultar estos documentos ingresando a la opción <strong>DOCUMENTOS.</strong>
+            </div>
+          {% endif %}
+          {% if request.method != "POST" %}
+          {% for debitnote in debitnotes %}
+            <a href="{% url 'detalle_nota_debito' pk=debitnote.pk %}" class="list-group-item">
+              <h4>{{debitnote.consecutivo_interno}}</h4>
+              <p><strong>{{debitnote.fecha_emision|date:"d F Y"}} {{debitnote.fecha_emision|date:"f a"}}</strong>
+              <p><strong>{{debitnote.cliente}}</strong></p>
+            </a>
+          {% endfor %}
+          {% endif %}
+          {% if request.method == "POST" %}
+          {% for debitnote in lista %}
+           <a href="{% url 'detalle_nota_debito' pk=debitnote.pk %}" class="list-group-item">
+              <h4>{{debitnote.consecutivo_interno}}</h4>
+              <p><strong>{{debitnote.fecha_emision|date:"d F Y"}} {{debitnote.fecha_emision|date:"f a"}}</strong>
+              <p><strong>{{debitnote.cliente}}</strong></p>
+            </a>
+          {% endfor %}
+          {% endif %}
+          </div>
+				</div>
+			</div>
+			<div class="detalle">
+			{% block content %}
+        <div class="mensaje-detalle">
+          <h2><span class="glyphicon glyphicon-alert"></span> Selecciona un Elemento</h2>
+          <p>Haz click sobre un elemento de la lista para visualizarlo en detalle <strong>AQUI.</strong></p>
+        </div>
+			{% endblock %}
+			</div>
+		</div>
+	</div>
+</body>

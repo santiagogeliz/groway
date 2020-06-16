@@ -1,0 +1,126 @@
+ {% extends 'groway/insumos.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{insumo.descripcion}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-item">
+			{% if insumo.imagen != 'No Registrado' %}
+			<div class="imagen-categoria">
+				<div class="img-cat imagen">
+					<label for="imagen">Imagen del Insumo</label>
+					<div id="imagen">
+						<img src="{{insumo.imagen.url}}" alt="Groway" width="300" height="200">
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div class="descripcion-item">
+				<div class="img-cat categoria">
+					<label for="categoria">Categoria de Insumo</label>
+					<div id="categoria">
+						{{insumo.categoria}}
+					</div>
+				</div>
+				<div class="desc-item tipo_item">
+					<label for="tipo_item">Tipo de Insumo</label>
+					<div id="tipo_item">
+						{{insumo.tipo_item}}
+					</div>
+				</div>
+				{% if insumo.tipo_item == 'Inventariable' %}
+				<div class="desc-item tipo_item">
+					<label for="tipo_item">Cantidad</label>
+					{% if insumo.cantidad > 0 and insumo.cantidad != 'No Registrado' %}
+					<div id="tipo_item" class="cantidad_insumo">
+					{% endif %}
+					{% if insumo.cantidad <= 0 or insumo.cantidad == 'No Registrado' %}
+					<div id="tipo_item" class="sin_existencias">
+					{% endif %}
+						<strong>{{insumo.cantidad}}</strong>
+					</div>
+				</div>
+				{% endif %}
+				<div class="desc-item codigo">
+					<label for="codigo">Código</label>
+					<div id="codigo">
+						{{insumo.codigo}}
+					</div>
+				</div>
+				{% if insumo.codigo_barras %}
+				<div class="desc-item codigo_barras">
+					<label for="codigo_barras">Código de Barras</label>
+					<div id="codigo_barras">
+						{{insumo.codigo_barras}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="desc-item unidad_medida">
+					<label for="unidad_medida">Unidad de Medida</label>
+					<div id="unidad_medida">
+						{{insumo.unidad_medida}}
+					</div>
+				</div>
+			</div>
+			<div class="descrip-detalle">
+				<div class="desc-item descripcion_detalle">
+					<label for="descripcion_detalle">Descripción Detallada</label>
+					<div id="descripcion_detalle" class="descrip-item">
+						{{insumo.descripcion_detalle}}
+					</div>
+				</div>
+			</div>
+			<div class="costo-impuestos">
+				<div class="cost-imp precio_compra">
+					<label for="precio_compra">Precio por Unidad</label>
+					<div style="text-align: right;" id="precio_compra">
+						{{insumo.precio_compra}}
+					</div>
+				</div>
+				<div class="cost-imp iva_compra">
+					<label for="iva_compra">% IVA</label>
+					<div style="text-align: right;" id="iva_compra">
+						{{insumo.iva_compras}}
+					</div>
+				</div>
+				<div class="cost-imp impuesto_consumo_compras">
+					<label for="impuesto_consumo_compras">% ICO</label>
+					<div style="text-align: right;" id="impuesto_consumo_compras">
+						{{insumo.impuesto_consumo_compras}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios Dinámicos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a este <strong>Insumo</strong><br>
+		¿Deseas Editarlo de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_insumo' pk=insumo.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span>Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva<br>
+		¿Seguro que deseas Eliminar este <strong>Insumo</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_insumo' pk=insumo.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

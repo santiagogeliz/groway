@@ -1,0 +1,346 @@
+{% load static %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org.TR/html4/loose.dtd">
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+  	<title>Groway - Software Contable, Facturación, Crecimiento</title>
+  	<style type="text/css">
+  		@page {
+	        size: letter portrait;
+	        @frame col1_frame {             /* Content frame 1 */
+	            -pdf-frame-content: logo_nit;
+	            left: 30px; width: 550px; top: 50px; height: auto;
+	        }
+	        @frame col2_frame {             /* Content frame 2 */
+	            -pdf-frame-content: consec;
+	            left: 400px; width: 600px; top: 110px; height: auto;
+	        }
+	        @frame col2_frame {             /* Content frame 2 */
+	            -pdf-frame-content: resol;
+	            left: 400px; width: 600px; top: 150px; height: auto;
+	        }
+	        @frame info_frame {
+	        	-pdf-frame-content: info_cliente;
+	        	left: 20px; width: 770px; top: 285px; height: auto;
+	        }
+	        @frame info_frame {
+	        	-pdf-frame-content: referencia-documento;
+	        	left: 510px; width: 300px; top: 320px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla1;
+	        	left: 25px; width: 760px; top: 470px; height: 400px;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla2;
+	        	left: 572px; width: 700px; bottom: 460px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla2_moved;
+	        	left: 572px; width: 700px; bottom: 420px; height: auto;
+	        }
+	         @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla2_moved-more;
+	        	left: 572px; width: 700px; bottom: 340px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: detalle-documento;
+	        	left: 20px; width: 450px; bottom: 434px; height: auto;
+	        }
+	         @frame tabla_frame {
+	        	-pdf-frame-content: detalle-documento-moved;
+	        	left: 20px; width: 450px; bottom: 394px; height: auto;
+	        }
+	         @frame tabla_frame {
+	        	-pdf-frame-content: detalle-documento-moved-more;
+	        	left: 20px; width: 450px; bottom: 314px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: nota-documento;
+	        	left: 30px; width: 400px; bottom: 80px; height: auto;
+	        }
+	        @frame footer_frame {
+	        	-pdf-frame-content: contact;
+	        	left: 160px; width: 500px; bottom: 40px; height: auto;
+	        }
+    	}
+    	p.nit {
+    		font-size: 13px;
+    	}
+    	h2.organizacion_nombre {
+    		font-size: 25px;
+    	}
+    	.consec {
+    		text-align: center;
+    		font-size: 25px;
+    		color: #BD0406;
+    		padding-right: 240px;
+    		padding-bottom: 0px;
+    	}
+    	.resol {
+    		font-size: 13px;
+    		text-align: center;
+    		padding-right: 240px;
+    		padding-top: 0px;
+    	}
+    	.documento-info-cliente, .fecha {
+    		font-size: 13px;
+    		padding-left: 10px;
+    		border-bottom: solid 2px #C4CBB7;
+    	}
+    	.fecha p {
+    		margin: 0px;
+    	}
+    	.documento-table1 th {
+    		font-size: 13px;
+    	}
+    	.documento-table1 td {
+    		font-size: 12px;
+    		padding-top: 5px;
+    		border-top: solid 2px #C4CBB7;
+    	}
+    	.documento-table2 td, .documento-table2 th {
+    		font-size: 12px;
+    		padding-top: 5px;
+    		border-bottom: solid 2px #C4CBB7;
+    	}
+    	.documento-table2 th {
+    		text-align: right;
+    	}
+    	.detalle-items {
+    		border-top: solid 2px #C4CBB7;
+    		border-bottom: solid 2px #C4CBB7;
+    		font-size: 14px;
+    		padding-top: 5px;
+    		padding-left: 10px;
+    		padding-right: 10px;
+    		text-align: justify;
+    	}
+    	.contactenos {
+    		text-align: center;
+    		font-size: 12px;
+    	}
+  	</style>
+</head>
+<body>
+	<div class="documento-detail">
+		<div class="documento-header">
+			<div id="logo_nit">
+				{% if orgactivas.logo_organizacion %}
+				<img src="{{orgactivas.logo_organizacion.url}}" alt="Groway" width="300" height="60">
+				{% endif %}
+				{% if orgactivas.logo_organizacion == '' %}
+				<h2 class="organizacion_nombre">{{orgactivas.nombre_visible_cia}}</h2>
+				{% endif %}
+				<p class="nit">{{factura_comp.org_creadora}}<br>{{factura_comp.id_organizacion}}. {{factura_comp.numero_id_organizacion}} - {{factura_comp.numero_id_org_adicional}}<br>{{factura_comp.dir_organizacion}}<br>Tel: {{factura_comp.telefono_organizacion}}<br>{{factura_comp.ciudad_organizacion}}, {{factura_comp.departamento_organizacion}}</p>
+			</div>
+			<div class="consec_resol">
+				<p class="consec" id="consec"><strong>Factura de Compra</strong> {{factura_comp.consecutivo_interno}}</p>
+			</div>
+		</div>
+		<div id="info_cliente">
+			<div class="fecha">
+				<p>Fecha Expedición: {{factura_comp.fecha_emision|date:"d/m/Y"}} {{factura_comp.fecha_emision|date:"f a"}}</p>
+			</div>
+			<div class="documento-info-cliente">
+				<p>Proveedor: {{factura_comp.proveedor}}<br>
+				{{factura_comp.id_proveedor}}: {{factura_comp.numero_id_proveedor}} {% if factura_comp.numero_id_proveedor_adicional %}- {{factura_comp.numero_id_proveedor_adicional}} {% endif %}<br>
+				Dirección: {{factura_comp.dir_proveedor}}<br>
+				Ciudad: {{factura_comp.ciudad_proveedor}}, {{factura_comp.departamento_proveedor}}<br>
+				País: {{factura_comp.pais_proveedor}}<br>
+				Teléfono: {{factura_comp.telefono_proveedor}}</p>
+			</div>
+		</div>
+		{% if factura_comp.descripcion_detallada != 'No Registrado' %}
+		{% if factura_comp.item_3 == None and factura_comp.item_4 == None %}
+		<div id="detalle-documento" class="detalle-items">
+		{% endif %}
+		{% if factura_comp.item_3 != None and factura_comp.item_4 == None %}
+		<div id="detalle-documento-moved" class="detalle-items">
+		{% endif %}
+		{% if factura_comp.item_4 != None %}
+		<div id="detalle-documento-moved-more" class="detalle-items">
+		{% endif %}
+			<p><strong>Descripción Detallada:</strong><br>{{factura_comp.descripcion_detallada|linebreaksbr}}</p>
+		</div>
+		{% endif %}
+		{% if factura_comp.observacion != 'No Registrado' %}
+		<div id="nota-documento" class="nota-items" style="font-size: 14px;">
+			<p><strong>Nota: </strong>{{factura_comp.observacion}}</p>
+		</div>
+		{% endif %}
+		<div id="info_tabla1">
+			<div class="table-responsive">
+				<table class="documento-table1 table">
+					<thead>
+						<tr>
+							<th width="50">Ítem</th>
+							<th width="180">Descripción</th>
+							<th width="50">UM</th>
+							<th width="50">Cant.</th>
+							<th width="110">Precio Unidad</th>
+							<th width="70">% Dcto.</th>
+							<th width="110">Valor Dcto.</th>
+							<th width="110">IVA</th>
+							{% if factura_comp.ico_total %}
+							<th width="110">ICO</th>
+							{% endif %}
+							<th width="110">Valor Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.item_1}}</td>
+							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{factura_comp.descripcion_1}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.iva_1}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_1}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_1}}</td>
+						</tr>
+						{% if factura_comp.item_2 != None %}
+						<tr>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.item_2}}</td>
+							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{factura_comp.descripcion_2}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.iva_2}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_2}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_2}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.item_3 != None %}
+						<tr>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.item_3}}</td>
+							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{factura_comp.descripcion_3}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.iva_3}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_3}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_3}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.item_4 != None %}
+						<tr>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.item_4}}</td>
+							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{factura_comp.descripcion_4}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.iva_4}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_4}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_4}}</td>
+						</tr>
+						{% endif %}
+						{% if factura_comp.item_5 != None %}
+						<tr>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.item_5}}</td>
+							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{factura_comp.descripcion_5}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{factura_comp.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.cantidad_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_unitario_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.porcentaje_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.valor_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{factura_comp.iva_5}}</td>
+							{% if factura_comp.ico_total %}
+							<td class="valor-tabla" align="right">{{factura_comp.ico_5}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura_comp.valor_total_5}}</td>
+						</tr>
+						{% endif %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		{% if factura_comp.item_3 == None and factura_comp.item_4 == None %}
+		<div id="info_tabla2">
+		{% endif %}
+		{% if factura_comp.item_3 != None and factura_comp.item_4 == None %}
+		<div id="info_tabla2_moved">
+		{% endif %}
+		{% if factura_comp.item_4 != None %}
+		<div id="info_tabla2_moved-more">
+		{% endif %}
+			<table class="documento-table2 table">
+				<tr>
+					<th width="80">Sub Total: </th>
+					<td width="80" align="right" class="totales">{{factura_comp.sub_total}}</td>
+				</tr>
+				<tr>
+					<th>Total IVA: </th>
+					<td align="right" class="totales">{{factura_comp.iva_total}}</td>
+				</tr>
+				{% if factura_comp.ico_total %}
+				<tr>
+					<th>Total ICO: </th>
+					<td align="right" class="totales">{{factura_comp.ico_total}}</td>
+				</tr>
+				{% endif %}
+				{% if factura_comp.reterenta %}
+				<tr>
+					<th>- Reterenta: </th>
+					<td align="right" class="totales">{{factura_comp.reterenta}}</td>
+				</tr>
+				{% endif %}
+				{% if factura_comp.reteiva %}
+				<tr>
+					<th>- Reteiva: </th>
+					<td align="right" class="totales">{{factura_comp.reteiva}}</td>
+				</tr>
+				{% endif %}
+				{% if factura_comp.reteica %}
+				<tr>
+					<th>- Reteica: </th>
+					<td align="right" class="totales">{{factura_comp.reteica}}</td>
+				</tr>
+				{% endif %}
+				<tr>
+					<th style="border-bottom: none; padding-bottom: 5px;">Total: </th>
+					<td style="border-bottom: none; padding-bottom: 5px;" align="right" class="totales">{{factura_comp.total_documento}}</td>
+				</tr>
+				{% if factura_comp.anticipo %}
+				<tr>
+					<th style="border-bottom: none;">Anticipo: </th>
+					<td style="border-bottom: none;" align="right" class="totales">{{factura_comp.anticipo}}</td>
+				</tr>
+				<tr>
+					<th style="border-bottom: none; border-top: solid 2px #C4CBB7;">Saldo Pendiente: </th>
+					<td style="border-bottom: none; border-top: solid 2px #C4CBB7;" align="right" class="totales">{{factura_comp.saldo_pendiente}}</td>
+				</tr>
+				{% endif %}
+			</table>
+		</div>
+		<div id="contact">
+			<div class="contactenos">
+				{% if orgactivas.email == None %}
+				<p>GROWAY, un software de SantiagoGeliz<br>www.linkedin.com/in/santiagogeliz</p>
+				{% endif %}
+				{% if orgactivas.email %}
+				<p>{{orgactivas.email}} {% if orgactivas.website %} / {{orgactivas.website}} {% endif %}</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</body>
+</html>

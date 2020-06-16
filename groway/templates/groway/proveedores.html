@@ -1,0 +1,260 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Candal|Sawarabi+Gothic" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Anton|Muli:300,400" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="{% static 'css/groway.css' %}">
+  <link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  	<script type="text/javascript">
+  		  $(function() {
+        var body = $("body");
+        var user = $(".user");
+        var tool = $(".tool");
+        var subtool = $(".subtool");
+        var subuser = $(".subuser");
+        var drop1 = $(".drop1");
+        var down1 = $(".down1");
+        var drop2 = $(".drop2");
+        var down2 = $(".down2");
+        var drop3 = $(".drop3");
+        var down3 = $(".down3");
+        var page_header = $("header");
+        var content = $(".content");
+        var detalle = $(".detalle");
+        var lista_objetos = $(".lista-objetos");
+        var volver = $(".volver-consectermin");
+        var volver_dropdown = $(".dropdown-volver-consectermin");
+        var link_volver = $(".volver-link");
+        var mensaje_edicion = $(".mensaje-confirmacion-edicion");
+        var mensaje_eliminacion = $(".mensaje-confirmacion-eliminacion");
+        var accion_editar = $(".accion-editar");
+        var accion_eliminar = $(".accion-eliminar");
+        var respuesta_no = $(".respuesta-no");
+        tool.click(function() {
+          tool.removeClass("active");
+          user.removeClass("active");
+          down1.removeClass("solid");
+          down2.removeClass("solid");
+          down3.removeClass("solid");
+          $(this).addClass("active");
+        });
+        user.click(function() {
+          user.removeClass("active");
+          tool.removeClass("active");
+          down1.removeClass("solid");
+          down2.removeClass("solid");
+          down3.removeClass("solid");
+          $(this).addClass("active");
+        });
+
+        subtool.click(function() {
+          down1.removeClass("solid");
+          down2.removeClass("solid");
+          down3.removeClass("solid");
+          $(this).addClass("active");
+        });
+        content.click(function() {
+          user.removeClass("active");
+          tool.removeClass("active");
+          down1.removeClass("solid");
+          down2.removeClass("solid");
+          down3.removeClass("solid");
+          drop2.addClass("active");
+        });
+        subuser.click(function() {
+          user.removeClass("active");
+        });
+        drop1.click(function() {
+          down1.addClass("solid");
+        });
+        drop2.click(function() {
+          down2.addClass("solid");
+        });
+        drop3.click(function() {
+          down3.addClass("solid");
+        });
+        volver.click(function() {
+          volver_dropdown.addClass("agregar");
+          volver.addClass("semicurvo");
+        });
+        link_volver.click(function () {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        detalle.click(function() {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        page_header.click(function() {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        lista_objetos.click(function() {
+          volver_dropdown.removeClass("agregar");
+          volver.removeClass("semicurvo");
+        });
+        accion_editar.click(function() {
+          mensaje_edicion.addClass("editar");
+        });
+        accion_eliminar.click(function() {
+          mensaje_eliminacion.addClass("editar");
+        });
+        respuesta_no.click(function() {
+          mensaje_edicion.removeClass("editar");
+          mensaje_eliminacion.removeClass("editar");
+        });
+      });
+  	</script>
+  	
+  	<title>Groway - Software Contable, Facturación, Crecimiento</title>
+</head>
+<body>
+	<header class="block">
+		<nav class="growaynav navbar navbar-fixed-top">
+			<div class="container-fluid">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<div class="row">
+						<div class="colum brand">
+              <div class="logo-nombre-org">
+                {% if orgactivas.logo_organizacion %}
+                <div class="logo_org">
+                  <img src="{{orgactivas.logo_organizacion.url}}" alt="Groway" width="300" height="60">
+                </div>
+                {% endif %}
+                {% if orgactivas.logo_organizacion == "" %}
+                <h2 class="nombre-org">{{orgactivas.nombre_visible_cia}}</h2>
+                {% endif %}
+                {% if orgactivas == None %}
+                <h2 class="nombre-default">ORGANIZACIÓN</h2>
+                {% endif %}
+              </div>
+            </div>
+            <div class="colum mini-brand">
+              <a href="{% url 'dashboard' %}"><img src="{% static 'img/growayminilogo.png' %}"alt="Groway" width="70" height="40" class="minilogo_groway"></a>
+            </div>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse" id="myNavbar">
+					<ul class="tools navbar-nav">
+            <a class="drop1 tool">Documentos <span class="caret"></span></a>
+              <ul class="down1 subtools">
+                <a class="subtool" href="{% url 'cotizaciones' %}">Cotizaciones</a>
+                <a class="subtool" href="{% url 'remisiones' %}">Remisiones</a>
+                <a class="subtool" href="{% url 'facturas_venta' %}">Facturas de Venta</a>
+                <a class="subtool" href="{% url 'notas_credito' %}">Notas Crédito</a>
+                <a class="subtool" href="{% url 'notas_debito' %}">Notas Débito</a>
+                <a class="subtool" href="{% url 'facturas_compra' %}">Compras / Gastos</a>
+              </ul>
+            <a class="drop2 tool active">Contactos <span class="caret"></span></a>
+              <ul class="down2 subtools">
+                <a class="subtool" href="{% url 'clientes' %}">Clientes</a>
+                <a class="subtool" href="{% url 'proveedores' %}">Proveedores</a>
+              </ul>
+            <a class="drop3 tool">Inventario <span class="caret"></span></a>
+              <ul class="down3 subtools">
+                <a class="subtool" href="{% url 'items' %}">Items de Venta</a>
+                <a class="subtool" href="{% url 'insumos' %}">Insumos</a>
+              </ul>
+            <a class="tool" href="{% url 'reportes_crecimiento' %}">Crecimiento <span class="glyphicon glyphicon-stats"></span></a>
+          </ul>
+					<ul class="user-tools navbar-nav navbar-right row">
+            <a class="user dropdown dropdown-toggle" data-toggle="dropdown" href="#">{{user.username}} <span class="glyphicon glyphicon-user"></span></a>
+              <ul class="dropdown-menu">
+                <a class="subuser" href="{% url 'organizacion' %}">Organización</a>
+                <a class="subuser" href="{% url 'logout' %}">Cerrar Sesión</a>
+              </ul>
+          </ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<div class="content">
+		<div class="tool-actions">
+			<div class="lista">
+				<div class="lista-header">
+					<div class="titulo-controles">
+						<h3 class="titulo-controles">Gestión de Proveedores</h3>
+					</div>
+					<div class="filtro-ordenador">
+						<div class="filtro-content container-fluid">
+							<div class="minitools">
+                {% if orgactivas %}
+                <a class="minitool-crear" href="{% url 'nuevo_proveedor' %}"><span class="glyphicon glyphicon-plus"></span> Crear</a>
+                {% endif %}
+                {% if orgactivas == None %}
+                <a class="minitool-crear-disable"><span class="glyphicon glyphicon-plus"></span> Crear</a>
+                {% endif %}
+              </div>
+							<form method="POST" action="">{% csrf_token %}
+                <div class="finder">
+								  <input type="text" name="buscar" placeholder="Buscar">
+								  <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                </div>
+                <div class="order-by">
+  								<select name="ordenar">
+  									<option value="nombre_legal">Ordenar por Nombre</option>
+  									<option value="numero_identificacion">Ordenar por Numero ID</option>
+  								</select>
+                </div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="lista-objetos obj-list">
+          <div class="list-group">
+          {% if orgactivas == None %}
+            <div class="noobject-alert">
+              <h4><span class="glyphicon glyphicon-alert"></span><strong> No hay Organización activa</strong></h4>
+              <p>Para crear y ver los Proveedores es necesario que haya una <strong>ORGANIZACIÓN ACTIVA.</strong><br>
+              Puedes crear y activar una Organización desde las opciones de usuario, haciendo click en tu <strong>Nombre de Usuario.</strong></p>
+            </div>
+          {% endif %}
+          {% if nohayproveedores == 0 %}
+            <div class="noobject-alert">
+              <h4><span class="glyphicon glyphicon-alert"></span><strong> No hay proveedores creados todavía</strong></h4>
+              <p>Para crear un nuevo proveedor haz click en <strong>CREAR.</strong></p>
+            </div>
+          {% endif %}
+          {% if request.method != "POST" %}
+          {% for contacto in contactos %}
+            <a href="{% url 'detalle_proveedor' pk=contacto.pk %}" class="list-group-item">
+              <h4>{{contacto.nombre_legal}}</h4>
+              <p><strong>{{contacto.identificacion}}</strong> {{contacto.numero_identificacion}} {% if contacto.numero_id_adicional %}- {{contacto.numero_id_adicional}} {% endif %}</p>
+            </a>
+          {% endfor %}
+          {% endif %}
+          {% if request.method == "POST" %}
+          {% for contacto in lista %}
+            <a href="{% url 'detalle_proveedor' pk=contacto.pk %}" class="list-group-item">
+              <h4>{{contacto.nombre_legal}}</h4>
+              <p><strong>{{contacto.identificacion}}</strong> {{contacto.numero_identificacion}} {% if contacto.numero_id_adicional %}- {{contacto.numero_id_adicional}} {% endif %}</p>
+            </a>
+          {% endfor %}
+          {% endif %}
+          </div>
+				</div>
+			</div>
+			<div class="detalle">
+			{% block content %}
+        <div class="mensaje-detalle">
+          <h2><span class="glyphicon glyphicon-alert"></span> Selecciona un Elemento</h2>
+          <p>Haz click sobre un elemento de la lista para visualizarlo en detalle <strong>AQUI.</strong></p>
+        </div>
+			{% endblock %}
+			</div>
+		</div>
+	</div>
+</body>

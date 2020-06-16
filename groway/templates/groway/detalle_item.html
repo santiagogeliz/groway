@@ -1,0 +1,126 @@
+{% extends 'groway/items.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>{{item.descripcion}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-item">
+			{% if item.imagen != 'No Registrado' %}
+			<div class="imagen-categoria">
+				<div class="img-cat imagen">
+					<label for="imagen">Imagen del Ítem</label>
+					<div id="imagen">
+						<img src="{{item.imagen.url}}" alt="Groway" width="300" height="200">
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div class="descripcion-item">
+				<div class="img-cat categoria">
+					<label for="categoria">Categoria de Item</label>
+					<div id="categoria">
+						{{item.categoria}}
+					</div>
+				</div>
+				<div class="desc-item tipo_item">
+					<label for="tipo_item">Tipo de Item</label>
+					<div id="tipo_item">
+						{{item.tipo_item}}
+					</div>
+				</div>
+				{% if item.tipo_item == 'Inventariable' %}
+				<div class="desc-item tipo_item">
+					<label for="tipo_item">Cantidad</label>
+					{% if item.cantidad > 0 and item.cantidad != 'No Registrado' %}
+					<div id="tipo_item" class="cantidad_item">
+					{% endif %}
+					{% if item.cantidad <= 0 or item.cantidad == 'No Registrado' %}
+					<div id="tipo_item" class="sin_existencias">
+					{% endif %}
+						<strong>{{item.cantidad}}</strong>
+					</div>
+				</div>
+				{% endif %}
+				<div class="desc-item codigo">
+					<label for="codigo">Código</label>
+					<div id="codigo">
+						{{item.codigo}}
+					</div>
+				</div>
+				{% if item.codigo_barras != "No Registrado" %}
+				<div class="desc-item codigo_barras">
+					<label for="codigo_barras">Código de Barras</label>
+					<div id="codigo_barras">
+						{{item.codigo_barras}}
+					</div>
+				</div>
+				{% endif %}
+				<div class="desc-item unidad_medida">
+					<label for="unidad_medida">Unidad de Medida</label>
+					<div id="unidad_medida">
+						{{item.unidad_medida}}
+					</div>
+				</div>
+			</div>
+			<div class="descrip-detalle">
+				<div class="desc-item descripcion_detalle">
+					<label for="descripcion_detalle">Descripción Detallada</label>
+					<div id="descripcion_detalle" class="descrip-item">
+						{{item.descripcion_detalle}}
+					</div>
+				</div>
+			</div>
+			<div class="costo-impuestos">
+				<div class="cost-imp precio_venta">
+					<label for="precio_venta">Precio por Unidad</label>
+					<div style="text-align: right;" id="precio_venta">
+						{{item.precio_venta}}
+					</div>
+				</div>
+				<div class="cost-imp iva_ventas">
+					<label for="iva_ventas">% IVA</label>
+					<div style="text-align: right;" id="iva_ventas">
+						{{item.iva_ventas}}
+					</div>
+				</div>
+				<div class="cost-imp impuesto_consumo_ventas">
+					<label for="impuesto_consumo_ventas">% ICO</label>
+					<div style="text-align: right;" id="impuesto_consumo_ventas">
+						{{item.impuesto_consumo_ventas}}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Los Cambios Afectarán a los Documentos</h2>
+		<p>Los cambios realizados se reflejarán en todos los documentos vinculados a este <strong>Item</strong><br>
+		¿Deseas Editarlo de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_item' pk=item.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva<br>
+		¿Seguro que deseas Eliminar este <strong>Item</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_item' pk=item.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

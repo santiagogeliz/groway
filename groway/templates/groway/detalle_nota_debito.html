@@ -1,0 +1,369 @@
+{% extends 'groway/notas_debito.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>NOTA DÉBITO {{debitnote.consecutivo_interno}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto-documento row">
+			<a class="acciones accion-pdf" href="{% url 'pdf_nota_debito' pk=debitnote.pk %}" target="_blank">Generar PDF</a>
+		</div>
+		<div class="form-content-detalle-cotizacion">
+			<div class="datos-generales-detalle">
+				<div class="generales" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle consecutivo">
+						<label for="consecutivo">Consecutivo</label>
+						<div id="consecutivo">
+							{{debitnote.consecutivo_interno}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha">
+						<label for="fecha">Fecha</label>
+						<div id="fecha">
+							{{debitnote.fecha_emision|date:"d F Y"}} {{debitnote.fecha_emision|date:"f a"}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_factura">
+						<label for="referencia_factura">Referencia Factura</label>
+						<div id="referencia_factura">
+							<a class="enlace-documentos" href="{% url 'detalle_factura_venta' pk=factura_generadora.pk %}">{{debitnote.referencia_factura}}</a>
+						</div>
+					</div>
+					{% if debitnote.referencia_factura_DIAN != 'No Registrado' %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia DIAN Factura</label>
+						<div id="referencia_remision">
+							{{debitnote.referencia_factura_DIAN}}
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle fecha_emision_factura">
+						<label for="fecha_emision_factura">Fecha de la Factura</label>
+						<div id="fecha_emision_factura">
+							{{debitnote.fecha_emision_factura|date:"d F Y"}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-generales-detalle">
+				<div class="descripcion_cargo">
+					<div class="datos-gnles-detalle concepto_nota_debito" style="margin-right: 10px; margin-left: 10px;">
+						<label for="concepto_nota_debito">Concepto de Nota Débito</label>
+						<div id="concepto_nota_debito">
+							{{debitnote.concepto_nota_debito}}
+						</div>
+					</div>
+					{% if debitnote.descripcion_cargo %}
+					<div class="datos-paob-detalle descripcion_cargo" style="margin-right: 10px; margin-left: 10px;">
+						<label for="descripcion_cargo">Descripcion del Interes / Gasto</label>
+						<div style="text-align: justify;" class="descripcion-content" id="descripcion_cargo">      
+							{{debitnote.descripcion_cargo|linebreaksbr}}
+						</div>
+					</div>
+					{% endif %}
+				</div>
+			</div>
+			<div class="datos-generales-detalle">
+				<div class="terminos_medios_pagos" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle terminos_de_pago">
+						<label for="terminos_de_pago">Terminos de Pago</label>
+						<div id="terminos_de_pago">
+							{{debitnote.terminos_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle medio_de_pago">
+						<label for="medio_de_pago">Medio de Pago</label>
+						<div id="medio_de_pago">
+							{{debitnote.medio_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle moneda">
+						<label for="moneda">Moneda</label>
+						<div id="moneda">
+							{{debitnote.moneda}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="referencias-documentos">
+				<div class="referencias" style="margin-right: 10px; margin-left: 10px;">
+					{% if debitnote.referencia_cotizacion != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_cotizacion">
+						<label for="referencia_cotizacion">Referencia Cotización</label>
+						<div id="referencia_cotizacion">
+							<a class="enlace-documentos" href="{% url 'detalle_cotizacion' pk=cotizacion_generadora.pk %}">{{debitnote.referencia_cotizacion}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if debitnote.referencia_remision != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Remisión</label>
+						<div id="referencia_remision">
+							<a class="enlace-documentos" href="{% url 'detalle_remision' pk=remisionesgeneradas.pk %}">{{debitnote.referencia_remision}}</a>
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle referencia_orden_compra">
+						<label for="referencia_orden_compra">Referencia Orden de Compra</label>
+						<div id="referencia_orden_compra">
+							{{debitnote.referencia_orden_compra}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_otro_documento">
+						<label for="referencia_otro_documento">Referencia a Documento (Otro)</label>
+						<div id="referencia_otro_documento">
+							{{debitnote.referencia_otro_documento}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones-detalle">
+				<div class="datos-cliente" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Cliente</label>
+						<div id="cliente">
+							{{debitnote.cliente}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{debitnote.id_cliente}} {{debitnote.numero_id_cliente}} -{% if debitnote.numero_id_cli_adicional %} {{debitnote.numero_id_cli_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{debitnote.telefono_cliente}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{debitnote.dir_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{debitnote.ciudad_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{debitnote.departamento_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{debitnote.pais_cliente}}
+						</div>
+					</div>
+				</div>
+				<div class="datos-organizacion" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Proveedor</label>
+						<div id="cliente">
+							{{debitnote.org_creadora}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{debitnote.id_organizacion}} {{debitnote.numero_id_organizacion}} -{% if debitnote.numero_id_org_adicional %} {{debitnote.numero_id_org_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{debitnote.telefono_organizacion}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{debitnote.dir_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{debitnote.ciudad_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{debitnote.departamento_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{debitnote.pais_organizacion}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if debitnote.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-observaciones">
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div style="text-align: justify;" class="descripcion-content" id="descripcion_detallada">      
+						{{debitnote.descripcion_detallada|linebreaksbr}}
+					</div>
+				</div>
+			</div>
+			{% endif %}
+			<div class="items-totales-detalle">
+				<div class="row">
+					<table class="linea-documento">
+						<tr>
+							<th class="titulo-tabla" style="text-align: center;">Item</th>
+							<th class="titulo-tabla" style="text-align: center;">Descripción</th>
+							<th class="titulo-tabla" style="text-align: center;">UM</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">Cant.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Precio Unidad</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">% Dcto.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Valor Dcto.</th>
+							{% if debitnote.iva_total %}
+							<th class="titulo-tabla" style="text-align: center;">IVA</th>
+							{% endif %}
+							{% if debitnote.ico_total %}
+							<th class="titulo-tabla" style="text-align: center;">ICO</th>
+							{% endif %}
+							<th class="titulo-tabla" style="text-align: center;">Valor Total</th>
+						</tr>
+						<tr>
+							<td class="valor-tabla">{{debitnote.item_1}}</td>
+							<td class="valor-tabla descrip_item">{{debitnote.descripcion_1}}</td>
+							<td class="valor-tabla">{{debitnote.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.cantidad_1}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_unitario_1}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.porcentaje_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_descuento_1}}</td>
+							{% if debitnote.iva_total %}
+							<td class="valor-tabla" align="right">{{debitnote.iva_1}}</td>
+							{% endif %}
+							{% if debitnote.ico_total %}
+							<td class="valor-tabla" align="right">{{debitnote.ico_1}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{debitnote.valor_total_1}}</td>
+						</tr>
+						{% if debitnote.item_2 != None %}
+						<tr>
+							<td class="valor-tabla">{{debitnote.item_2}}</td>
+							<td class="valor-tabla descrip_item">{{debitnote.descripcion_2}}</td>
+							<td class="valor-tabla">{{debitnote.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.cantidad_2}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_unitario_2}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.porcentaje_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_descuento_2}}</td>
+							{% if debitnote.iva_total %}
+							<td class="valor-tabla" align="right">{{debitnote.iva_2}}</td>
+							{% endif %}
+							{% if debitnote.ico_total %}
+							<td class="valor-tabla" align="right">{{debitnote.ico_2}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{debitnote.valor_total_2}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.item_3 != None %}
+						<tr>
+							<td class="valor-tabla">{{debitnote.item_3}}</td>
+							<td class="valor-tabla descrip_item">{{debitnote.descripcion_3}}</td>
+							<td class="valor-tabla">{{debitnote.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.cantidad_3}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_unitario_3}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.porcentaje_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_descuento_3}}</td>
+							{% if debitnote.iva_total %}
+							<td class="valor-tabla" align="right">{{debitnote.iva_3}}</td>
+							{% endif %}
+							{% if debitnote.ico_total %}
+							<td class="valor-tabla" align="right">{{debitnote.ico_3}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{debitnote.valor_total_3}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.item_4 != None %}
+						<tr>
+							<td class="valor-tabla">{{debitnote.item_4}}</td>
+							<td class="valor-tabla descrip_item">{{debitnote.descripcion_4}}</td>
+							<td class="valor-tabla">{{debitnote.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.cantidad_4}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_unitario_4}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.porcentaje_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_descuento_4}}</td>
+							{% if debitnote.iva_total %}
+							<td class="valor-tabla" align="right">{{debitnote.iva_4}}</td>
+							{% endif %}
+							{% if debitnote.ico_total %}
+							<td class="valor-tabla" align="right">{{debitnote.ico_4}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{debitnote.valor_total_4}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.item_5 != None %}
+						<tr>
+							<td class="valor-tabla">{{debitnote.item_5}}</td>
+							<td class="valor-tabla descrip_item">{{debitnote.descripcion_5}}</td>
+							<td class="valor-tabla">{{debitnote.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.cantidad_5}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_unitario_5}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.porcentaje_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{debitnote.valor_descuento_5}}</td>
+							{% if debitnote.iva_total %}
+							<td class="valor-tabla" align="right">{{debitnote.iva_5}}</td>
+							{% endif %}
+							{% if debitnote.ico_total %}
+							<td class="valor-tabla" align="right">{{debitnote.ico_5}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{debitnote.valor_total_5}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				<div class="row">
+					<table class="total-documento">
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{debitnote.sub_total}}</td>
+						</tr>
+						{% if debitnote.iva_total %}
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{debitnote.iva_total}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{debitnote.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{debitnote.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{debitnote.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{debitnote.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="padding-bottom: 5px; text-align: right;">Total: </th>
+							<td style="padding-bottom: 5px;" align="right" class="totales">{{debitnote.total_documento}}</td>
+						</tr>
+						{% if debitnote.anticipo %}
+						<tr>
+							<th style="padding-top: 5px; border-top: solid white 2px; text-align: right;">Anticipo: </th>
+							<td style="padding-top: 5px; border-top: solid white 2px;" align="right" class="totales">{{debitnote.anticipo}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Pendiente: </th>
+							<td align="right" class="totales">{{debitnote.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+						{% if debitnote.cargo_interes %}
+						<tr>
+							<th>Gastos / Intereses: </th>
+							<td align="right" class="totales">{{debitnote.cargo_interes}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Total: </th>
+							<td align="right" class="totales">{{debitnote.saldo_total}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			{% if debitnote.observacion != "No Registrado" %}
+			<div class="datos-paob-detalle observacion" style="margin-right: 10px; margin-left: 10px;">
+				<strong>Nota:</strong> {{debitnote.observacion}}
+			</div>	
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}  

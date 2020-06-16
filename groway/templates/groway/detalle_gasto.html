@@ -1,0 +1,63 @@
+{% extends 'groway/gastos_registro.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>Registro de Gasto {{gasto.fecha_emision}} {{gasto.fecha_emision|date:"a"}}</h2>
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto row">
+			<a class="acciones accion-eliminar">Eliminar</a>
+			<a class="acciones accion-editar">Editar</a>
+		</div>
+		<div class="form-content-detalle-consecutivo">
+			<div class="datos_gasto">
+				<div class="gasto_info">
+					<div class="img-cat">
+						<label for="concep_gastos">Concepto del Gasto</label>
+						<div class="descrip-cargos" id="concep_gastos">
+							{{gasto.concepto_gasto}}
+						</div>
+					</div>
+					<div class="img-cat">
+						<label for="descrip_gastos">Descripción del Gasto</label>
+						<div class="descrip-cargos" id="descrip_gastos">      
+							{{gasto.descripcion_gasto|linebreaksbr}}
+						</div>
+					</div>
+					<div class="img-cat">
+						<label for="valor_gastos">Valor del Gasto</label>
+						<div class="descrip-cargos" id="valor_gastos">      
+							{{gasto.valor_gasto}}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-edicion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Cambios Dinámicos</h2>
+		<p>Los cambios realizados en este registro de gasto se reflejarán en los <strong>Reportes de Crecimiento.</strong><br>
+		¿Deseas Editarlo de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'editar_gasto' pk=gasto.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-eliminacion">
+		<h2><span class="glyphicon glyphicon-alert"></span> Eliminar</h2>
+		<p>El elemento se eliminará de manera definitiva.<br>
+		¿Seguro que deseas Eliminar este <strong>Registro de Gasto</strong>?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'eliminar_gasto' pk=gasto.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}

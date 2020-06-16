@@ -1,0 +1,398 @@
+{% extends 'groway/facturas_venta.html' %}
+{% load static %}
+{% block content %}
+	<div class="form-header">
+		<h2>FACTURA DE VENTA {{factura.consecutivo_interno}} {% if factura.anulada == True %} -<strong style="color: red"> ANULADA</strong></h2>{% endif %}
+	</div>
+	<div class="form-body">
+		<div class="acciones-objeto-documento row">
+			{% if nohayconsecutivo_rsm == 1 and remisionesgeneradas == 0 %}
+			<a class="acciones accion-remision">Generar Remisión</a>
+			{% endif %}
+			{% if nohayconsecutivo_rsm == 0 and remisionesgeneradas == 0 %}
+			<a class="acciones-disable">Generar Remisión</a>
+			{% endif %}
+			{% if nohayconsecutivo_ncred == 1 and notascreditogeneradas == 0 and notasdebitogeneradas == 0 %}
+			<a class="acciones accion-ncredito">Generar Nota Crédito</a>
+			{% endif %}
+			{% if nohayconsecutivo_ndeb == 1 and notasdebitogeneradas == 0 and notascreditogeneradas == 0 %}
+			<a class="acciones accion-ndebito">Generar Nota Débito</a>
+			{% endif %}
+			{% if nohayconsecutivo_ncred == 0 and notascreditogeneradas == 0 and notasdebitogeneradas == 0 %}
+			<a class="acciones-disable">Generar Nota Crédito</a>
+			{% endif %}
+			{% if nohayconsecutivo_ndeb == 0 and notasdebitogeneradas == 0 and notascreditogeneradas == 0 %}
+			<a class="acciones-disable">Generar Nota Débito</a>
+			{% endif %}
+			<a class="acciones accion-pdf" href="{% url 'pdf_factura_venta' pk=factura.pk %}" target="_blank">Generar PDF</a>
+		</div>
+		<div class="form-content-detalle-cotizacion">
+			<div class="datos-generales-detalle">
+				<div class="generales" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-gnles-detalle consecutivo">
+						<label for="consecutivo">Consecutivo</label>
+						<div id="consecutivo">
+							{{factura.consecutivo_interno}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha">
+						<label for="fecha">Fecha</label>
+						<div id="fecha">
+							{{factura.fecha_emision|date:"d F Y"}} {{factura.fecha_emision|date:"f a"}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle terminos_de_pago">
+						<label for="terminos_de_pago">Terminos de Pago</label>
+						<div id="terminos_de_pago">
+							{{factura.terminos_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle fecha_vencimiento">
+						<label for="fecha_vencimiento">Fecha Vencimiento</label>
+						<div id="fecha_vencimiento">
+							{{factura.fecha_vencimiento|date:"d F Y"}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle medio_de_pago">
+						<label for="medio_de_pago">Medio de Pago</label>
+						<div id="medio_de_pago">
+							{{factura.medio_de_pago}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle moneda">
+						<label for="moneda">Moneda</label>
+						<div id="moneda">
+							{{factura.moneda}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="referencias-documentos">
+				<div class="referencias" style="margin-right: 10px; margin-left: 10px;">
+					{% if factura.referencia_cotizacion != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_cotizacion">
+						<label for="referencia_cotizacion">Referencia Cotización</label>
+						<div id="referencia_cotizacion">
+							<a class="enlace-documentos" href="{% url 'detalle_cotizacion' pk=cotizacion_generadora.pk %}">{{factura.referencia_cotizacion}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if factura.referencia_remision != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Remisión</label>
+						<div id="referencia_remision">
+							<a class="enlace-documentos" href="{% url 'detalle_remision' pk=remisionesgeneradas.pk %}">{{factura.referencia_remision}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if factura.referencia_notacredito != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_remision">
+						<label for="referencia_remision">Referencia Nota Crédito</label>
+						<div id="referencia_remision">
+							<a class="enlace-documentos" href="{% url 'detalle_nota_credito' pk=notascreditogeneradas.pk %}">{{factura.referencia_notacredito}}</a>
+						</div>
+					</div>
+					{% endif %}
+					{% if factura.referencia_notadebito != "No Registrado" %}
+					<div class="datos-gnles-detalle referencia_notadebito">
+						<label for="referencia_notadebito">Referencia Nota Débito</label>
+						<div id="referencia_notadebito">
+							<a class="enlace-documentos" href="{% url 'detalle_nota_debito' pk=notasdebitogeneradas.pk %}">{{factura.referencia_notadebito}}</a>
+						</div>
+					</div>
+					{% endif %}
+					<div class="datos-gnles-detalle referencia_orden_compra">
+						<label for="referencia_orden_compra">Referencia Orden de Compra</label>
+						<div id="referencia_orden_compra">
+							{{factura.referencia_orden_compra}}
+						</div>
+					</div>
+					<div class="datos-gnles-detalle referencia_otro_documento">
+						<label for="referencia_otro_documento">Referencia a Documento (Otro)</label>
+						<div id="referencia_otro_documento">
+							{{factura.referencia_otro_documento}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="datos-participantes-observaciones-detalle">
+				<div class="datos-cliente" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Cliente</label>
+						<div id="cliente">
+							{{factura.cliente}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{factura.id_cliente}} {{factura.numero_id_cliente}} -{% if factura.numero_id_cli_adicional %} {{factura.numero_id_cli_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{factura.telefono_cliente}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{factura.dir_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{factura.ciudad_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{factura.departamento_cliente}}
+						</div>
+						<div class="ubicacion">
+							{{factura.pais_cliente}}
+						</div>
+					</div>
+				</div>
+				<div class="datos-organizacion" style="margin-right: 10px; margin-left: 10px;">
+					<div class="datos-paob-detalle cliente">
+						<label for="cliente">Proveedor</label>
+						<div id="cliente">
+							{{factura.org_creadora}}
+						</div>
+					</div>
+					<div class="datos-paob-detalle id_cliente">
+						<strong>Identificación:</strong> {{factura.id_organizacion}} {{factura.numero_id_organizacion}} -{% if factura.numero_id_org_adicional %} {{factura.numero_id_org_adicional}} {% endif %}
+					</div>
+					<div class="datos-paob-detalle telefono_cliente">
+						<strong>Teléfono:</strong> {{factura.telefono_organizacion}}
+					</div>
+					<div class="datos-paob-detalle dir_cliente">
+						<strong>Dirección:</strong>
+						<div class="ubicacion">
+							{{factura.dir_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{factura.ciudad_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{factura.departamento_organizacion}}
+						</div>
+						<div class="ubicacion">
+							{{factura.pais_organizacion}}
+						</div>
+					</div>
+				</div>
+			</div>
+			{% if factura.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-observaciones">
+				{% if factura.descripcion_detallada != "No Registrado" %}
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div style="text-align: justify;" class="descripcion-content" id="descripcion_detallada">      
+						{{factura.descripcion_detallada|linebreaksbr}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			{% endif %}
+			<div class="items-totales-detalle">
+				<div class="row">
+					<table class="linea-documento">
+						<tr>
+							<th class="titulo-tabla" style="text-align: center;">Item</th>
+							<th class="titulo-tabla" style="text-align: center;">Descripción</th>
+							<th class="titulo-tabla" style="text-align: center;">UM</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">Cant.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Precio Unidad</th>
+							<th class="titulo-tabla" style="text-align: center;" width="60">% Dcto.</th>
+							<th class="titulo-tabla" style="text-align: center;" width="100">Valor Dcto.</th>
+							{% if factura.iva_total %}
+							<th class="titulo-tabla" style="text-align: center;">IVA</th>
+							{% endif %}
+							{% if factura.ico_total %}
+							<th class="titulo-tabla" style="text-align: center;">ICO</th>
+							{% endif %}
+							<th class="titulo-tabla" style="text-align: center;">Valor Total</th>
+						</tr>
+						<tr>
+							<td class="valor-tabla">{{factura.item_1}}</td>
+							<td class="valor-tabla descrip_item">{{factura.descripcion_1}}</td>
+							<td class="valor-tabla">{{factura.UM_1}}</td>
+							<td class="valor-tabla" align="right">{{factura.cantidad_1}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_unitario_1}}</td>
+							<td class="valor-tabla" align="right">{{factura.porcentaje_descuento_1}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_descuento_1}}</td>
+							{% if factura.iva_total %}
+							<td class="valor-tabla" align="right">{{factura.iva_1}}</td>
+							{% endif %}
+							{% if factura.ico_total %}
+							<td class="valor-tabla" align="right">{{factura.ico_1}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura.valor_total_1}}</td>
+						</tr>
+						{% if factura.item_2 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura.item_2}}</td>
+							<td class="valor-tabla descrip_item">{{factura.descripcion_2}}</td>
+							<td class="valor-tabla">{{factura.UM_2}}</td>
+							<td class="valor-tabla" align="right">{{factura.cantidad_2}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_unitario_2}}</td>
+							<td class="valor-tabla" align="right">{{factura.porcentaje_descuento_2}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_descuento_2}}</td>
+							{% if factura.iva_total %}
+							<td class="valor-tabla" align="right">{{factura.iva_2}}</td>
+							{% endif %}
+							{% if factura.ico_total %}
+							<td class="valor-tabla" align="right">{{factura.ico_2}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura.valor_total_2}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.item_3 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura.item_3}}</td>
+							<td class="valor-tabla descrip_item">{{factura.descripcion_3}}</td>
+							<td class="valor-tabla">{{factura.UM_3}}</td>
+							<td class="valor-tabla" align="right">{{factura.cantidad_3}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_unitario_3}}</td>
+							<td class="valor-tabla" align="right">{{factura.porcentaje_descuento_3}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_descuento_3}}</td>
+							{% if factura.iva_total %}
+							<td class="valor-tabla" align="right">{{factura.iva_3}}</td>
+							{% endif %}
+							{% if factura.ico_total %}
+							<td class="valor-tabla" align="right">{{factura.ico_3}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura.valor_total_3}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.item_4 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura.item_4}}</td>
+							<td class="valor-tabla descrip_item">{{factura.descripcion_4}}</td>
+							<td class="valor-tabla">{{factura.UM_4}}</td>
+							<td class="valor-tabla" align="right">{{factura.cantidad_4}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_unitario_4}}</td>
+							<td class="valor-tabla" align="right">{{factura.porcentaje_descuento_4}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_descuento_4}}</td>
+							{% if factura.iva_total %}
+							<td class="valor-tabla" align="right">{{factura.iva_4}}</td>
+							{% endif %}
+							{% if factura.ico_total %}
+							<td class="valor-tabla" align="right">{{factura.ico_4}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura.valor_total_4}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.item_5 != None %}
+						<tr>
+							<td class="valor-tabla">{{factura.item_5}}</td>
+							<td class="valor-tabla descrip_item">{{factura.descripcion_5}}</td>
+							<td class="valor-tabla">{{factura.UM_5}}</td>
+							<td class="valor-tabla" align="right">{{factura.cantidad_5}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_unitario_5}}</td>
+							<td class="valor-tabla" align="right">{{factura.porcentaje_descuento_5}}</td>
+							<td class="valor-tabla" align="right">{{factura.valor_descuento_5}}</td>
+							{% if factura.iva_total %}
+							<td class="valor-tabla" align="right">{{factura.iva_5}}</td>
+							{% endif %}
+							{% if factura.ico_total %}
+							<td class="valor-tabla" align="right">{{factura.ico_5}}</td>
+							{% endif %}
+							<td class="valor-tabla" align="right">{{factura.valor_total_5}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+				<div class="row">
+					<table class="total-documento">
+						<tr>
+							<th style="text-align: right;">Sub Total: </th>
+							<td align="right" class="totales">{{factura.sub_total}}</td>
+						</tr>
+						{% if factura.iva_total %}
+						<tr>
+							<th style="text-align: right;">Total IVA: </th>
+							<td align="right" class="totales">{{factura.iva_total}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.ico_total %}
+						<tr>
+							<th style="text-align: right;">Total ICO: </th>
+							<td align="right" class="totales">{{factura.ico_total}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.reterenta %}
+						<tr>
+							<th style="text-align: right;">- Reterenta: </th>
+							<td align="right" class="totales">{{factura.reterenta}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.reteiva %}
+						<tr>
+							<th style="text-align: right;">- Reteiva: </th>
+							<td align="right" class="totales">{{factura.reteiva}}</td>
+						</tr>
+						{% endif %}
+						{% if factura.reteica %}
+						<tr>
+							<th style="text-align: right;">- Reteica: </th>
+							<td align="right" class="totales">{{factura.reteica}}</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<th style="padding-bottom: 5px; text-align: right;">Total: </th>
+							<td style="padding-bottom: 5px;" align="right" class="totales">{{factura.total_documento}}</td>
+						</tr>
+						{% if factura.anticipo %}
+						<tr>
+							<th style="padding-top: 5px; border-top: solid white 2px; text-align: right;">Anticipo: </th>
+							<td style="padding-top: 5px; border-top: solid white 2px;" align="right" class="totales">{{factura.anticipo}}</td>
+						</tr>
+						<tr>
+							<th>Saldo Pendiente: </th>
+							<td align="right" class="totales">{{factura.saldo_pendiente}}</td>
+						</tr>
+						{% endif %}
+					</table>
+				</div>
+			</div>
+			{% if factura.observacion != "No Registrado" %}
+			<div class="datos-paob-detalle observacion" style="margin-right: 10px; margin-left: 10px;">
+				<strong>Nota:</strong> {{factura.observacion}}
+			</div>	
+			{% endif %}
+		</div>
+	</div>
+	<div class="mensaje-confirmacion-generar-remision">
+		<h2><span class="glyphicon glyphicon-alert"></span> Generar Documento</h2>
+		<p>Se generará una nueva <strong>Remisión</strong> utilizando los datos de esta <strong>Factura de Venta.</strong><br>
+		¿Desea continuar con esta acción?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'generar_remision_fac_ven' pk=factura.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-generar-ncredito">
+		<h2><span class="glyphicon glyphicon-alert"></span> Anular Factura</h2>
+		<p>Se generará una nueva <strong>Nota Crédito</strong> utilizando los datos de esta factura de venta.<br>Esto <strong>Anulará</strong> el documento actual.<br>
+		¿Desea generar una Nota Crédito de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'generar_nota_credito' pk=factura.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-generar-ndebito">
+		<h2><span class="glyphicon glyphicon-alert"></span> Anular Factura</h2>
+		<p>Se generará una nueva <strong>Nota Débito</strong> utilizando los datos de esta factura de venta.<br>Esto <strong>Anulará</strong> el documento actual.<br>
+		¿Desea generar una Nota Débito de todos modos?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'generar_nota_debito' pk=factura.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+{% endblock %}  
