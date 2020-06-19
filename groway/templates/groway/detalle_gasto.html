@@ -2,26 +2,27 @@
 {% load static %}
 {% block content %}
 	<div class="form-header">
-		<h2>Registro de Gasto {{gasto.fecha_emision}} {{gasto.fecha_emision|date:"a"}}</h2>
+		<h2>{{gasto.concepto_gasto}} {{gasto.numero_gasto}}</h2>
 	</div>
 	<div class="form-body">
 		<div class="acciones-objeto row">
 			<a class="acciones accion-eliminar">Eliminar</a>
 			<a class="acciones accion-editar">Editar</a>
+			<a class="acciones accion-pdf" href="{% url 'pdf_gasto' pk=gasto.pk %}" target="_blank">Generar PDF</a>
 		</div>
 		<div class="form-content-detalle-consecutivo">
 			<div class="datos_gasto">
 				<div class="gasto_info">
 					<div class="img-cat">
-						<label for="concep_gastos">Concepto del Gasto</label>
-						<div class="descrip-cargos" id="concep_gastos">
-							{{gasto.concepto_gasto}}
+						<label for="descrip_gastos">Fecha</label>
+						<div class="descrip-cargos" id="descrip_gastos">      
+							{{gasto.fecha_emision|date:"d F Y"}} {{gasto.fecha_emision|date:"f a"}}
 						</div>
 					</div>
 					<div class="img-cat">
-						<label for="descrip_gastos">Descripción del Gasto</label>
-						<div class="descrip-cargos" id="descrip_gastos">      
-							{{gasto.descripcion_gasto|linebreaksbr}}
+						<label for="concep_gastos">Concepto del Gasto</label>
+						<div class="descrip-cargos" id="concep_gastos">
+							{{gasto.concepto_gasto}}
 						</div>
 					</div>
 					<div class="img-cat">
@@ -32,6 +33,18 @@
 					</div>
 				</div>
 			</div>
+			{% if gasto.descripcion_detallada != "No Registrado" %}
+			<div class="descripcion-observaciones">
+				{% if gasto.descripcion_detallada != "No Registrado" %}
+				<div class="datos-paob-detalle descripcion_detallada" style="margin-right: 10px; margin-left: 10px;">
+					<label for="descripcion_detallada">Descripcion General</label>
+					<div style="text-align: justify;" class="descripcion-content" id="descripcion_detallada">      
+						{{gasto.descripcion_gasto|linebreaksbr}}
+					</div>
+				</div>
+				{% endif %}
+			</div>
+			{% endif %}
 		</div>
 	</div>
 	<div class="mensaje-confirmacion-edicion">

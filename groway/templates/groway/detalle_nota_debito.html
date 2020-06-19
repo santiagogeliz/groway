@@ -2,10 +2,13 @@
 {% load static %}
 {% block content %}
 	<div class="form-header">
-		<h2>NOTA DÉBITO {{debitnote.consecutivo_interno}}</h2>
+		<h2>NOTA DÉBITO {{debitnote.consecutivo_interno}} {% if debitnote.pagada == True %} -<strong style="color: green"> PAGADA</strong>{% endif %}</h2>
 	</div>
 	<div class="form-body">
 		<div class="acciones-objeto-documento row">
+			{% if debitnote.pagada == False %}
+			<a class="acciones accion-pagar">Pagar</a>
+			{% endif %}
 			<a class="acciones accion-pdf" href="{% url 'pdf_nota_debito' pk=debitnote.pk %}" target="_blank">Generar PDF</a>
 		</div>
 		<div class="form-content-detalle-cotizacion">
@@ -365,5 +368,18 @@
 			</div>	
 			{% endif %}
 		</div>
+	</div>
+	<div class="mensaje-confirmacion-pagar-factura">
+		<h2><span class="glyphicon glyphicon-alert"></span> Registrar Pago</h2>
+		<p>Se registrará un pago para esta <strong>Nota Débito</strong>, esto limitará las acciones para este documento.<br>
+		¿Desea continuar con esta acción?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'pagar_debitnote' pk=debitnote.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
 	</div>
 {% endblock %}  

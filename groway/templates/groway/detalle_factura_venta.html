@@ -2,26 +2,29 @@
 {% load static %}
 {% block content %}
 	<div class="form-header">
-		<h2>FACTURA DE VENTA {{factura.consecutivo_interno}} {% if factura.anulada == True %} -<strong style="color: red"> ANULADA</strong></h2>{% endif %}
+		<h2>FACTURA DE VENTA {{factura.consecutivo_interno}} {% if factura.anulada == True %} -<strong style="color: red"> ANULADA</strong>{% endif %} {% if factura.pagada == True %} -<strong style="color: green"> PAGADA</strong>{% endif %}</h2>
 	</div>
 	<div class="form-body">
 		<div class="acciones-objeto-documento row">
-			{% if nohayconsecutivo_rsm == 1 and remisionesgeneradas == 0 %}
+			{% if factura.pagada == False and factura.anulada == False %}
+			<a class="acciones accion-pagar">Pagar</a>
+			{% endif %}
+			{% if nohayconsecutivo_rsm == 1 and remisionesgeneradas == 0 and factura.anulada == False %}
 			<a class="acciones accion-remision">Generar Remisión</a>
 			{% endif %}
-			{% if nohayconsecutivo_rsm == 0 and remisionesgeneradas == 0 %}
+			{% if nohayconsecutivo_rsm == 0 and remisionesgeneradas == 0 and factura.anulada == False %}
 			<a class="acciones-disable">Generar Remisión</a>
 			{% endif %}
-			{% if nohayconsecutivo_ncred == 1 and notascreditogeneradas == 0 and notasdebitogeneradas == 0 %}
+			{% if nohayconsecutivo_ncred == 1 and notascreditogeneradas == 0 and notasdebitogeneradas == 0 and factura.pagada == False %}
 			<a class="acciones accion-ncredito">Generar Nota Crédito</a>
 			{% endif %}
-			{% if nohayconsecutivo_ndeb == 1 and notasdebitogeneradas == 0 and notascreditogeneradas == 0 %}
+			{% if nohayconsecutivo_ndeb == 1 and notasdebitogeneradas == 0 and notascreditogeneradas == 0 and factura.pagada == False %}
 			<a class="acciones accion-ndebito">Generar Nota Débito</a>
 			{% endif %}
-			{% if nohayconsecutivo_ncred == 0 and notascreditogeneradas == 0 and notasdebitogeneradas == 0 %}
+			{% if nohayconsecutivo_ncred == 0 and notascreditogeneradas == 0 and notasdebitogeneradas == 0 and factura.pagada == False %}
 			<a class="acciones-disable">Generar Nota Crédito</a>
 			{% endif %}
-			{% if nohayconsecutivo_ndeb == 0 and notasdebitogeneradas == 0 and notascreditogeneradas == 0 %}
+			{% if nohayconsecutivo_ndeb == 0 and notasdebitogeneradas == 0 and notascreditogeneradas == 0 and factura.pagada == False %}
 			<a class="acciones-disable">Generar Nota Débito</a>
 			{% endif %}
 			<a class="acciones accion-pdf" href="{% url 'pdf_factura_venta' pk=factura.pk %}" target="_blank">Generar PDF</a>
@@ -355,6 +358,19 @@
 			</div>	
 			{% endif %}
 		</div>
+	</div>
+	<div class="mensaje-confirmacion-pagar-factura">
+		<h2><span class="glyphicon glyphicon-alert"></span> Registrar Pago</h2>
+		<p>Se registrará un pago para esta <strong>Factura</strong>, esto limitará las acciones para este documento.<br>
+		¿Desea continuar con esta acción?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'pagar_factura' pk=factura.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
 	</div>
 	<div class="mensaje-confirmacion-generar-remision">
 		<h2><span class="glyphicon glyphicon-alert"></span> Generar Documento</h2>

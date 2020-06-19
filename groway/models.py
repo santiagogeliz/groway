@@ -155,9 +155,9 @@ LIMPIEZA = "L"
 ASESORIA = "A"
 TRANSPORTE = "T"
 IMPUESTOS = "I"
-CONCEPTO_GASTO = [(RENTA_ALQUILER, "Alquiler del local o inmueble"), (SERVICIOS, "Servicios básicos (electricidad, agua, etc)"), (PERSONAL, "Gastos en personal de trabajo (Nóminas, salarios, etc)"),
-(OFICINA, "Material de oficina"), (PUBLICIDAD, "Marketing, publicidad y relaciones públicas"), (MANTENIMIENTO, "Mantenimiento de equipos e instalaciones"), (LIMPIEZA, "Servicios de limpiesa"),
-(ASESORIA, "Asesorías, servicios jurídicos y auditorías"), (TRANSPORTE, "Transporte de mercancías y viajes"), (IMPUESTOS, "Tributos e impuestos")]
+CONCEPTO_GASTO = [(RENTA_ALQUILER, "Pago de Alquiler"), (SERVICIOS, "Pago de Servicios"), (PERSONAL, "Pago de Nómina"),
+(OFICINA, "Material de oficina"), (PUBLICIDAD, "Marketing y Publicidad"), (MANTENIMIENTO, "Mantenimiento"), (LIMPIEZA, "Servicios de Limpiesa"),
+(ASESORIA, "Asesorías, servicios jurídicos y auditorías"), (TRANSPORTE, "Transporte"), (IMPUESTOS, "Impuestos")]
 
 
 # Modelos de la APP
@@ -938,6 +938,7 @@ class Factura_de_venta(models.Model):
 	fecha_para_consec = models.DateField(null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
 	fecha_vencimiento = models.DateTimeField(null=True, blank=True)
+	fecha_pago = models.DateTimeField(null=True, blank=True)
 	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
@@ -1029,6 +1030,7 @@ class Factura_de_venta(models.Model):
 	observacion = models.CharField(max_length=200,  null=True, blank=True)
 	generado = models.BooleanField(default=False)
 	anulada = models.BooleanField(default=False)
+	pagada = models.BooleanField(default=False)
 
 
 	def auto_consecutivo(self):
@@ -1449,6 +1451,7 @@ class Nota_credito(models.Model):
 	referencia_factura_DIAN = models.TextField(max_length=200, null=True, blank=True)
 	fecha_emision_factura = models.DateTimeField(null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
+	fecha_pago = models.DateTimeField(null=True, blank=True)
 	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
@@ -1547,6 +1550,7 @@ class Nota_credito(models.Model):
 	descuento_rebaja = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	saldo_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	generado = models.BooleanField(default=False)
+	pagada = models.BooleanField(default=False)
 
 
 	def auto_consecutivo(self):
@@ -1805,6 +1809,7 @@ class Nota_debito(models.Model):
 	referencia_factura_DIAN = models.TextField(max_length=200, null=True, blank=True)
 	fecha_emision_factura = models.DateTimeField(null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
+	fecha_pago = models.DateTimeField(null=True, blank=True)
 	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
@@ -1899,6 +1904,7 @@ class Nota_debito(models.Model):
 	descripcion_cargo = models.TextField(null=True, blank=True)
 	saldo_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	generado = models.BooleanField(default=False)
+	pagada = models.BooleanField(default=False)
 
 
 	def auto_consecutivo(self):
@@ -2374,15 +2380,25 @@ class Factura_de_compra(models.Model):
 
 
 class Gastos_registro(models.Model):
+	numero_gasto = models.IntegerField(null=True, blank=True, default=1)
 	concepto_gasto = models.CharField(max_length=1, choices=CONCEPTO_GASTO)
 	descripcion_gasto = models.TextField(null=True, blank=True)
 	valor_gasto = models.DecimalField(max_digits=11, decimal_places=2)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 
+	def auto_numero(self):
+		gastos_creados = Gastos_registro.objects.filter(concepto_gasto=self.concepto_gasto).count()
+		if gastos_creados == 0:
+			self.numero_gasto = 1
+			self.save()
+		elif gastos_creados > 0:
+			self.numero_gasto = gastos_creados
+			self.save()
+
 	def __str__(self):
 		self.save()
-		return self.concepto_gasto
+		return '%s %s'%(self.concepto_gasto, self.numero_gasto)
 
 
 class Crecimiento(models.Model):
@@ -2421,17 +2437,17 @@ class Crecimiento(models.Model):
 			inicio = inicio + desface_tiempo
 			fin = datetime(año, mes, dia, 23, 59, 59, tzinfo=pytz.UTC)
 			fin = fin + desface_tiempo
-			facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+			facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 			total_facturas = 0
 			total_impuestos = 0
 			for factura in facturas:
 				venta = factura.total_documento
 				total_facturas = total_facturas + venta
 				total_impuestos = total_impuestos + factura.iva_total + factura.ico_total
-			creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-			creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-			creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-			debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio, fin), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+			creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+			creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+			creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+			debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio, fin), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 			total_cn_1 = 0
 			imp_cn_1 = 0
 			for creditnote in creditnotes_concep_1:
@@ -2493,17 +2509,17 @@ class Crecimiento(models.Model):
 				ganancias = []
 				ventas_dia = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + factura.iva_total + factura.ico_total
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -2581,17 +2597,17 @@ class Crecimiento(models.Model):
 				ganancias = []
 				ventas_semana = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + factura.iva_total + factura.ico_total
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -2668,15 +2684,15 @@ class Crecimiento(models.Model):
 				fin_dia = inicio_dia + semana_a_semana
 				ventas_semana = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					for factura in facturas:
 						venta = factura.total_documento
 						total_facturas = total_facturas + venta
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True,  concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True,  concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -2734,17 +2750,17 @@ class Crecimiento(models.Model):
 				ganancias = []
 				ventas_mes = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + factura.iva_total + factura.ico_total
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -2821,15 +2837,15 @@ class Crecimiento(models.Model):
 				fin_dia = inicio_dia + mes_a_mes
 				ventas_mes = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					for factura in facturas:
 						venta = factura.total_documento
 						total_facturas = total_facturas + venta
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -2887,17 +2903,17 @@ class Crecimiento(models.Model):
 				ganancias = []
 				ventas_año = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + factura.iva_total + factura.ico_total
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=self.org_creadora, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:

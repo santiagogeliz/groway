@@ -43,8 +43,10 @@
         var volver_dropdown = $(".dropdown-volver-consectermin");
         var link_volver = $(".volver-link");
         var mensaje_edicion = $(".mensaje-confirmacion-edicion-documento");
+        var pagar_factura = $(".mensaje-confirmacion-pagar-factura");
         var mensaje_generacion = $(".mensaje-confirmacion-generar-documento");
         var accion_editar = $(".accion-editar");
+        var accion_pagar = $(".accion-pagar");
         var accion_remision = $(".accion-remision");
         var respuesta_no = $(".respuesta-no");
   			var descripcion = $(".descripcion-dropdown");
@@ -195,11 +197,15 @@
         accion_editar.click(function() {
           mensaje_edicion.addClass("editar");
         });
+        accion_pagar.click(function() {
+          pagar_factura.addClass("editar");
+        });
         accion_remision.click(function() {
           mensaje_generacion.addClass("editar");
         });
         respuesta_no.click(function() {
           mensaje_edicion.removeClass("editar");
+          pagar_factura.removeClass("editar");
           mensaje_generacion.removeClass("editar");
         });
   		});
@@ -297,6 +303,7 @@
                     <option value="-fecha_emision">Ordenar por Fecha</option>
                     <option value="nombre_cliente">Ordenar por Cliente</option>
                     <option value="total_documento">Ordenar por Valor Total</option>
+                    <option value="pagada">Notas Débito Pagadas</option>
                   </select>
                 </div>
               </form>
@@ -330,6 +337,9 @@
               <h4>{{debitnote.consecutivo_interno}}</h4>
               <p><strong>{{debitnote.fecha_emision|date:"d F Y"}} {{debitnote.fecha_emision|date:"f a"}}</strong>
               <p><strong>{{debitnote.cliente}}</strong></p>
+              {% if debitnote.pagada == True %}
+              <p style="color: green;"><strong>PAGADA</strong></p>
+              {% endif %}
             </a>
           {% endfor %}
           {% endif %}
@@ -339,6 +349,9 @@
               <h4>{{debitnote.consecutivo_interno}}</h4>
               <p><strong>{{debitnote.fecha_emision|date:"d F Y"}} {{debitnote.fecha_emision|date:"f a"}}</strong>
               <p><strong>{{debitnote.cliente}}</strong></p>
+              {% if debitnote.pagada == True %}
+              <p style="color: green;"><strong>PAGADA</strong></p>
+              {% endif %}
             </a>
           {% endfor %}
           {% endif %}

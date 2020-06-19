@@ -8,6 +8,7 @@
 		<div class="acciones-objeto row">
 			<a class="acciones accion-eliminar">Eliminar</a>
 			<a class="acciones accion-editar" href="{% url 'editar_reporte' pk=reporte.pk %}">Editar</a>
+			<a class="acciones accion-pdf" href="{% url 'pdf_reporte_crecimiento' pk=reporte.pk %}" target="_blank">Generar PDF</a>
 		</div>
 		<div class="form-content-detalle-grafico" style="margin-bottom: 20px;">
 			<div class="nuevo-consecutivo">

@@ -141,6 +141,9 @@
 				<p class="nit">{{factura.org_creadora}}<br>{{factura.id_organizacion}}. {{factura.numero_id_organizacion}} - {{factura.numero_id_org_adicional}}<br>{{factura.dir_organizacion}}<br>Tel: {{factura.telefono_organizacion}}<br>{{factura.ciudad_organizacion}}, {{factura.departamento_organizacion}}</p>
 			</div>
 			<div class="consec_resol">
+				{% if factura.pagada == True %}
+				<p class="anulada" id="anulation"><strong>PAGADA</strong>
+				{% endif %}
 				{% if factura.anulada == True %}
 				<p class="anulada" id="anulation"><strong>ANULADA</strong>
 				{% endif %}

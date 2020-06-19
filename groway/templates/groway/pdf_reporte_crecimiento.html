@@ -1,0 +1,214 @@
+{% load static %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org.TR/html4/loose.dtd">
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/png" href="{% static 'img/growayicon.ico' %}">
+	<link rel="stylesheet" href="{% static 'css/groway.css' %}">
+  	<title>Groway - Software Contable, Facturación, Crecimiento</title>
+  	<style type="text/css">
+  		@page {
+	        size: letter portrait;
+	        @frame col1_frame {             /* Content frame 1 */
+	            -pdf-frame-content: logo_nit;
+	            left: 30px; width: 550px; top: 50px; height: auto;
+	        }
+	        @frame col2_frame {             /* Content frame 2 */
+	            -pdf-frame-content: anulation;
+	            left: 400px; width: 600px; top: 70px; height: auto;
+	        }
+	        @frame col2_frame {             /* Content frame 2 */
+	            -pdf-frame-content: consec;
+	            left: 400px; width: 600px; top: 110px; height: auto;
+	        }
+	        @frame col2_frame {             /* Content frame 2 */
+	            -pdf-frame-content: resol;
+	            left: 400px; width: 600px; top: 150px; height: auto;
+	        }
+	        @frame info_frame {
+	        	-pdf-frame-content: info_cliente;
+	        	left: 20px; width: 770px; top: 285px; height: auto;
+	        }
+	        @frame info_frame {
+	        	-pdf-frame-content: referencia-documento;
+	        	left: 510px; width: 300px; top: 340px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla1;
+	        	left: 25px; width: 760px; top: 470px; height: 400px;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla2;
+	        	left: 572px; width: 700px; bottom: 460px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla2_moved;
+	        	left: 572px; width: 700px; bottom: 420px; height: auto;
+	        }
+	         @frame tabla_frame {
+	        	-pdf-frame-content: info_tabla2_moved-more;
+	        	left: 572px; width: 700px; bottom: 340px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: detalle-documento;
+	        	left: 20px; width: 450px; bottom: 434px; height: auto;
+	        }
+	         @frame tabla_frame {
+	        	-pdf-frame-content: detalle-documento-moved;
+	        	left: 20px; width: 450px; bottom: 394px; height: auto;
+	        }
+	         @frame tabla_frame {
+	        	-pdf-frame-content: detalle-documento-moved-more;
+	        	left: 20px; width: 450px; bottom: 314px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: nota-documento;
+	        	left: 30px; width: 400px; bottom: 80px; height: auto;
+	        }
+	        @frame footer_frame {
+	        	-pdf-frame-content: contact;
+	        	left: 160px; width: 500px; bottom: 40px; height: auto;
+	        }
+    	}
+    	p.nit {
+    		font-size: 13px;
+    	}
+    	h2.organizacion_nombre {
+    		font-size: 25px;
+    	}
+    	.consec, .anulada {
+    		text-align: center;
+    		font-size: 25px;
+    		color: #BD0406;
+    		padding-right: 240px;
+    		padding-bottom: 0px;
+    	}
+    	.resol {
+    		font-size: 13px;
+    		text-align: center;
+    		padding-right: 240px;
+    		padding-top: 0px;
+    	}
+    	.documento-info-cliente, .fecha {
+    		font-size: 13px;
+    		padding-left: 10px;
+    		border-bottom: solid 2px #C4CBB7;
+    	}
+    	.fecha p {
+    		margin: 0px;
+    	}
+    	.documento-table1 th {
+    		font-size: 13px;
+    	}
+    	.documento-table1 td {
+    		font-size: 12px;
+    		padding-top: 5px;
+    		border-top: solid 2px #C4CBB7;
+    	}
+    	.documento-table2 td, .documento-table2 th {
+    		font-size: 12px;
+    		padding-top: 5px;
+    		border-bottom: solid 2px #C4CBB7;
+    	}
+    	.documento-table2 th {
+    		text-align: right;
+    	}
+    	.detalle-items {
+    		border-top: solid 2px #C4CBB7;
+    		border-bottom: solid 2px #C4CBB7;
+    		font-size: 14px;
+    		padding-top: 5px;
+    		padding-left: 10px;
+    		padding-right: 10px;
+    		text-align: justify;
+    	}
+    	.contactenos {
+    		text-align: center;
+    		font-size: 12px;
+    	}
+  	</style>
+</head>
+<body>
+	<div class="documento-detail">
+		<div class="documento-header">
+			<div id="logo_nit">
+				{% if orgactivas.logo_organizacion %}
+				<img src="{{orgactivas.logo_organizacion.url}}" alt="Groway" width="300" height="60">
+				{% endif %}
+				{% if orgactivas.logo_organizacion == '' %}
+				<h2 class="organizacion_nombre">{{orgactivas.nombre_visible_cia}}</h2>
+				{% endif %}
+			</div>
+			<div class="consec_resol">
+				<p class="consec" id="consec"><strong>{{reporte.nombre}}</strong></p>
+			</div>
+		</div>
+		<div id="info_cliente">
+			<div class="fecha">
+				<p><strong>Fecha del Reporte:</strong> {{reporte.fecha_creacion|date:"d/m/Y"}}</p>
+			</div>
+			<div class="documento-info-cliente">
+				<p>Métrica de Crecimiento: {{reporte.metrica_crecimiento}}<br>
+				Fecha Inicio: {{reporte.fecha_inicio|date:"d/m/Y"}}<br>
+				{% if reporte.fecha_fin %}
+				Fecha Fin: {{reporte.fecha_fin|date:"d/m/Y"}}<br>
+				{% endif %}
+				{% if reporte.ventas_dia %}
+				Ventas del Día: {{reporte.ventas_dia}}<br>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				Ganancias del Día: {{reporte.ganancias_dia}}<br>
+				{% endif %}
+				{% endif %}
+				{% if reporte.ventas_semana and reporte.tasa_crecimiento_diaria %}
+				Ventas de la Semana: {{reporte.ventas_semana}}<br>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				Ganancias de la Semana: {{reporte.ganancias_semana}}<br>
+				{% endif %}
+				Crecimiento Diario (%): {{reporte.tasa_crecimiento_diaria}}<br>
+				{% endif %}
+				{% if reporte.ventas_mes and reporte.tasa_crecimiento_semana %}
+				Ventas del Mes: {{reporte.ventas_mes}}<br>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				Ganancias del Mes: {{reporte.ganancias_mes}}<br>
+				{% endif %}
+				Crecimiento Semanal (%): {{reporte.tasa_crecimiento_semana}}<br>
+				{% endif %}
+				{% if reporte.ventas_año and reporte.tasa_crecimiento_semana and reporte.tasa_crecimiento_mensual %}
+				Ventas del Año: {{reporte.ventas_año}}<br>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				Ganancias del Año: {{reporte.ganancias_año}}<br>
+				{% endif %}
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas' %}
+				Crecimiento Semanal (%): {{reporte.tasa_crecimiento_semana}}<br>
+				{% endif %}
+				Crecimiento Mensual (%): {{reporte.tasa_crecimiento_mensual}}<br>
+				{% endif %}
+				{% if reporte.ventas_periodo and reporte.tasa_crecimiento_mensual and reporte.tasa_crecimiento_anual %}
+				Ventas del Periodo: {{reporte.ventas_periodo}}<br>
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas VS Ganancias' %}
+				Ganancias del Periodo: {{reporte.ganancias_periodo}}<br>
+				{% endif %}
+				{% if reporte.metrica_crecimiento == 'Crecimiento de Ventas' %}
+				Crecimiento Mensual (%): {{reporte.tasa_crecimiento_mensual}}<br>
+				{% endif %}
+				Crecimiento Anual (%): {{reporte.tasa_crecimiento_anual}}
+				{% endif %}</p>
+			</div>
+		</div>
+		<div id="info_tabla1">
+			<img src="{% url 'grafica_detalle' %}">
+		</div>
+		<div id="contact">
+			<div class="contactenos">
+				{% if orgactivas.email == None %}
+				<p>GROWAY, un software de SantiagoGeliz<br>www.linkedin.com/in/santiagogeliz</p>
+				{% endif %}
+				{% if orgactivas.email %}
+				<p>{{orgactivas.email}} {% if orgactivas.website %} / {{orgactivas.website}} {% endif %}</p>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -2569,27 +2569,39 @@ def facturas_venta(request):
 		buscarxcliente = Factura_de_venta.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
 		buscarxtotal = Factura_de_venta.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
 		if buscarxfecha:
-			if orden == "anulada":
+			if orden == "pagada":
+				lista = buscarxfecha.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
+			elif orden == "anulada":
 				lista = buscarxfecha.filter(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
 			else:
 				lista = buscarxfecha.filter(anulada=False).order_by(orden)
 				lista = reemplazardatos_facturas(lista)
 		elif buscarxconsec:
-			if orden == "anulada":
+			if orden == "pagada":
+				lista = buscarxconsec.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
+			elif orden == "anulada":
 				lista = buscarxconsec.filter(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
 			else:
 				lista = buscarxconsec.filter(anulada=False).order_by(orden)
 				lista = reemplazardatos_facturas(lista)
 		elif buscarxcliente:
-			if orden == "anulada":
+			if orden == "pagada":
+				lista = buscarxcliente.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
+			elif orden == "anulada":
 				lista = buscarxcliente.filter(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
 			else:
 				lista = buscarxcliente.filter(anulada=False).order_by(orden)
 				lista = reemplazardatos_facturas(lista)
 		elif buscarxtotal:
+			if orden == "pagada":
+				lista = buscarxtotal.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
 			if orden == "anulada":
 				lista = buscarxtotal.order_by(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
@@ -2846,27 +2858,39 @@ def detalle_factura_venta(request, pk):
 		buscarxcliente = Factura_de_venta.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
 		buscarxtotal = Factura_de_venta.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
 		if buscarxfecha:
-			if orden == "anulada":
+			if orden == "pagada":
+				lista = buscarxfecha.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
+			elif orden == "anulada":
 				lista = buscarxfecha.filter(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
 			else:
 				lista = buscarxfecha.filter(anulada=False).order_by(orden)
 				lista = reemplazardatos_facturas(lista)
 		elif buscarxconsec:
-			if orden == "anulada":
+			if orden == "pagada":
+				lista = buscarxconsec.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
+			elif orden == "anulada":
 				lista = buscarxconsec.filter(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
 			else:
 				lista = buscarxconsec.filter(anulada=False).order_by(orden)
 				lista = reemplazardatos_facturas(lista)
 		elif buscarxcliente:
-			if orden == "anulada":
+			if orden == "pagada":
+				lista = buscarxcliente.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
+			elif orden == "anulada":
 				lista = buscarxcliente.filter(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
 			else:
 				lista = buscarxcliente.filter(anulada=False).order_by(orden)
 				lista = reemplazardatos_facturas(lista)
 		elif buscarxtotal:
+			if orden == "pagada":
+				lista = buscarxtotal.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_facturas(lista)
 			if orden == "anulada":
 				lista = buscarxtotal.order_by(anulada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_facturas(lista)
@@ -2881,6 +2905,21 @@ def detalle_factura_venta(request, pk):
 	return render(request, 'groway/detalle_factura_venta.html', {'orgactivas':orgactivas, 'factura':factura, 'facturas':facturas, 'lista':lista, 'nohayfacturas':nohayfacturas, 'nohayterminospago':nohayterminospago, 'nohayconsecutivo':nohayconsecutivo,
 		'nohayconsecutivo_rsm':nohayconsecutivo_rsm, 'nohayconsecutivo_ncred':nohayconsecutivo_ncred, 'nohayconsecutivo_ndeb':nohayconsecutivo_ndeb,
 		'remisionesgeneradas':remisionesgeneradas, 'notascreditogeneradas':notascreditogeneradas, 'notasdebitogeneradas':notasdebitogeneradas, 'cotizacion_generadora':cotizacion_generadora, 'solo_fac_anuladas':solo_fac_anuladas, 'nohayitems':nohayitems, 'nohayclientes':nohayclientes})
+
+
+def pagar_factura(request, pk):
+	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
+	if orgactivas:
+		orgactivas = orgactivas.get(activa=True, administrador=request.user)
+	else:
+		orgactivas = None
+	factura = get_object_or_404(Factura_de_venta, pk=pk)
+	factura.pagada = True
+	factura.fecha_pago = timezone.now()
+	factura.save()
+	return redirect('detalle_factura_venta', pk=factura.pk)
+
+
 
 def pdf_factura_venta(request, pk):
 	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
@@ -3091,28 +3130,44 @@ def notas_credito(request):
 	nohayconsecutivo = Consecutivo_documento.objects.filter(tipo_de_documento='NCT', org_creadora=orgactivas).count()
 	nohaynotas = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).count()
 	if request.method == "POST":
-			dic = request.POST
-			busqueda = dic["buscar"]
-			orden = dic["ordenar"]
-			buscarxfecha = Nota_credito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxconsec = Nota_credito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxcliente = Nota_credito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxtotal = Nota_credito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
-			if buscarxfecha:
-				lista = buscarxfecha.order_by(orden)
-				lista = reemplazardatos_credits_notes(lista)
-			elif buscarxconsec:
-				lista = buscarxconsec.order_by(orden)
-				lista = reemplazardatos_credits_notes(lista)
-			elif buscarxcliente:
-				lista = buscarxcliente.order_by(orden)
-				lista = reemplazardatos_credits_notes(lista)
-			elif buscarxtotal:
-				lista = buscarxtotal.order_by(orden)
+		dic = request.POST
+		busqueda = dic["buscar"]
+		orden = dic["ordenar"]
+		buscarxfecha = Nota_credito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxconsec = Nota_credito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxcliente = Nota_credito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxtotal = Nota_credito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
+		if buscarxfecha:
+			if orden == "pagada":
+				lista = buscarxfecha.filter(pagada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_credits_notes(lista)
 			else:
-				lista = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+				lista = buscarxfecha.order_by(orden)
 				lista = reemplazardatos_credits_notes(lista)
+		elif buscarxconsec:
+			if orden == "pagada":
+				lista = buscarxconsec.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_credits_notes(lista)
+			else:
+				lista = buscarxconsec.order_by(orden)
+				lista = reemplazardatos_credits_notes(lista)
+		elif buscarxcliente:
+			if orden == "pagada":
+				lista = buscarxcliente.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_credits_notes(lista)
+			else:
+				lista = buscarxcliente.order_by(orden)
+				lista = reemplazardatos_credits_notes(lista)
+		elif buscarxtotal:
+			if orden == "pagada":
+				lista = buscarxtotal.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_credits_notes(lista)
+			else:
+				lista = buscarxtotal.order_by(orden)
+				lista = reemplazardatos_credits_notes(lista)
+		else:
+			lista = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+			lista = reemplazardatos_credits_notes(lista)
 	creditnotes = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
 	creditnotes = reemplazardatos_credits_notes(creditnotes)
 	return render(request, 'groway/notas_credito.html', {'orgactivas':orgactivas, 'creditnotes':creditnotes, 'lista':lista, 'nohaynotas':nohaynotas, 'nohayconsecutivo':nohayconsecutivo})
@@ -3145,28 +3200,44 @@ def detalle_nota_credito(request, pk):
 	else:
 		remisionesgeneradas = 0
 	if request.method == "POST":
-			dic = request.POST
-			busqueda = dic["buscar"]
-			orden = dic["ordenar"]
-			buscarxfecha = Nota_credito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxconsec = Nota_credito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxcliente = Nota_credito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxtotal = Nota_credito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
-			if buscarxfecha:
-				lista = buscarxfecha.order_by(orden)
-				lista = reemplazardatos_credits_notes(lista)
-			elif buscarxconsec:
-				lista = buscarxconsec.order_by(orden)
-				lista = reemplazardatos_credits_notes(lista)
-			elif buscarxcliente:
-				lista = buscarxcliente.order_by(orden)
-				lista = reemplazardatos_credits_notes(lista)
-			elif buscarxtotal:
-				lista = buscarxtotal.order_by(orden)
+		dic = request.POST
+		busqueda = dic["buscar"]
+		orden = dic["ordenar"]
+		buscarxfecha = Nota_credito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxconsec = Nota_credito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxcliente = Nota_credito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxtotal = Nota_credito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
+		if buscarxfecha:
+			if orden == "pagada":
+				lista = buscarxfecha.filter(pagada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_credits_notes(lista)
 			else:
-				lista = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+				lista = buscarxfecha.order_by(orden)
 				lista = reemplazardatos_credits_notes(lista)
+		elif buscarxconsec:
+			if orden == "pagada":
+				lista = buscarxconsec.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_credits_notes(lista)
+			else:
+				lista = buscarxconsec.order_by(orden)
+				lista = reemplazardatos_credits_notes(lista)
+		elif buscarxcliente:
+			if orden == "pagada":
+				lista = buscarxcliente.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_credits_notes(lista)
+			else:
+				lista = buscarxcliente.order_by(orden)
+				lista = reemplazardatos_credits_notes(lista)
+		elif buscarxtotal:
+			if orden == "pagada":
+				lista = buscarxtotal.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_credits_notes(lista)
+			else:
+				lista = buscarxtotal.order_by(orden)
+				lista = reemplazardatos_credits_notes(lista)
+		else:
+			lista = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+			lista = reemplazardatos_credits_notes(lista)
 	creditnotes = Nota_credito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
 	creditnotes = reemplazardatos_credits_notes(creditnotes)
 	return render(request, 'groway/detalle_nota_credito.html', {'orgactivas':orgactivas, 'creditnote':creditnote, 'creditnotes':creditnotes, 'lista':lista, 'nohaynotas':nohaynotas, 'nohayconsecutivo':nohayconsecutivo, 'factura_generadora':factura_generadora,
@@ -3199,6 +3270,18 @@ def pdf_nota_credito(request, pk):
 		return response
 	return HttpResponse("Not found")
 
+def pagar_creditnote(request, pk):
+	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
+	if orgactivas:
+		orgactivas = orgactivas.get(activa=True, administrador=request.user)
+	else:
+		orgactivas = None
+	creditnote = get_object_or_404(Nota_credito, pk=pk)
+	creditnote.pagada = True
+	creditnote.fecha_pago = timezone.now()
+	creditnote.save()
+	return redirect('detalle_nota_credito', pk=creditnote.pk)
+
 @login_required
 def notas_debito(request):
 	lista ="valor"
@@ -3210,28 +3293,44 @@ def notas_debito(request):
 	nohayconsecutivo = Consecutivo_documento.objects.filter(tipo_de_documento='NDT', org_creadora=orgactivas).count()
 	nohaynotas = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).count()
 	if request.method == "POST":
-			dic = request.POST
-			busqueda = dic["buscar"]
-			orden = dic["ordenar"]
-			buscarxfecha = Nota_debito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxconsec = Nota_debito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxcliente = Nota_debito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxtotal = Nota_debito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
-			if buscarxfecha:
-				lista = buscarxfecha.order_by(orden)
-				lista = reemplazardatos_debits_notes(lista)
-			elif buscarxconsec:
-				lista = buscarxconsec.order_by(orden)
-				lista = reemplazardatos_debits_notes(lista)
-			elif buscarxcliente:
-				lista = buscarxcliente.order_by(orden)
-				lista = reemplazardatos_debits_notes(lista)
-			elif buscarxtotal:
-				lista = buscarxtotal.order_by(orden)
+		dic = request.POST
+		busqueda = dic["buscar"]
+		orden = dic["ordenar"]
+		buscarxfecha = Nota_debito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxconsec = Nota_debito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxcliente = Nota_debito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxtotal = Nota_debito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
+		if buscarxfecha:
+			if orden == "pagada":
+				lista = buscarxfecha.filter(pagada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_debits_notes(lista)
 			else:
-				lista = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+				lista = buscarxfecha.order_by(orden)
 				lista = reemplazardatos_debits_notes(lista)
+		elif buscarxconsec:
+			if orden == "pagada":
+				lista = buscarxconsec.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_debits_notes(lista)
+			else:
+				lista = buscarxconsec.order_by(orden)
+				lista = reemplazardatos_debits_notes(lista)
+		elif buscarxcliente:
+			if orden == "pagada":
+				lista = buscarxcliente.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_debits_notes(lista)
+			else:
+				lista = buscarxcliente.order_by(orden)
+				lista = reemplazardatos_debits_notes(lista)
+		elif buscarxtotal:
+			if orden == "pagada":
+				lista = buscarxtotal.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_debits_notes(lista)
+			else:
+				lista = buscarxtotal.order_by(orden)
+				lista = reemplazardatos_debits_notes(lista)
+		else:
+			lista = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+			lista = reemplazardatos_debits_notes(lista)
 	debitnotes = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
 	debitnotes = reemplazardatos_debits_notes(debitnotes)
 	return render(request, 'groway/notas_debito.html', {'orgactivas':orgactivas, 'debitnotes':debitnotes, 'lista':lista, 'nohaynotas':nohaynotas, 'nohayconsecutivo':nohayconsecutivo})
@@ -3264,28 +3363,44 @@ def detalle_nota_debito(request, pk):
 	else:
 		remisionesgeneradas = 0
 	if request.method == "POST":
-			dic = request.POST
-			busqueda = dic["buscar"]
-			orden = dic["ordenar"]
-			buscarxfecha = Nota_debito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxconsec = Nota_debito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxcliente = Nota_debito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
-			buscarxtotal = Nota_debito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
-			if buscarxfecha:
-				lista = buscarxfecha.order_by(orden)
-				lista = reemplazardatos_debits_notes(lista)
-			elif buscarxconsec:
-				lista = buscarxconsec.order_by(orden)
-				lista = reemplazardatos_debits_notes(lista)
-			elif buscarxcliente:
-				lista = buscarxcliente.order_by(orden)
-				lista = reemplazardatos_debits_notes(lista)
-			elif buscarxtotal:
-				lista = buscarxtotal.order_by(orden)
+		dic = request.POST
+		busqueda = dic["buscar"]
+		orden = dic["ordenar"]
+		buscarxfecha = Nota_debito.objects.filter(fecha_emision__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxconsec = Nota_debito.objects.filter(consecutivo_interno__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxcliente = Nota_debito.objects.filter(nombre_cliente__contains=busqueda, org_creadora=orgactivas, generado=True)
+		buscarxtotal = Nota_debito.objects.filter(total_documento__contains=busqueda, org_creadora=orgactivas, generado=True)
+		if buscarxfecha:
+			if orden == "pagada":
+				lista = buscarxfecha.filter(pagada=True).order_by('-consecutivo_interno')
 				lista = reemplazardatos_debits_notes(lista)
 			else:
-				lista = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+				lista = buscarxfecha.order_by(orden)
 				lista = reemplazardatos_debits_notes(lista)
+		elif buscarxconsec:
+			if orden == "pagada":
+				lista = buscarxconsec.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_debits_notes(lista)
+			else:
+				lista = buscarxconsec.order_by(orden)
+				lista = reemplazardatos_debits_notes(lista)
+		elif buscarxcliente:
+			if orden == "pagada":
+				lista = buscarxcliente.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_debits_notes(lista)
+			else:
+				lista = buscarxcliente.order_by(orden)
+				lista = reemplazardatos_debits_notes(lista)
+		elif buscarxtotal:
+			if orden == "pagada":
+				lista = buscarxtotal.filter(pagada=True).order_by('-consecutivo_interno')
+				lista = reemplazardatos_debits_notes(lista)
+			else:
+				lista = buscarxtotal.order_by(orden)
+				lista = reemplazardatos_debits_notes(lista)
+		else:
+			lista = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
+			lista = reemplazardatos_debits_notes(lista)
 	debitnotes = Nota_debito.objects.filter(org_creadora=orgactivas, generado=True).order_by('-consecutivo_interno')
 	debitnotes = reemplazardatos_debits_notes(debitnotes)
 	return render(request, 'groway/detalle_nota_debito.html', {'orgactivas':orgactivas, 'debitnote':debitnote, 'debitnotes':debitnotes, 'lista':lista, 'nohaynotas':nohaynotas, 'nohayconsecutivo':nohayconsecutivo, 'factura_generadora':factura_generadora,
@@ -3317,6 +3432,18 @@ def pdf_nota_debito(request, pk):
 		response['Content-Disposition'] = content
 		return response
 	return HttpResponse("Not found")
+
+def pagar_debitnote(request, pk):
+	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
+	if orgactivas:
+		orgactivas = orgactivas.get(activa=True, administrador=request.user)
+	else:
+		orgactivas = None
+	debitnote = get_object_or_404(Nota_debito, pk=pk)
+	debitnote.pagada = True
+	debitnote.fecha_pago = timezone.now()
+	debitnote.save()
+	return redirect('detalle_nota_debito', pk=debitnote.pk)
 
 @login_required
 def facturas_compra(request):
@@ -3707,6 +3834,7 @@ def nuevo_gasto(request):
 			gasto.fecha_emision = timezone.now()
 			gasto.org_creadora = orgactivas
 			gasto.save()
+			gasto.auto_numero()
 			return redirect('detalle_gasto', pk=gasto.pk)
 	else:
 		form = Gastos_registroForm()
@@ -3772,6 +3900,27 @@ def detalle_gasto(request, pk):
 	gasto = reemplazardatos_gasto(gasto)
 	return render(request, 'groway/detalle_gasto.html', {'orgactivas':orgactivas, 'gastos':gastos, 'gasto':gasto, 'nohaygastos':nohaygastos, 'lista':lista})
 
+def pdf_gasto(request, pk):
+	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
+	if orgactivas:
+		orgactivas = orgactivas.get(activa=True, administrador=request.user)
+	else:
+		orgactivas = None
+	gasto = get_object_or_404(Gastos_registro, pk=pk)
+	gasto = reemplazardatos_gasto(gasto)
+	template = get_template('groway/pdf_gasto.html')
+	consec = gasto.fecha_emision
+	context = {'gasto':gasto,'orgactivas':orgactivas}
+	html = template.render(context)
+	result = BytesIO()
+	pdf = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), dest=result, link_callback=fetch_resources)
+	if pdf:
+		response = HttpResponse(result.getvalue(), content_type='application/pdf')
+		filename = "Reporte de gasto %s.pdf"%(consec)
+		content = "inline; filename = %s"%(filename)
+		response['Content-Disposition'] = content
+		return response
+	return HttpResponse("Not found")
 
 @login_required
 def reportes_crecimiento(request):
@@ -3830,17 +3979,17 @@ def grafica_nueva(request):
 		ventas = []
 		horas = []
 		while inicio_hora <= fin:
-			facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+			facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 			total_facturas = 0
 			total_impuestos = 0
 			for factura in facturas:
 				venta = factura.total_documento/1000000
 				total_facturas = total_facturas + venta
 				total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-			creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-			creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-			creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-			debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+			creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+			creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+			creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+			debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 			total_cn_1 = 0
 			imp_cn_1 = 0
 			for creditnote in creditnotes_concep_1:
@@ -3931,17 +4080,17 @@ def grafica_nueva(request):
 			ventas = []
 			dias = []
 			while inicio_dia <= fin:
-				facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+				facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 				total_facturas = 0
 				total_impuestos = 0
 				for factura in facturas:
 					venta = factura.total_documento/1000000
 					total_facturas = total_facturas + venta
 					total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-				debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True,  concepto_nota_credito='4').order_by('fecha_emision')
+				debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 				total_cn_1 = 0
 				imp_cn_1 = 0
 				for creditnote in creditnotes_concep_1:
@@ -4017,17 +4166,17 @@ def grafica_nueva(request):
 			ventas = []
 			semanas = []
 			while inicio_dia <= fin:
-				facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+				facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 				total_facturas = 0
 				total_impuestos = 0
 				for factura in facturas:
 					venta = factura.total_documento/1000000
 					total_facturas = total_facturas + venta
 					total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-				debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+				debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 				total_cn_1 = 0
 				imp_cn_1 = 0
 				for creditnote in creditnotes_concep_1:
@@ -4102,17 +4251,17 @@ def grafica_nueva(request):
 			ventas = []
 			meses = []
 			while inicio_dia <= fin:
-				facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+				facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 				total_facturas = 0
 				total_impuestos = 0
 				for factura in facturas:
 					venta = factura.total_documento/1000000
 					total_facturas = total_facturas + venta
 					total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-				debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+				debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 				total_cn_1 = 0
 				imp_cn_1 = 0
 				for creditnote in creditnotes_concep_1:
@@ -4187,17 +4336,17 @@ def grafica_nueva(request):
 			ventas = []
 			años = []
 			while inicio_dia <= fin:
-				facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+				facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 				total_facturas = 0
 				total_impuestos = 0
 				for factura in facturas:
 					venta = factura.total_documento/1000000
 					total_facturas = total_facturas + venta
 					total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-				debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+				debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 				total_cn_1 = 0
 				imp_cn_1 = 0
 				for creditnote in creditnotes_concep_1:
@@ -4290,17 +4439,17 @@ def grafica_detalle(request):
 			ventas = []
 			horas = []
 			while inicio_hora <= fin:
-				facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+				facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 				total_facturas = 0
 				total_impuestos = 0
 				for factura in facturas:
 					venta = factura.total_documento/1000000
 					total_facturas = total_facturas + venta
 					total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-				debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+				creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+				creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+				creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+				debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_hora, fin_hora), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 				total_cn_1 = 0
 				imp_cn_1 = 0
 				for creditnote in creditnotes_concep_1:
@@ -4391,17 +4540,17 @@ def grafica_detalle(request):
 				ventas = []
 				dias = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento/1000000
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -4477,17 +4626,17 @@ def grafica_detalle(request):
 				ventas = []
 				semanas = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento/1000000
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -4562,17 +4711,17 @@ def grafica_detalle(request):
 				ventas = []
 				meses = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento/1000000
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -4647,17 +4796,17 @@ def grafica_detalle(request):
 				ventas = []
 				años = []
 				while inicio_dia <= fin:
-					facturas = Factura_de_venta.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False).order_by('fecha_emision')
+					facturas = Factura_de_venta.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, anulada=False, pagada=True).order_by('fecha_emision')
 					total_facturas = 0
 					total_impuestos = 0
 					for factura in facturas:
 						venta = factura.total_documento/1000000
 						total_facturas = total_facturas + venta
 						total_impuestos = total_impuestos + (factura.iva_total/1000000) + (factura.ico_total/1000000)
-					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='1').order_by('fecha_emision')
-					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='3').order_by('fecha_emision')
-					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, concepto_nota_credito='4').order_by('fecha_emision')
-					debitnotes = Nota_debito.objects.filter(fecha_emision__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True).order_by('fecha_emision')
+					creditnotes_concep_1 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='1').order_by('fecha_emision')
+					creditnotes_concep_3 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='3').order_by('fecha_emision')
+					creditnotes_concep_4 = Nota_credito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True, concepto_nota_credito='4').order_by('fecha_emision')
+					debitnotes = Nota_debito.objects.filter(fecha_pago__range=(inicio_dia, fin_dia), org_creadora=orgactivas, generado=True, pagada=True).order_by('fecha_emision')
 					total_cn_1 = 0
 					imp_cn_1 = 0
 					for creditnote in creditnotes_concep_1:
@@ -4882,3 +5031,25 @@ def detalle_reporte(request, pk):
 	reportes = Crecimiento.objects.filter(org_creadora=orgactivas, guardada=True).order_by('-fecha_creacion')
 	reportes = reemplazardatos_reportes(reportes)
 	return render(request, 'groway/detalle_reporte.html', {'orgactivas':orgactivas, 'reporte':reporte, 'reportes':reportes, 'lista':lista, 'nohayreportes':nohayreportes, 'nohayfacturas':nohayfacturas})
+
+def pdf_reporte_crecimiento(request, pk):
+	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
+	if orgactivas:
+		orgactivas = orgactivas.get(activa=True, administrador=request.user)
+	else:
+		orgactivas = None
+	reporte = get_object_or_404(Crecimiento, pk=pk)
+	reporte = reemplazardatos_reporte(reporte)
+	template = get_template('groway/pdf_reporte_crecimiento.html')
+	titulo = reporte.nombre
+	context = {'reporte':reporte, 'orgactivas':orgactivas}
+	html = template.render(context)
+	result = BytesIO()
+	pdf = pisa.CreatePDF(BytesIO(html.encode("UTF-8")), dest=result, link_callback=fetch_resources)
+	if pdf:
+		response = HttpResponse(result.getvalue(), content_type='application/pdf')
+		filename = "%s.pdf"%(titulo)
+		content = "inline; filename = %s"%(filename)
+		response['Content-Disposition'] = content
+		return response
+	return HttpResponse("Not found")

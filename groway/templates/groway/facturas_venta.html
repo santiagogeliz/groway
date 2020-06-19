@@ -43,10 +43,12 @@
         var volver_dropdown = $(".dropdown-volver-consectermin");
         var link_volver = $(".volver-link");
         var mensaje_edicion = $(".mensaje-confirmacion-edicion-documento");
+        var pagar_factura = $(".mensaje-confirmacion-pagar-factura");
         var generar_remision = $(".mensaje-confirmacion-generar-remision");
         var generar_ncredito = $(".mensaje-confirmacion-generar-ncredito");
         var generar_ndebito = $(".mensaje-confirmacion-generar-ndebito");
         var accion_editar = $(".accion-editar");
+        var accion_pagar = $(".accion-pagar");
         var accion_remision = $(".accion-remision");
         var accion_ncredito = $(".accion-ncredito");
         var accion_ndebito = $(".accion-ndebito");
@@ -199,6 +201,9 @@
         accion_editar.click(function() {
           mensaje_edicion.addClass("editar");
         });
+        accion_pagar.click(function() {
+          pagar_factura.addClass("editar");
+        });
         accion_remision.click(function() {
           generar_remision.addClass("editar");
         });
@@ -210,6 +215,7 @@
         });
         respuesta_no.click(function() {
           mensaje_edicion.removeClass("editar");
+          pagar_factura.removeClass("editar");
           generar_remision.removeClass("editar");
           generar_ncredito.removeClass("editar");
           generar_ndebito.removeClass("editar");
@@ -318,6 +324,7 @@
                     <option value="-fecha_emision">Ordenar por Fecha</option>
                     <option value="nombre_cliente">Ordenar por Cliente</option>
                     <option value="total_documento">Ordenar por Valor Total</option>
+                    <option value="pagada">Facturas Pagadas</option>
                     <option value="anulada">Facturas Anuladas</option>
                   </select>
                 </div>
@@ -379,6 +386,9 @@
               {% if factura.anulada == True %}
               <p style="color: red;"><strong>ANULADA</strong></p>
               {% endif %}
+              {% if factura.pagada == True %}
+              <p style="color: green;"><strong>PAGADA</strong></p>
+              {% endif %}
             </a>
           {% endfor %}
           {% endif %}
@@ -390,6 +400,9 @@
               <p><strong>{{factura.cliente}}</strong></p>
               {% if factura.anulada == True %}
               <p style="color: red;"><strong>ANULADA</strong></p>
+              {% endif %}
+              {% if factura.pagada == True %}
+              <p style="color: green;"><strong>PAGADA</strong></p>
               {% endif %}
             </a>
           {% endfor %}

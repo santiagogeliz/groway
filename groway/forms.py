@@ -94,13 +94,13 @@ class Factura_de_ventaForm(forms.ModelForm):
 	class Meta:
 		model = Factura_de_venta
 		fields = ("tipo_de_documento","consecutivo_DIAN","consec_inter_prefijo","consec_inter_numero","consecutivo_interno","referencia_orden_compra","referencia_remision","referencia_cotizacion","referencia_notacredito","referencia_notadebito","referencia_otro_documento","fecha_para_consec","fecha_emision",
-			"fecha_vencimiento","tipo_imp1","tipo_imp2","tipo_imp3","terminos_de_pago","medio_de_pago","moneda","vendedor","org_creadora","id_organizacion","numero_id_organizacion","numero_id_org_adicional","dir_organizacion","ciudad_organizacion","departamento_organizacion","pais_organizacion",
+			"fecha_vencimiento","fecha_pago","tipo_imp1","tipo_imp2","tipo_imp3","terminos_de_pago","medio_de_pago","moneda","vendedor","org_creadora","id_organizacion","numero_id_organizacion","numero_id_org_adicional","dir_organizacion","ciudad_organizacion","departamento_organizacion","pais_organizacion",
 			"telefono_organizacion","cliente","nombre_cliente","id_cliente","numero_id_cliente","numero_id_cli_adicional","dir_cliente","ciudad_cliente","departamento_cliente","pais_cliente","telefono_cliente","item_1","item_2","item_3","item_4", "item_5",
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
 			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","generado","anulada")
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","generado","anulada","pagada")
 		widgets = {'referencia_orden_compra': forms.TextInput(attrs={'placeholder': 'Número'}),
 		'referencia_otro_documento': forms.TextInput(attrs={'placeholder': 'Documento: Número'}),
 		}
@@ -109,25 +109,25 @@ class Nota_creditoForm(forms.ModelForm):
 	class Meta:
 		model = Nota_credito
 		fields = ("tipo_de_documento","consecutivo_DIAN","consec_inter_prefijo","consec_inter_numero","consecutivo_interno","referencia_factura","referencia_factura_DIAN","referencia_orden_compra","referencia_remision","referencia_cotizacion","referencia_otro_documento",
-			"fecha_emision","fecha_emision_factura","tipo_imp1","tipo_imp2","tipo_imp3","terminos_de_pago","medio_de_pago","moneda","vendedor","org_creadora","id_organizacion","numero_id_organizacion","numero_id_org_adicional","dir_organizacion","ciudad_organizacion",
+			"fecha_emision","fecha_pago","fecha_emision_factura","tipo_imp1","tipo_imp2","tipo_imp3","terminos_de_pago","medio_de_pago","moneda","vendedor","org_creadora","id_organizacion","numero_id_organizacion","numero_id_org_adicional","dir_organizacion","ciudad_organizacion",
 			"departamento_organizacion","pais_organizacion","telefono_organizacion","cliente","nombre_cliente","id_cliente","numero_id_cliente","numero_id_cli_adicional","dir_cliente","ciudad_cliente","departamento_cliente","pais_cliente","telefono_cliente","item_1","item_2","item_3","item_4", "item_5",
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
 			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","concepto_nota_credito","item_1_afec","item_2_afec","item_3_afec","item_4_afec","item_5_afec","descuento_rebaja","saldo_total","generado")
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","concepto_nota_credito","item_1_afec","item_2_afec","item_3_afec","item_4_afec","item_5_afec","descuento_rebaja","saldo_total","generado","pagada")
 
 class Nota_debitoForm(forms.ModelForm):
 	class Meta:
 		model = Nota_debito
 		fields = ("tipo_de_documento","consecutivo_DIAN","consec_inter_prefijo","consec_inter_numero","consecutivo_interno","referencia_factura","referencia_factura_DIAN","referencia_orden_compra","referencia_remision","referencia_cotizacion","referencia_otro_documento",
-			"fecha_emision","fecha_emision_factura","tipo_imp1","tipo_imp2","tipo_imp3","terminos_de_pago","medio_de_pago","moneda","vendedor","org_creadora","id_organizacion","numero_id_organizacion","numero_id_org_adicional","dir_organizacion","ciudad_organizacion",
+			"fecha_emision","fecha_pago","fecha_emision_factura","tipo_imp1","tipo_imp2","tipo_imp3","terminos_de_pago","medio_de_pago","moneda","vendedor","org_creadora","id_organizacion","numero_id_organizacion","numero_id_org_adicional","dir_organizacion","ciudad_organizacion",
 			"departamento_organizacion","pais_organizacion","telefono_organizacion","cliente","nombre_cliente","id_cliente","numero_id_cliente","numero_id_cli_adicional","dir_cliente","ciudad_cliente","departamento_cliente","pais_cliente","telefono_cliente","item_1","item_2","item_3","item_4", "item_5",
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
 			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","concepto_nota_debito","cargo_interes","descripcion_cargo","saldo_total","generado")
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","concepto_nota_debito","cargo_interes","descripcion_cargo","saldo_total","generado","pagada")
 
 class Factura_de_compraForm(forms.ModelForm):
 	class Meta:
@@ -144,7 +144,7 @@ class Factura_de_compraForm(forms.ModelForm):
 class Gastos_registroForm(forms.ModelForm):
 	class Meta:
 		model = Gastos_registro
-		fields = ("concepto_gasto","descripcion_gasto","valor_gasto","fecha_emision","org_creadora")
+		fields = ("numero_gasto","concepto_gasto","descripcion_gasto","valor_gasto","fecha_emision","org_creadora")
 
 class CrecimientoForm(forms.ModelForm):
 	class Meta:

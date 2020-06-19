@@ -247,16 +247,16 @@
           {% if request.method != "POST" %}
           {% for gasto in gastos %}
             <a href="{% url 'detalle_gasto' pk=gasto.pk %}" class="list-group-item">
-             <h4>{{gasto.fecha_emision}} {{gasto.fecha_emision|date:"a"}}</h4>
-             <p>{{gasto.concepto_gasto}}</p>
+             <h4>{{gasto.concepto_gasto}} {{gasto.numero_gasto}}</h4>
+             <p>{{gasto.fecha_emision|date:"d F Y"}} {{gasto.fecha_emision|date:"f a"}}</p>
             </a>
           {% endfor %}
           {% endif %}
           {% if request.method == "POST" %}
           {% for gasto in lista %}
             <a href="{% url 'detalle_gasto' pk=gasto.pk %}" class="list-group-item">
-             <h4>{{gasto.fecha_emision}}</h4>
-             <p>{{gasto.concepto_gasto}}</p>
+             <h4>{{gasto.concepto_gasto}} {{gasto.numero_gasto}}</h4>
+             <p>{{gasto.fecha_emision}} {{gasto.fecha_emision|date:"a"}}</p>
             </a>
           {% endfor %}
           {% endif %}
