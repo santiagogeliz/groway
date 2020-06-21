@@ -1,4 +1,4 @@
-# groway
+# Groway
 
 Groway is a wepapp that helps you manage your business in an easy and practical way, with intuitive tools to create financial documents and giving you all the necessary information about the growth of your sales.
 
