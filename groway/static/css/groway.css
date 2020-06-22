@@ -557,10 +557,7 @@ a.comenzar_btn:hover {
 
 /* Responsive para home_page y caracteristicas - celulares */
 
-@media screen and (max-width: 400px) {
-	body {
-		width: 359px;
-	}
+@media screen and (max-width: 750px) {
 	.navscroll {
 		padding-top: 40px;
 		padding-bottom: 20px;
@@ -1856,7 +1853,7 @@ a.terminar:active, a.terminar:visited, button.terminar:active, button.terminar:v
 
 /* Responsive de cotizaciones.html */
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 750px) {
   .lista {
     width: 100%;
     height: 20%;
@@ -2766,10 +2763,7 @@ button.crear_cuenta:focus {
 }
 /* Responsive para nuevo_usuario.html y login.html - celular */
 
-@media screen and (max-width: 768px) {
-	body {
-		width: 359px;
-	}
+@media screen and (max-width: 750px) {
 
 	.formulario_nuevo_usuario {
 		float: none;
@@ -2937,11 +2931,7 @@ button.crear_cuenta:focus {
 
 /* Responsive para la Interfaz de Usuario - celular */
 
-@media screen and (max-width: 768px) {
-
-	body {
-		width: 359px;
-	}
+@media screen and (max-width: 750px) {
 
 	.growaynav {
 		height: 40px;
