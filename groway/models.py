@@ -10,176 +10,27 @@ from django.db.models import Sum
 from django.utils import timezone
 from django import forms
 from datetime import timedelta
-
-# Listas - Dicts para los ChoiceFields
-
-REGISTRO_CIVIL = '11'
-TARJETA_IDENTIDAD = '12'
-CEDULA_CIUDADANIA = '13'
-TARJETA_EXTRANJERA = '21'
-CEDULA_EXTRANJERIA = '22'
-NIT = '31'
-PASAPORTE = '41'
-DOCUMENTO_EXTRANJERO = '42'
-NO_OBLIGADO_RUT_PN = 'R-00-PN'
-PERSONA_JURIDICA = '1'
-PERSONA_NATURAL = '2'
-CLIENTE = 'CL'
-PROVEEDOR = 'PD'
-OTRO = 'OT'
-CORRIENTE = 'CCO'
-AHORRO = 'AHO'
-REGIMEN_COMUN = '2'
-REGIMEN_SIMPLIFICADO = '0'
-DOCUMENTOS_IDENTIDAD =[(REGISTRO_CIVIL,'Registro Civil'), (TARJETA_IDENTIDAD, 'Tarjeta de Identidad'), (CEDULA_CIUDADANIA, 'Cédula de Ciudadanía'),
-(NIT, 'NIT'), (PASAPORTE, 'Pasaporte'), (DOCUMENTO_EXTRANJERO, 'Documento de identificación extranjero'), (NO_OBLIGADO_RUT_PN, 'No obigado a registrarse en el RUT PN')]
-REGIMEN_TRIBUTARIO = [(REGIMEN_COMUN, "Régimen Común"), (REGIMEN_SIMPLIFICADO, "Régimen Simplificado")]
-NATURALEZA = [(PERSONA_JURIDICA, 'Persona Juridica'), (PERSONA_NATURAL, 'Persona Natural')]
-RELACIONES = [(CLIENTE, 'Cliente'), (PROVEEDOR, 'Proveedor'), (OTRO, 'Otro')]
-TIPO_CUENTA = [(CORRIENTE, 'Cuenta Corriente'), (AHORRO, 'Cuenta Ahorros')]
-
-SERVICIO = 'SV'
-INVENTARIABLE = 'IN'
-NO_INVENTARIABLE = 'NI'
-ITEM_VENTA = 'IV'
-INSUMO = 'IM'
-UNIDAD = 'UNID'
-METROS = 'M'
-CENTIMETROS = 'CM'
-KILOGRAMO = "KG"
-GRAMOS = 'G'
-LITROS = 'L'
-MILILITRO = 'ML'
-DESTINO_ITEM = [(ITEM_VENTA, "Item de Venta"), (INSUMO, "Insumo")]
-UNIDADES_MEDIDA = [(UNIDAD, "UNID"), (METROS, "M"), (CENTIMETROS, "CM"), (GRAMOS, "G"), (KILOGRAMO, "KG"), (LITROS, "L"), (MILILITRO, "ML")]
-TIPO_ITEM = [(SERVICIO, 'Servicio'), (INVENTARIABLE, 'Inventariable'), (NO_INVENTARIABLE, 'No Inventariable')]
-
-FACTURA_DE_VENTA = "FVE"
-FACTURA_DE_EXPORTACION = "FEX"
-FACTURA_DE_CONTINGENCIA = "FCG"
-FACTURA_DE_COMPRA = "FCO"
-COTIZACION = "CZN"
-REMISION = "RSN"
-NOTA_CREDITO = "NCT"
-NOTA_DEBITO = "NDT"
-TIPO_DE_DOCUMENTO = [(FACTURA_DE_VENTA, 'Factura de Venta'), (FACTURA_DE_COMPRA, 'Factura de Compra'),
-(COTIZACION, 'Cotización'), (REMISION, 'Remisión'), (NOTA_CREDITO, 'Nota Crédito'),
-(NOTA_DEBITO, 'Nota Débito')]
-
-COLOMBIA_PESO = 'COP'
-USA_DOLLAR = 'USD'
-EUROPE_EURO = 'EUR'
-MONEDAS = [(COLOMBIA_PESO, 'Colombia, Pesos'), (USA_DOLLAR, 'United States of America, Dollar'), (EUROPE_EURO, 'Euro Member Country')]
-
-ALEMANIA = 'DE'
-ARGENTINA = 'AR'
-ARMENIA = 'AM'
-ARUBA = 'AW'
-AUSTRALIA = 'AU'
-BAHAMAS = 'BS'
-BOLIVIA = 'BO'
-BRASIL = 'BR'
-CANADA = 'CA'
-CHILE = 'CL'
-CHINA = 'CN'
-COLOMBIA = 'CO'
-COSTA_RICA = 'CR'
-CUBA = 'CU'
-ECUADOR = 'EC'
-EGIPTO = 'EG'
-EL_SALVADOR = 'SV'
-ESPAÑA = 'ES'
-ESTADOS_UNIDOS = 'US'
-FILIPINAS = 'PH'
-FRANCIA = 'FR'
-GUATEMALA = 'GT'
-HAITI = 'HT'
-HONDURAS = 'HN'
-ITALIA = 'IT'
-JAPON = 'JP'
-NICARAGUA = 'NI'
-PANAMA = 'PA'
-PARAGUAY = 'PY'
-PERU = 'PE'
-PORTUGAL = 'PT'
-PUERTO_RICO = 'PR'
-REINO_UNIDO = 'GB'
-RUSIA = 'RU'
-URUGUAY = 'UY'
-VENEZUELA = 'VE'
-PAISES = [(ALEMANIA, 'Alemania'), (ARGENTINA, 'Argentina'), (ARMENIA, 'Armenia'), (ARUBA, 'Aruba'), (AUSTRALIA, 'Australia'), (BAHAMAS, 'Bahamas'), (BOLIVIA, 'Bolivia'),
-(BRASIL, 'Brasil'), (CANADA, 'Canadá'), (CHILE, 'Chile'), (CHINA, 'China'), (COLOMBIA, 'Colombia'), (COSTA_RICA, 'Costa Rica'), (CUBA, 'Cuba'), (ECUADOR, 'Ecuador'),
-(EGIPTO, 'Egipto'), (EL_SALVADOR, 'El Salvador'), (ESPAÑA, 'España'), (ESTADOS_UNIDOS, 'Estados Unidos'), (FILIPINAS, 'Filipinas'), (FRANCIA, 'Francia'), (GUATEMALA, 'Guatemala'),
-(HAITI, 'Haití'), (HONDURAS, 'Honduras'), (ITALIA, 'Italia'), (JAPON, 'Japón'), (NICARAGUA, 'Nicaragua'), (PANAMA, 'Panamá'), (PARAGUAY, 'Paraguay'), (PERU, 'Perú'),
-(PORTUGAL, 'Portugal'), (PUERTO_RICO, 'Puerto Rico'), (REINO_UNIDO, 'Reino Unido'), (RUSIA, 'Rusia'), (URUGUAY, 'Uruguay'), (VENEZUELA, 'Venezuela')]
-
-EFECTIVO = '10'
-CHEQUE = '20'
-TRASFERENCIA_BANCARIA = '41'
-CONSIGNACION_BANCARIA = '42'
-MEDIOS_DE_PAGO = [(EFECTIVO, 'Efectivo'), (CHEQUE, 'Cheque'), (TRASFERENCIA_BANCARIA, 'Transferencia Bancaria'), (CONSIGNACION_BANCARIA, 'Consignación Bancaria')]
-
-VALOR_TOTAL_IVA = "01"
-VALOR_TOTAL_IMPUESTO_CONSUMO = "02"
-VALOR_TOTAL_ICA = "03"
-VALOR_TOTAL_IMPUESTO_NACIONAL_CONSUMO = "04"
-TIPO_IMPUESTO = [(VALOR_TOTAL_IVA, "Valor total del IVA"), (VALOR_TOTAL_IMPUESTO_CONSUMO, "Valor total de impuesto al consumo"),
-(VALOR_TOTAL_ICA, "Valor total del ICA"), (VALOR_TOTAL_IMPUESTO_NACIONAL_CONSUMO, "Valor total del impuesto nacional al consumo")]
-
-DEVOLUCION_BIENES = "1"
-ANULACION_FACTURA = "2"
-REBAJA_TOTAL = "3"
-DESCUENTO_TOTAL = "4"
-RESCISION = "5"
-INCUMPLIMIENTO = "6"
-INTERESES = "1"
-GASTOSXCOBRAR = "2"
-CAMBIO_VALOR = "3"
-CONCEPTO_NOTA_DEBITO = [(INTERESES, "Intereses"),(GASTOSXCOBRAR, "Gastos por cobrar"),(CAMBIO_VALOR, "Cambio del valor de la Factura")]
-CONCEPTO_NOTA_CREDITO = [(DEVOLUCION_BIENES, "Devolución de parte de los bienes; no aceptación de partes del servicio"),
-(ANULACION_FACTURA, "Anulación de factura electrónica por falta de requisitos"), (REBAJA_TOTAL, "Rebaja voluntaria al saldo por cobrar"),
-(DESCUENTO_TOTAL, "Descuento total aplicado en la factura"), (RESCISION, "Rescisión administrativa; nulidad por recepción de decisión administrativa o judicial."),
-(INCUMPLIMIENTO, "Resolución por incumplimientos de lo pactado entre las partes")]
-
-CRECIMIENTO_VENTAS = "V"
-CRECIMIENTO_VENTAS_VS_GANANCIAS = "G"
-METRICA_CRECIMIENTO = [(CRECIMIENTO_VENTAS, "Crecimiento de Ventas"), (CRECIMIENTO_VENTAS_VS_GANANCIAS, "Crecimiento de Ventas VS Ganancias")]
-
-RENTA_ALQUILER = "R"
-SERVICIOS = "S"
-PERSONAL = "P"
-OFICINA = "O"
-PUBLICIDAD = "U"
-MANTENIMIENTO = "M"
-LIMPIEZA = "L"
-ASESORIA = "A"
-TRANSPORTE = "T"
-IMPUESTOS = "I"
-CONCEPTO_GASTO = [(RENTA_ALQUILER, "Pago de Alquiler"), (SERVICIOS, "Pago de Servicios"), (PERSONAL, "Pago de Nómina"),
-(OFICINA, "Material de oficina"), (PUBLICIDAD, "Marketing y Publicidad"), (MANTENIMIENTO, "Mantenimiento"), (LIMPIEZA, "Servicios de Limpiesa"),
-(ASESORIA, "Asesorías, servicios jurídicos y auditorías"), (TRANSPORTE, "Transporte"), (IMPUESTOS, "Impuestos")]
-
+from . import choices
+from django.core.exceptions import ValidationError
+from django.core.files.images import get_image_dimensions
 
 # Modelos de la APP
 
-
 class Organizacion(models.Model):
-	naturaleza = models.CharField(max_length=1, choices=NATURALEZA)
-	activad_economica = models.CharField(max_length=100)
-	codigo_actividad_economica = models.CharField(max_length=5)
-	regimen_tributario = models.CharField(max_length=1, choices=REGIMEN_TRIBUTARIO)
-	identificacion = models.CharField(max_length=7, choices=DOCUMENTOS_IDENTIDAD)
+	nombre_legal = models.CharField(max_length=50)
+	identificacion = models.CharField(max_length=7, choices=choices.DOCUMENTOS_IDENTIDAD)
 	numero_identificacion = models.CharField(max_length=50)
 	numero_id_adicional = models.CharField(max_length=4, null=True, blank=True)
-	nombre_legal = models.CharField(max_length=50)
-	nombre_visible_cia = models.CharField(max_length=20)
-	moneda_base = models.CharField(max_length=3, choices=MONEDAS)
+	activad_economica = models.CharField(max_length=100)
+	codigo_actividad_economica = models.CharField(max_length=5)
 	descripcion = models.TextField(null=True, blank=True)
 	logo_organizacion = models.ImageField(max_length=100, upload_to='user_img/', null=True, blank=True)
+	nombre_visible_cia = models.CharField(max_length=20)
+	moneda_base = models.CharField(max_length=3, choices=choices.MONEDAS)
 	direccion = models.CharField(max_length=50)
 	ciudad = models.CharField(max_length=50)
 	departamento = models.CharField(max_length=50)
-	pais = models.CharField(max_length=2, choices=PAISES)
+	pais = models.CharField(max_length=2, choices=choices.PAISES)
 	cod_postal = models.CharField(max_length=50, null=True, blank=True)
 	persona_contacto = models.CharField(max_length=50, null=True, blank=True)
 	telefono = models.PositiveIntegerField()
@@ -187,23 +38,37 @@ class Organizacion(models.Model):
 	email = models.EmailField(max_length=254, null=True, blank=True)
 	website = models.CharField(max_length=254, null=True, blank=True)
 	numero_cuenta = models.IntegerField(null=True, blank=True)
-	tipo_cuenta = models.CharField(max_length=3, null=True, blank=True, choices=TIPO_CUENTA)
+	tipo_cuenta = models.CharField(max_length=3, null=True, blank=True, choices=choices.TIPO_CUENTA)
 	entidad_financiera = models.CharField(max_length=50, null=True, blank=True)
+	regimen_tributario = models.CharField(max_length=1, choices=choices.REGIMEN_TRIBUTARIO)
+	responsable_iva = models.CharField(max_length=2, choices=choices.RESPONSABLE_IVA)
 	gran_contribuyente = models.BooleanField()
 	declarante_impuesto_renta = models.BooleanField()
-	compras_consumidor_final = models.BooleanField()
 	compras_practicar_reterenta = models.BooleanField()
-	compras_practicar_reteiva = models.BooleanField()
+	compras_practicar_reteiva_proveedores_regimen_comun = models.BooleanField()
+	compras_practicar_reteiva_proveedores_regimen_simple = models.BooleanField()
 	compras_practicar_reteica = models.BooleanField()
+	tarifa_practicar_reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	ventas_liquidar_reterenta = models.BooleanField()
-	base_reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
-	tarifa_reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	ventas_liquidar_autoretencion_renta = models.BooleanField()
-	tarifa_autoreterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	tarifa_autoreterenta = models.CharField(max_length=2, choices=choices.TARIFA_AUTORETERENTA, blank=True)
+	ventas_liquidar_autorreterenta_clientes_regimen_simple = models.BooleanField()
 	ventas_liquidar_reteica = models.BooleanField()
-	tarifa_reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	tarifa_liquidar_reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	administrador = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	activa = models.BooleanField()
+
+	def clean(self):
+		img_logo = self.logo_organizacion
+		if img_logo:
+			w, h = get_image_dimensions(img_logo)
+			if w != 300:
+				raise ValidationError("El ancho para 'Logo Organización' debe ser de %spx. El archivo seleccionado tiene %spx" %(300, w))
+			if h != 60:
+				raise ValidationError("El alto para 'Logo Organización' debe ser de %spx. El archivo seleccionado tiene %spx" %(60, h))
+			filesize = img_logo.size
+			if filesize > 350*1024:
+				raise ValidationError("El tamaño máximo para 'Logo Organización' es de %sKB" %(350))
 
 	def __str__(self):
 		self.save()
@@ -211,30 +76,29 @@ class Organizacion(models.Model):
 
 
 class Contacto(models.Model):
-	naturaleza = models.CharField(max_length=1, choices=NATURALEZA)
-	activad_economica = models.CharField(max_length=100, null=True, blank=True)
-	codigo_actividad_economica = models.CharField(max_length=5, null=True, blank=True)
-	regimen_tributario = models.CharField(max_length=1, choices=REGIMEN_TRIBUTARIO)
-	identificacion = models.CharField(max_length=7, choices=DOCUMENTOS_IDENTIDAD)
+	naturaleza = models.CharField(max_length=1, choices=choices.NATURALEZA)
+	identificacion = models.CharField(max_length=7, choices=choices.DOCUMENTOS_IDENTIDAD)
 	numero_identificacion = models.CharField(max_length=50)
 	numero_id_adicional = models.CharField(max_length=4, null=True, blank=True)
 	nombre_legal = models.CharField(max_length=50)
-	relacion_activa = models.CharField(max_length=2, null=True, blank=True, choices=RELACIONES)
+	activad_economica = models.CharField(max_length=100, null=True, blank=True)
+	codigo_actividad_economica = models.CharField(max_length=5, null=True, blank=True)
+	relacion_activa = models.CharField(max_length=2, null=True, blank=True, choices=choices.RELACIONES)
 	consumidor_final = models.BooleanField()
+	regimen_tributario = models.CharField(max_length=1, choices=choices.REGIMEN_TRIBUTARIO)
+	responsable_iva = models.CharField(max_length=2, choices=choices.RESPONSABLE_IVA)
 	gran_contribuyente = models.BooleanField()
-	liquidar_reterenta = models.BooleanField()
-	liquidar_reteica = models.BooleanField()
-	declarante_impuesto_renta = models.BooleanField()
-	declarante_impuesto_ICA = models.BooleanField()
-	autoretenedor_impuesto_renta = models.BooleanField()
-	exento_de_reterenta = models.BooleanField()
-	base_reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
-	tarifa_reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
-	tarifa_reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	ventas_liquidar_reteiva_responsable_iva_regimen_comun = models.BooleanField()
+	ventas_liquidar_reteiva_responsable_iva_regimen_simple = models.BooleanField()
+	ventas_liquidar_reterenta = models.BooleanField()
+	ventas_liquidar_reteica = models.BooleanField()
+	compras_declarante_impuesto_renta = models.BooleanField()
+	compras_autoretenedor_impuesto_renta = models.BooleanField()
+	compras_exento_de_reterenta = models.BooleanField()
 	direccion = models.CharField(max_length=50)
 	ciudad = models.CharField(max_length=50)
 	departamento = models.CharField(max_length=50)
-	pais = models.CharField(max_length=2, choices=PAISES)
+	pais = models.CharField(max_length=2, choices=choices.PAISES)
 	cod_postal = models.CharField(max_length=50, null=True, blank=True)
 	persona_contacto = models.CharField(max_length=50, null=True, blank=True)
 	persona_contacto_adicional = models.CharField(max_length=50, null=True, blank=True)
@@ -242,7 +106,7 @@ class Contacto(models.Model):
 	telefono_dos = models.PositiveIntegerField(null=True, blank=True)
 	email = models.EmailField(max_length=254, null=True, blank=True)
 	numero_cuenta = models.IntegerField(null=True, blank=True)
-	tipo_cuenta = models.CharField(max_length=3, null=True, blank=True, choices=TIPO_CUENTA)
+	tipo_cuenta = models.CharField(max_length=3, null=True, blank=True, choices=choices.TIPO_CUENTA)
 	entidad_financiera = models.CharField(max_length=50, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 
@@ -253,7 +117,7 @@ class Contacto(models.Model):
 
 
 class Categoria(models.Model):
-	destino_item = models.CharField(max_length=2, choices=DESTINO_ITEM)
+	destino_item = models.CharField(max_length=2, choices=choices.DESTINO_ITEM)
 	pre_fijo = models.CharField(max_length=3)
 	numero = models.IntegerField(null=True, blank=True, default=1)
 	nombre = models.CharField(max_length=50)
@@ -269,14 +133,15 @@ class Item(models.Model):
 	imagen = models.ImageField(max_length=100, upload_to='user_img/', null=True, blank=True)
 	categoria = models.CharField(max_length=300, null=True, blank=True)
 	codigo = models.CharField(max_length=100, null=True, blank=True)
-	tipo_item = models.CharField(max_length=2, choices=TIPO_ITEM)
+	tipo_item = models.CharField(max_length=2, choices=choices.TIPO_ITEM)
 	descripcion = models.CharField(max_length=200)
 	descripcion_detalle = models.TextField(null=True, blank=True)
 	codigo_barras = models.CharField(max_length=50, null=True, blank=True)
-	unidad_medida = models.CharField(max_length=4, choices=UNIDADES_MEDIDA)
+	unidad_medida = models.CharField(max_length=4, choices=choices.UNIDADES_MEDIDA)
 	precio_venta = models.DecimalField(max_digits=11, decimal_places=2)
-	iva_ventas = models.DecimalField(max_digits=11, decimal_places=2)
-	impuesto_consumo_ventas = models.DecimalField(max_digits=11, decimal_places=2)
+	iva_ventas = models.CharField(max_length=2, choices=choices.TARIFA_IVA)
+	impuesto_consumo_ventas = models.CharField(max_length=2, choices=choices.TARIFA_ICO)
+	tarifa_reterenta = models.CharField(max_length=2, choices=choices.TARIFA_RETERENTA)
 	cantidad = models.PositiveIntegerField(null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 
@@ -291,6 +156,18 @@ class Item(models.Model):
 			self.codigo = "%s%s"%(codigo.pre_fijo, nuevo_numero)
 			self.save()
 
+	def clean(self):
+		img_item = self.imagen
+		if img_item:
+			w, h = get_image_dimensions(img_item)
+			if w != 300:
+				raise ValidationError("El ancho para 'Imagen del Item' debe ser de %spx. El archivo seleccionado tiene %spx" %(300, w))
+			if h != 200:
+				raise ValidationError("El alto para 'Imagen del Item' debe ser de %spx. El archivo seleccionado tiene %spx" %(200, h))
+			filesize = img_item.size
+			if filesize > 350*1024:
+				raise ValidationError("El tamaño máximo para 'Imagen del Item' es de %sKB" %(350))
+
 	def __str__(self):
 		self.save()
 		return "%s | %s"%(self.codigo, self.descripcion)
@@ -299,14 +176,15 @@ class Insumo(models.Model):
 	imagen = models.ImageField(max_length=100, upload_to='user_img/', null=True, blank=True)
 	categoria = models.CharField(max_length=300, null=True, blank=True)
 	codigo = models.CharField(max_length=100, null=True, blank=True)
-	tipo_item = models.CharField(max_length=2, choices=TIPO_ITEM)
+	tipo_item = models.CharField(max_length=2, choices=choices.TIPO_ITEM)
 	descripcion = models.CharField(max_length=200)
 	descripcion_detalle = models.TextField(null=True, blank=True)
 	codigo_barras = models.CharField(max_length=50, null=True, blank=True)
-	unidad_medida = models.CharField(max_length=4, choices=UNIDADES_MEDIDA)
+	unidad_medida = models.CharField(max_length=4, choices=choices.UNIDADES_MEDIDA)
 	precio_compra = models.DecimalField(max_digits=11, decimal_places=2)
-	iva_compras = models.DecimalField(max_digits=11, decimal_places=2)
-	impuesto_consumo_compras = models.DecimalField(max_digits=11, decimal_places=2)
+	iva_compras = models.CharField(max_length=2, choices=choices.TARIFA_IVA)
+	impuesto_consumo_compras = models.CharField(max_length=2, choices=choices.TARIFA_ICO)
+	tarifa_reterenta = models.CharField(max_length=2, choices=choices.TARIFA_RETERENTA)
 	cantidad = models.PositiveIntegerField(null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 
@@ -320,6 +198,18 @@ class Insumo(models.Model):
 			nuevo_numero = codigo.numero + insumos_creados
 			self.codigo = "%s%s"%(codigo.pre_fijo, nuevo_numero)
 			self.save()
+
+	def clean(self):
+		img_item = self.imagen
+		if img_item:
+			w, h = get_image_dimensions(img_item)
+			if w != 300:
+				raise ValidationError("El ancho para 'Imagen del Insumo' debe ser de %spx. El archivo seleccionado tiene %spx" %(300, w))
+			if h != 200:
+				raise ValidationError("El alto para 'Imagen del Insumo' debe ser de %spx. El archivo seleccionado tiene %spx" %(200, h))
+			filesize = img_item.size
+			if filesize > 350*1024:
+				raise ValidationError("El tamaño máximo para 'Imagen del Insumo' es de %sKB" %(350))
 
 	def __str__(self):
 		self.save()
@@ -344,7 +234,7 @@ class Termino_de_pago(models.Model):
 		return self.descripcion
 
 class Consecutivo_documento(models.Model):
-	tipo_de_documento = models.CharField(max_length=3, choices=TIPO_DE_DOCUMENTO)
+	tipo_de_documento = models.CharField(max_length=3, choices=choices.TIPO_DE_DOCUMENTO)
 	pre_fijo = models.CharField(max_length=2, null=True, blank=True)
 	numero = models.IntegerField(default=1, null=True, blank=True)
 	aut_num_facturacion = models.BigIntegerField(null=True, blank=True)
@@ -385,12 +275,12 @@ class Cotizacion(models.Model):
 	referencia_factura = models.CharField(max_length=100, null=True, blank=True)
 	referencia_otro_documento = models.CharField(max_length=100, null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
-	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp1 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=MEDIOS_DE_PAGO)
-	moneda = models.CharField(max_length=3, choices=MONEDAS, null=True, blank=True)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO)
+	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	vendedor = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 	id_organizacion = models.CharField(max_length=50, null=True, blank=True)
@@ -459,6 +349,7 @@ class Cotizacion(models.Model):
 	iva_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	ico_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	autoreterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteiva = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	sub_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
@@ -474,6 +365,7 @@ class Cotizacion(models.Model):
 	descripcion_5 = models.CharField(max_length=400,  null=True, blank=True)
 	descripcion_detallada = models.TextField(null=True, blank=True)
 	observacion = models.CharField(max_length=200,  null=True, blank=True)
+	cifra_total_en_palabras = models.CharField(max_length=300,  null=True, blank=True)
 	generado = models.BooleanField(default=False)
 
 	def auto_consecutivo(self):
@@ -548,6 +440,19 @@ class Cotizacion(models.Model):
 		self.descripcion_4 = descripciones[3]
 		self.descripcion_5 = descripciones[4]
 		self.save()
+
+		if self.descripcion_detallada == 'No Registrado' or self.descripcion_detallada == '':
+			descripciones_detalle = []
+			for item in item_selecionados:
+				if item:
+					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+					if item_doc.descripcion_detalle:
+						descripcion = '- %s\n' %(item_doc.descripcion_detalle)
+						descripciones_detalle.append(descripcion)
+			descrip_detail = ''
+			for descripcion in descripciones_detalle:
+				descrip_detail = descrip_detail + descripcion
+			self.descripcion_detallada = descrip_detail
 
 		unidadesmedida = []
 		for item in item_selecionados:
@@ -652,37 +557,51 @@ class Cotizacion(models.Model):
 		self.valor_total_5 = valorestotales[4]
 		self.sub_total = self.valor_total_1 + self.valor_total_2 + self.valor_total_3 + self.valor_total_4 + self.valor_total_5
 
-		iva_item = []
-		indice = 0
-		for item in item_selecionados:
-			if item:
-				item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
-				if item_doc.iva_ventas == None:
-					item_doc.iva_ventas = 0
-				iva = valorestotales[indice] * (item_doc.iva_ventas/100)
-				iva_item.append(iva)
-			else:
-				iva_item.append(0)
-			indice += 1
-		self.iva_1 = iva_item[0]
-		self.iva_2 = iva_item[1]
-		self.iva_3 = iva_item[2]
-		self.iva_4 = iva_item[3]
-		self.iva_5 = iva_item[4]
-		self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
-		self.save()
+		if self.org_creadora.responsable_iva == 'SI':
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_iva = [19, 5, 0, 0]
+			iva_item = []
+			indice = 0
+			for item in item_selecionados:
+				if item:
+					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+					if item_doc.iva_ventas:
+						tariva = 0
+						for numero in numeros:
+							if item_doc.iva_ventas == numero:
+								iva = float(valorestotales[indice]) * (tarifas_de_iva[tariva]/100)
+								iva_item.append(int(iva))
+							tariva += 1
+				else:
+					iva_item.append(0)
+				indice += 1
+			self.iva_1 = iva_item[0]
+			self.iva_2 = iva_item[1]
+			self.iva_3 = iva_item[2]
+			self.iva_4 = iva_item[3]
+			self.iva_5 = iva_item[4]
+			self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
+			self.save()
+		else:
+			self.iva_total = 0
+			self.save()
 
 		cliente = Contacto.objects.get(nombre_legal=self.cliente, relacion_activa="CL", org_creadora=self.org_creadora)
 		if cliente.consumidor_final == True:
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_ico = [16, 8, 4, 0]
 			ico_item = []
 			indice = 0
 			for item in item_selecionados:
 				if item:
 					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
-					if item_doc.impuesto_consumo_ventas == None:
-						item_doc.impuesto_consumo_ventas = 0
-					ico = valorestotales[indice] * (item_doc.impuesto_consumo_ventas/100)
-					ico_item.append(ico)
+					if item_doc.impuesto_consumo_ventas:
+						tarico = 0
+						for numero in numeros:
+							if item_doc.impuesto_consumo_ventas == numero:
+								ico = float(valorestotales[indice]) * (tarifas_de_ico[tarico]/100)
+								ico_item.append(int(ico))
+							tarico += 1
 				else:
 					ico_item.append(0)
 				indice += 1
@@ -697,49 +616,83 @@ class Cotizacion(models.Model):
 			self.ico_total = 0
 			self.save()
 
-		if self.org_creadora.declarante_impuesto_renta == True:
-			if self.org_creadora.ventas_liquidar_reterenta == True and cliente.liquidar_reterenta == True:
-				if self.org_creadora.gran_contribuyente == True:
-					self.reterenta = 0
-					self.save()
-				elif self.org_creadora.regimen_tributario == '2' or self.org_creadora.regimen_tributario == '0':
-					if cliente.regimen_tributario == '0':
-						self.reterenta = 0
-						self.save()
-					elif self.sub_total > self.org_creadora.base_reterenta:
-						if self.org_creadora.tarifa_reterenta == None:
-							self.org_creadora.tarifa_reterenta = 0
-							self.reterenta = self.sub_total * (self.org_creadora.tarifa_reterenta/100)
-							self.save()
-						else:
-							self.reterenta = self.sub_total * (self.org_creadora.tarifa_reterenta/100)
-							self.save()
-					else:
-						self.reterenta = 0
-						self.save()
-				else:
-					self.reterenta = 0
-					self.save()
+		if self.org_creadora.declarante_impuesto_renta == True or self.org_creadora.declarante_impuesto_renta == False:
+			if self.org_creadora.ventas_liquidar_reterenta == True and self.org_creadora.ventas_liquidar_autoretencion_renta == False and cliente.ventas_liquidar_reterenta == True:
+				numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+				self.reterenta = int(reterentas)
+				self.autoreterenta = 0
+				self.save()
 			elif self.org_creadora.ventas_liquidar_autoretencion_renta == True:
-				if self.org_creadora.naturaleza == '1':
-					if self.org_creadora.tarifa_autoreterenta == None:
-						self.org_creadora.tarifa_autoreterenta = 0
-						self.reterenta = self.sub_total * (self.org_creadora.tarifa_autoreterenta/100)
+				numeros = ['1', '2', '3']
+				tarifas_autoreterenta = [0.4, 0.8, 1.6]
+				indice = 0
+				if self.org_creadora.tarifa_autoreterenta == None:
+					self.autoreterenta = 0
+					self.save()
+				for numero in numeros:
+					if self.org_creadora.tarifa_autoreterenta == numero:
+						self.autoreterenta = self.sub_total * (tarifas_autoreterenta[indice]/100)
+						self.reterenta = 0
 						self.save()
-					else:
-						self.reterenta = self.sub_total * (self.org_creadora.tarifa_autoreterenta/100)
-						self.save()
-				else:
+					indice = indice + 1
+			elif self.org_creadora.ventas_liquidar_reterenta == True and self.org_creadora.ventas_liquidar_autorreterenta_clientes_regimen_simple == True :
+				if self.org_creadora.regimen_tributario == 2 and cliente.regimen_tributario == 0:
+					numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+					self.autoreterenta = int(reterentas)
 					self.reterenta = 0
 					self.save()
 			else:
 				self.reterenta = 0
+				self.autoreterenta = 0
 				self.save()
 		else:
 			self.reterenta = 0
+			self.autoreterenta = 0
 			self.save()
-
-		if self.org_creadora.ventas_liquidar_reteica == True and cliente.liquidar_reteica == True:
+	
+		if self.org_creadora.ventas_liquidar_reteica == True and cliente.ventas_liquidar_reteica == True:
 			if self.org_creadora.ciudad == cliente.ciudad:
 				if self.org_creadora.gran_contribuyente == True:
 					self.reteica = 0
@@ -749,12 +702,11 @@ class Cotizacion(models.Model):
 						self.reteica = 0
 						self.save()
 					else:
-						if self.org_creadora.tarifa_reteica == None:
-							self.org_creadora.tarifa_reteica = 0
-							self.reteica = self.sub_total * (self.org_creadora.tarifa_reteica/1000)
+						if self.org_creadora.tarifa_liquidar_reteica == None:
+							self.reteica = 0
 							self.save()
 						else:
-							self.reteica = self.sub_total * (self.org_creadora.tarifa_reteica/1000)
+							self.reteica = self.sub_total * (self.org_creadora.tarifa_liquidar_reteica/1000)
 							self.save()
 				else:
 					self.reteica = 0
@@ -766,23 +718,34 @@ class Cotizacion(models.Model):
 			self.reteica = 0
 			self.save()
 
-		if self.org_creadora.regimen_tributario == '0' or self.org_creadora.gran_contribuyente == True:
-			self.reteiva = 0
+		if cliente.gran_contribuyente == True:
+			self.reteiva = int(self.iva_total * 0.15)
 			self.save()
-		elif self.org_creadora.regimen_tributario == '2' and cliente.gran_contribuyente == True:
-			self.reteiva = self.iva_total * 0.15
-			self.save()
+		elif cliente.ventas_liquidar_reteiva_responsable_iva_regimen_comun and cliente.gran_contribuyente == False and cliente.responsable_iva == 'SI':
+			if self.org_creadora.responsable_iva == 'SI' and self.org_creadora.gran_contribuyente == False and self.org_creadora.regimen_tributario == '2':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
+				self.reteiva = 0
+				self.save()
+		elif cliente.ventas_liquidar_reteiva_responsable_iva_regimen_simple and cliente.regimen_tributario == '2' and cliente.responsable_iva == 'SI':
+			if self.org_creadora.responsable_iva == 'SI' and self.org_creadora.regimen_tributario == '0':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
+				self.reteiva = 0
+				self.save()
 		else:
 			self.reteiva = 0
 			self.save()
-			
+
 		if self.anticipo == None:
 			self.anticipo = 0
 			self.save()
 
 	def calculo_total_cotizacion(self):
 		self.total_impuestos = self.iva_total + self.ico_total
-		self.total_retenciones = self.reterenta + self.reteiva + self.reteica
+		self.total_retenciones = self.reterenta + self.autoreterenta + self.reteiva + self.reteica
 		self.total_documento = self.sub_total + self.total_impuestos - self.total_retenciones
 		self.saldo_pendiente = self.total_documento - self.anticipo
 		self.save()
@@ -816,6 +779,15 @@ class Cotizacion(models.Model):
 			porcentaje_descuento_2=self.porcentaje_descuento_2, porcentaje_descuento_3=self.porcentaje_descuento_3, porcentaje_descuento_4=self.porcentaje_descuento_4, porcentaje_descuento_5=self.porcentaje_descuento_5,
 			anticipo=self.anticipo, descripcion_detallada=self.descripcion_detallada, observacion=self.observacion)
 		return nueva_factura
+
+	def duplicar_documento(self):
+		nueva_cotizacion = Cotizacion(vendedor=self.vendedor,org_creadora=self.org_creadora,
+			terminos_de_pago=self.terminos_de_pago, medio_de_pago=self.medio_de_pago, moneda=self.moneda, tipo_imp1=self.tipo_imp1,tipo_imp2=self.tipo_imp2,tipo_imp3=self.tipo_imp3,
+			cliente=self.cliente, item_1=self.item_1, item_2=self.item_2, item_3=self.item_3, item_4=self.item_4, item_5=self.item_5,  cantidad_1=self.cantidad_1,
+			cantidad_2=self.cantidad_2, cantidad_3=self.cantidad_3, cantidad_4=self.cantidad_4, cantidad_5=self.cantidad_5, porcentaje_descuento_1=self.porcentaje_descuento_1,
+			porcentaje_descuento_2=self.porcentaje_descuento_2, porcentaje_descuento_3=self.porcentaje_descuento_3, porcentaje_descuento_4=self.porcentaje_descuento_4, porcentaje_descuento_5=self.porcentaje_descuento_5,
+			anticipo=self.anticipo, descripcion_detallada=self.descripcion_detallada, observacion=self.observacion)
+		return nueva_cotizacion
 
 	def __str__(self):
 		self.save()
@@ -939,12 +911,12 @@ class Factura_de_venta(models.Model):
 	fecha_emision = models.DateTimeField(null=True, blank=True)
 	fecha_vencimiento = models.DateTimeField(null=True, blank=True)
 	fecha_pago = models.DateTimeField(null=True, blank=True)
-	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp1 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=MEDIOS_DE_PAGO)
-	moneda = models.CharField(max_length=3, choices=MONEDAS, null=True, blank=True)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO)
+	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	vendedor = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 	id_organizacion = models.CharField(max_length=50, null=True, blank=True)
@@ -1013,6 +985,7 @@ class Factura_de_venta(models.Model):
 	iva_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	ico_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	autoreterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteiva = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	sub_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
@@ -1028,6 +1001,7 @@ class Factura_de_venta(models.Model):
 	descripcion_5 = models.CharField(max_length=400,  null=True, blank=True)
 	descripcion_detallada = models.TextField(null=True, blank=True)
 	observacion = models.CharField(max_length=200,  null=True, blank=True)
+	cifra_total_en_palabras = models.CharField(max_length=300,  null=True, blank=True)
 	generado = models.BooleanField(default=False)
 	anulada = models.BooleanField(default=False)
 	pagada = models.BooleanField(default=False)
@@ -1120,6 +1094,19 @@ class Factura_de_venta(models.Model):
 		self.descripcion_4 = descripciones[3]
 		self.descripcion_5 = descripciones[4]
 		self.save()
+
+		if self.descripcion_detallada == 'No Registrado' or self.descripcion_detallada == '':
+			descripciones_detalle = []
+			for item in item_selecionados:
+				if item:
+					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+					if item_doc.descripcion_detalle:
+						descripcion = '- %s\n' %(item_doc.descripcion_detalle)
+						descripciones_detalle.append(descripcion)
+			descrip_detail = ''
+			for descripcion in descripciones_detalle:
+				descrip_detail = descrip_detail + descripcion
+			self.descripcion_detallada = descrip_detail
 
 		unidadesmedida = []
 		for item in item_selecionados:
@@ -1224,37 +1211,51 @@ class Factura_de_venta(models.Model):
 		self.valor_total_5 = valorestotales[4]
 		self.sub_total = self.valor_total_1 + self.valor_total_2 + self.valor_total_3 + self.valor_total_4 + self.valor_total_5
 
-		iva_item = []
-		indice = 0
-		for item in item_selecionados:
-			if item:
-				item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
-				if item_doc.iva_ventas == None:
-					item_doc.iva_ventas = 0
-				iva = valorestotales[indice] * (item_doc.iva_ventas/100)
-				iva_item.append(iva)
-			else:
-				iva_item.append(0)
-			indice += 1
-		self.iva_1 = iva_item[0]
-		self.iva_2 = iva_item[1]
-		self.iva_3 = iva_item[2]
-		self.iva_4 = iva_item[3]
-		self.iva_5 = iva_item[4]
-		self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
-		self.save()
+		if self.org_creadora.responsable_iva == 'SI':
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_iva = [19, 5, 0, 0]
+			iva_item = []
+			indice = 0
+			for item in item_selecionados:
+				if item:
+					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+					if item_doc.iva_ventas:
+						tariva = 0
+						for numero in numeros:
+							if item_doc.iva_ventas == numero:
+								iva = float(valorestotales[indice]) * (tarifas_de_iva[tariva]/100)
+								iva_item.append(int(iva))
+							tariva += 1
+				else:
+					iva_item.append(0)
+				indice += 1
+			self.iva_1 = iva_item[0]
+			self.iva_2 = iva_item[1]
+			self.iva_3 = iva_item[2]
+			self.iva_4 = iva_item[3]
+			self.iva_5 = iva_item[4]
+			self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
+			self.save()
+		else:
+			self.iva_total = 0
+			self.save()
 
 		cliente = Contacto.objects.get(nombre_legal=self.cliente, relacion_activa="CL", org_creadora=self.org_creadora)
 		if cliente.consumidor_final == True:
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_ico = [16, 8, 4, 0]
 			ico_item = []
 			indice = 0
 			for item in item_selecionados:
 				if item:
 					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
-					if item_doc.impuesto_consumo_ventas == None:
-						item_doc.impuesto_consumo_ventas = 0
-					ico = valorestotales[indice] * (item_doc.impuesto_consumo_ventas/100)
-					ico_item.append(ico)
+					if item_doc.impuesto_consumo_ventas:
+						tarico = 0
+						for numero in numeros:
+							if item_doc.impuesto_consumo_ventas == numero:
+								ico = float(valorestotales[indice]) * (tarifas_de_ico[tarico]/100)
+								ico_item.append(int(ico))
+							tarico += 1
 				else:
 					ico_item.append(0)
 				indice += 1
@@ -1281,49 +1282,83 @@ class Factura_de_venta(models.Model):
 						item_doc.save()
 			indice += 1
 
-		if self.org_creadora.declarante_impuesto_renta == True:
-			if self.org_creadora.ventas_liquidar_reterenta == True and cliente.liquidar_reterenta == True:
-				if self.org_creadora.gran_contribuyente == True:
-					self.reterenta = 0
-					self.save()
-				elif self.org_creadora.regimen_tributario == '2' or self.org_creadora.regimen_tributario == '0':
-					if cliente.regimen_tributario == '0':
-						self.reterenta = 0
-						self.save()
-					elif self.sub_total > self.org_creadora.base_reterenta:
-						if self.org_creadora.tarifa_reterenta == None:
-							self.org_creadora.tarifa_reterenta = 0
-							self.reterenta = self.sub_total * (self.org_creadora.tarifa_reterenta/100)
-							self.save()
-						else:
-							self.reterenta = self.sub_total * (self.org_creadora.tarifa_reterenta/100)
-							self.save()
-					else:
-						self.reterenta = 0
-						self.save()
-				else:
-					self.reterenta = 0
-					self.save()
+		if self.org_creadora.declarante_impuesto_renta == True or self.org_creadora.declarante_impuesto_renta == False:
+			if self.org_creadora.ventas_liquidar_reterenta == True and self.org_creadora.ventas_liquidar_autoretencion_renta == False and cliente.ventas_liquidar_reterenta == True:
+				numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+				self.reterenta = int(reterentas)
+				self.autoreterenta = 0
+				self.save()
 			elif self.org_creadora.ventas_liquidar_autoretencion_renta == True:
-				if self.org_creadora.naturaleza == '1':
-					if self.org_creadora.tarifa_autoreterenta == None:
-						self.org_creadora.tarifa_autoreterenta = 0
-						self.reterenta = self.sub_total * (self.org_creadora.tarifa_autoreterenta/100)
+				numeros = ['1', '2', '3']
+				tarifas_autoreterenta = [0.4, 0.8, 1.6]
+				indice = 0
+				if self.org_creadora.tarifa_autoreterenta == None:
+					self.autoreterenta = 0
+					self.save()
+				for numero in numeros:
+					if self.org_creadora.tarifa_autoreterenta == numero:
+						self.autoreterenta = self.sub_total * (tarifas_autoreterenta[indice]/100)
+						self.reterenta = 0
 						self.save()
-					else:
-						self.reterenta = self.sub_total * (self.org_creadora.tarifa_autoreterenta/100)
-						self.save()
-				else:
+					indice = indice + 1
+			elif self.org_creadora.ventas_liquidar_reterenta == True and self.org_creadora.ventas_liquidar_autorreterenta_clientes_regimen_simple == True :
+				if self.org_creadora.regimen_tributario == 2 and cliente.regimen_tributario == 0:
+					numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+					self.autoreterenta = int(reterentas)
 					self.reterenta = 0
 					self.save()
 			else:
 				self.reterenta = 0
+				self.autoreterenta = 0
 				self.save()
 		else:
 			self.reterenta = 0
+			self.autoreterenta = 0
 			self.save()
 
-		if self.org_creadora.ventas_liquidar_reteica == True and cliente.liquidar_reteica == True:
+		if self.org_creadora.ventas_liquidar_reteica == True and cliente.ventas_liquidar_reteica == True:
 			if self.org_creadora.ciudad == cliente.ciudad:
 				if self.org_creadora.gran_contribuyente == True:
 					self.reteica = 0
@@ -1333,12 +1368,11 @@ class Factura_de_venta(models.Model):
 						self.reteica = 0
 						self.save()
 					else:
-						if self.org_creadora.tarifa_reteica == None:
-							self.org_creadora.tarifa_reteica = 0
-							self.reteica = self.sub_total * (self.org_creadora.tarifa_reteica/1000)
+						if self.org_creadora.tarifa_liquidar_reteica == None:
+							self.reteica = 0
 							self.save()
 						else:
-							self.reteica = self.sub_total * (self.org_creadora.tarifa_reteica/1000)
+							self.reteica = self.sub_total * (self.org_creadora.tarifa_liquidar_reteica/1000)
 							self.save()
 				else:
 					self.reteica = 0
@@ -1350,12 +1384,23 @@ class Factura_de_venta(models.Model):
 			self.reteica = 0
 			self.save()
 
-		if self.org_creadora.regimen_tributario == '0' or self.org_creadora.gran_contribuyente == True:
-			self.reteiva = 0
+		if cliente.gran_contribuyente == True:
+			self.reteiva = int(self.iva_total * 0.15)
 			self.save()
-		elif self.org_creadora.regimen_tributario == '2' and cliente.gran_contribuyente == True:
-			self.reteiva = self.iva_total * 0.15
-			self.save()
+		elif cliente.ventas_liquidar_reteiva_responsable_iva_regimen_comun and cliente.gran_contribuyente == False and cliente.responsable_iva == 'SI':
+			if self.org_creadora.responsable_iva == 'SI' and self.org_creadora.gran_contribuyente == False and self.org_creadora.regimen_tributario == '2':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
+				self.reteiva = 0
+				self.save()
+		elif cliente.ventas_liquidar_reteiva_responsable_iva_regimen_simple and cliente.regimen_tributario == '2' and cliente.responsable_iva == 'SI':
+			if self.org_creadora.responsable_iva == 'SI' and self.org_creadora.regimen_tributario == '0':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
+				self.reteiva = 0
+				self.save()
 		else:
 			self.reteiva = 0
 			self.save()
@@ -1366,7 +1411,7 @@ class Factura_de_venta(models.Model):
 
 	def calculo_total_factura(self):
 		self.total_impuestos = self.iva_total + self.ico_total
-		self.total_retenciones = self.reterenta + self.reteiva + self.reteica
+		self.total_retenciones = self.reterenta + self.autoreterenta + self.reteiva + self.reteica
 		self.total_documento = self.sub_total + self.total_impuestos - self.total_retenciones
 		self.saldo_pendiente = self.total_documento - self.anticipo
 		self.save()
@@ -1391,6 +1436,7 @@ class Factura_de_venta(models.Model):
 			descripcion_detallada=self.descripcion_detallada,observacion=self.observacion)
 		return nueva_remision
 
+	
 	def generar_nota_credito(self):
 		nueva_creditnote = Nota_credito(referencia_factura=self.consecutivo_interno, referencia_factura_DIAN=self.consecutivo_DIAN,fecha_emision_factura=self.fecha_emision,referencia_cotizacion=self.referencia_cotizacion,
 			referencia_remision=self.referencia_remision,referencia_orden_compra=self.referencia_orden_compra,referencia_otro_documento=self.referencia_otro_documento,
@@ -1452,12 +1498,12 @@ class Nota_credito(models.Model):
 	fecha_emision_factura = models.DateTimeField(null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
 	fecha_pago = models.DateTimeField(null=True, blank=True)
-	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp1 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=MEDIOS_DE_PAGO, null=True, blank=True)
-	moneda = models.CharField(max_length=3, choices=MONEDAS, null=True, blank=True)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO, null=True, blank=True)
+	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	vendedor = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 	id_organizacion = models.CharField(max_length=50, null=True, blank=True)
@@ -1526,6 +1572,7 @@ class Nota_credito(models.Model):
 	iva_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	ico_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	autoreterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteiva = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	sub_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
@@ -1541,7 +1588,8 @@ class Nota_credito(models.Model):
 	descripcion_5 = models.CharField(max_length=400,  null=True, blank=True)
 	descripcion_detallada = models.TextField(null=True, blank=True)
 	observacion = models.CharField(max_length=200,  null=True, blank=True)
-	concepto_nota_credito = models.CharField(max_length=1, choices=CONCEPTO_NOTA_CREDITO, null=True, blank=True)
+	cifra_total_en_palabras = models.CharField(max_length=300,  null=True, blank=True)
+	concepto_nota_credito = models.CharField(max_length=1, choices=choices.CONCEPTO_NOTA_CREDITO, null=True, blank=True)
 	item_1_afec = models.CharField(max_length=100, null=True, blank=True)
 	item_2_afec = models.CharField(max_length=100, null=True, blank=True)
 	item_3_afec = models.CharField(max_length=100, null=True, blank=True)
@@ -1644,37 +1692,51 @@ class Nota_credito(models.Model):
 		self.valor_total_5 = valorestotales[4]
 		self.sub_total = self.valor_total_1 + self.valor_total_2 + self.valor_total_3 + self.valor_total_4 + self.valor_total_5
 
-		iva_item = []
-		indice = 0
-		for item in item_selecionados:
-			if item:
-				item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
-				if item_doc.iva_ventas == None:
-					item_doc.iva_ventas = 0
-				iva = valorestotales[indice] * (item_doc.iva_ventas/100)
-				iva_item.append(iva)
-			else:
-				iva_item.append(0)
-			indice += 1
-		self.iva_1 = iva_item[0]
-		self.iva_2 = iva_item[1]
-		self.iva_3 = iva_item[2]
-		self.iva_4 = iva_item[3]
-		self.iva_5 = iva_item[4]
-		self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
-		self.save()
+		if self.org_creadora.responsable_iva == 'SI':
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_iva = [19, 5, 0, 0]
+			iva_item = []
+			indice = 0
+			for item in item_selecionados:
+				if item:
+					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+					if item_doc.iva_ventas:
+						tariva = 0
+						for numero in numeros:
+							if item_doc.iva_ventas == numero:
+								iva = float(valorestotales[indice]) * (tarifas_de_iva[tariva]/100)
+								iva_item.append(int(iva))
+							tariva += 1
+				else:
+					iva_item.append(0)
+				indice += 1
+			self.iva_1 = iva_item[0]
+			self.iva_2 = iva_item[1]
+			self.iva_3 = iva_item[2]
+			self.iva_4 = iva_item[3]
+			self.iva_5 = iva_item[4]
+			self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
+			self.save()
+		else:
+			self.iva_total = 0
+			self.save()
 
 		cliente = Contacto.objects.get(nombre_legal=self.cliente, relacion_activa="CL", org_creadora=self.org_creadora)
 		if cliente.consumidor_final == True:
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_ico = [16, 8, 4, 0]
 			ico_item = []
 			indice = 0
 			for item in item_selecionados:
 				if item:
 					item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
-					if item_doc.impuesto_consumo_ventas == None:
-						item_doc.impuesto_consumo_ventas = 0
-					ico = valorestotales[indice] * (item_doc.impuesto_consumo_ventas/100)
-					ico_item.append(ico)
+					if item_doc.impuesto_consumo_ventas:
+						tarico = 0
+						for numero in numeros:
+							if item_doc.impuesto_consumo_ventas == numero:
+								ico = float(valorestotales[indice]) * (tarifas_de_ico[tarico]/100)
+								ico_item.append(int(ico))
+							tarico += 1
 				else:
 					ico_item.append(0)
 				indice += 1
@@ -1689,49 +1751,83 @@ class Nota_credito(models.Model):
 			self.ico_total = 0
 			self.save()
 
-		if self.org_creadora.declarante_impuesto_renta == True:
-			if self.org_creadora.ventas_liquidar_reterenta == True and cliente.liquidar_reterenta == True:
-				if self.org_creadora.gran_contribuyente == True:
-					self.reterenta = 0
-					self.save()
-				elif self.org_creadora.regimen_tributario == '2' or self.org_creadora.regimen_tributario == '0':
-					if cliente.regimen_tributario == '0':
-						self.reterenta = 0
-						self.save()
-					elif self.sub_total > self.org_creadora.base_reterenta:
-						if self.org_creadora.tarifa_reterenta == None:
-							self.org_creadora.tarifa_reterenta = 0
-							self.reterenta = self.sub_total * (self.org_creadora.tarifa_reterenta/100)
-							self.save()
-						else:
-							self.reterenta = self.sub_total * (self.org_creadora.tarifa_reterenta/100)
-							self.save()
-					else:
-						self.reterenta = 0
-						self.save()
-				else:
-					self.reterenta = 0
-					self.save()
+		if self.org_creadora.declarante_impuesto_renta == True or self.org_creadora.declarante_impuesto_renta == False:
+			if self.org_creadora.ventas_liquidar_reterenta == True and self.org_creadora.ventas_liquidar_autoretencion_renta == False and cliente.ventas_liquidar_reterenta == True:
+				numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+				self.reterenta = int(reterentas)
+				self.autoreterenta = 0
+				self.save()
 			elif self.org_creadora.ventas_liquidar_autoretencion_renta == True:
-				if self.org_creadora.naturaleza == '1':
-					if self.org_creadora.tarifa_autoreterenta == None:
-						self.org_creadora.tarifa_autoreterenta = 0
-						self.reterenta = self.sub_total * (self.org_creadora.tarifa_autoreterenta/100)
+				numeros = ['1', '2', '3']
+				tarifas_autoreterenta = [0.4, 0.8, 1.6]
+				indice = 0
+				if self.org_creadora.tarifa_autoreterenta == None:
+					self.autoreterenta = 0
+					self.save()
+				for numero in numeros:
+					if self.org_creadora.tarifa_autoreterenta == numero:
+						self.autoreterenta = self.sub_total * (tarifas_autoreterenta[indice]/100)
+						self.reterenta = 0
 						self.save()
-					else:
-						self.reterenta = self.sub_total * (self.org_creadora.tarifa_autoreterenta/100)
-						self.save()
-				else:
+					indice = indice + 1
+			elif self.org_creadora.ventas_liquidar_reterenta == True and self.org_creadora.ventas_liquidar_autorreterenta_clientes_regimen_simple == True :
+				if self.org_creadora.regimen_tributario == 2 and cliente.regimen_tributario == 0:
+					numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Item.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+					self.autoreterenta = int(reterentas)
 					self.reterenta = 0
 					self.save()
 			else:
 				self.reterenta = 0
+				self.autoreterenta = 0
 				self.save()
 		else:
 			self.reterenta = 0
+			self.autoreterenta = 0
 			self.save()
 
-		if self.org_creadora.ventas_liquidar_reteica == True and cliente.liquidar_reteica == True:
+		if self.org_creadora.ventas_liquidar_reteica == True and cliente.ventas_liquidar_reteica == True:
 			if self.org_creadora.ciudad == cliente.ciudad:
 				if self.org_creadora.gran_contribuyente == True:
 					self.reteica = 0
@@ -1741,12 +1837,11 @@ class Nota_credito(models.Model):
 						self.reteica = 0
 						self.save()
 					else:
-						if self.org_creadora.tarifa_reteica == None:
-							self.org_creadora.tarifa_reteica = 0
-							self.reteica = self.sub_total * (self.org_creadora.tarifa_reteica/1000)
+						if self.org_creadora.tarifa_liquidar_reteica == None:
+							self.reteica = 0
 							self.save()
 						else:
-							self.reteica = self.sub_total * (self.org_creadora.tarifa_reteica/1000)
+							self.reteica = self.sub_total * (self.org_creadora.tarifa_liquidar_reteica/1000)
 							self.save()
 				else:
 					self.reteica = 0
@@ -1758,12 +1853,23 @@ class Nota_credito(models.Model):
 			self.reteica = 0
 			self.save()
 
-		if self.org_creadora.regimen_tributario == '0' or self.org_creadora.gran_contribuyente == True:
-			self.reteiva = 0
+		if cliente.gran_contribuyente == True:
+			self.reteiva = int(self.iva_total * 0.15)
 			self.save()
-		elif self.org_creadora.regimen_tributario == '2' and cliente.gran_contribuyente == True:
-			self.reteiva = self.iva_total * 0.15
-			self.save()
+		elif cliente.ventas_liquidar_reteiva_responsable_iva_regimen_comun and cliente.gran_contribuyente == False and cliente.responsable_iva == 'SI':
+			if self.org_creadora.responsable_iva == 'SI' and self.org_creadora.gran_contribuyente == False and self.org_creadora.regimen_tributario == '2':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
+				self.reteiva = 0
+				self.save()
+		elif cliente.ventas_liquidar_reteiva_responsable_iva_regimen_simple and cliente.regimen_tributario == '2' and cliente.responsable_iva == 'SI':
+			if self.org_creadora.responsable_iva == 'SI' and self.org_creadora.regimen_tributario == '0':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
+				self.reteiva = 0
+				self.save()
 		else:
 			self.reteiva = 0
 			self.save()
@@ -1774,7 +1880,7 @@ class Nota_credito(models.Model):
 
 	def calculo_total_creditnote(self):
 		self.total_impuestos = self.iva_total + self.ico_total
-		self.total_retenciones = self.reterenta + self.reteiva + self.reteica
+		self.total_retenciones = self.reterenta + self.autoreterenta + self.reteiva + self.reteica
 		self.total_documento = self.sub_total + self.total_impuestos - self.total_retenciones
 		self.saldo_pendiente = self.total_documento - self.anticipo
 		self.save()
@@ -1810,12 +1916,12 @@ class Nota_debito(models.Model):
 	fecha_emision_factura = models.DateTimeField(null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
 	fecha_pago = models.DateTimeField(null=True, blank=True)
-	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp1 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=MEDIOS_DE_PAGO, null=True, blank=True)
-	moneda = models.CharField(max_length=3, choices=MONEDAS, null=True, blank=True)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO, null=True, blank=True)
+	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	vendedor = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 	id_organizacion = models.CharField(max_length=50, null=True, blank=True)
@@ -1884,6 +1990,7 @@ class Nota_debito(models.Model):
 	iva_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	ico_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
+	autoreterenta = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteiva = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	reteica = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	sub_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
@@ -1899,7 +2006,8 @@ class Nota_debito(models.Model):
 	descripcion_5 = models.CharField(max_length=400, null=True, blank=True)
 	descripcion_detallada = models.TextField(null=True, blank=True)
 	observacion = models.CharField(max_length=200, null=True, blank=True)
-	concepto_nota_debito = models.CharField(max_length=1, choices=CONCEPTO_NOTA_DEBITO, null=True, blank=True)
+	cifra_total_en_palabras = models.CharField(max_length=300,  null=True, blank=True)
+	concepto_nota_debito = models.CharField(max_length=1, choices=choices.CONCEPTO_NOTA_DEBITO, null=True, blank=True)
 	cargo_interes = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
 	descripcion_cargo = models.TextField(null=True, blank=True)
 	saldo_total = models.DecimalField(max_digits=11, decimal_places=2, null=True, blank=True)
@@ -1936,11 +2044,11 @@ class Factura_de_compra(models.Model):
 	consec_inter_prefijo = models.CharField(max_length=3, null=True, blank=True)
 	consec_inter_numero = models.PositiveIntegerField(null=True, blank=True)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
-	tipo_imp1 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp2 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	tipo_imp3 = models.CharField(max_length=2, choices=TIPO_IMPUESTO, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=MEDIOS_DE_PAGO)
-	moneda = models.CharField(max_length=3, choices=MONEDAS, null=True, blank=True)
+	tipo_imp1 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO)
+	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	comprador = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 	id_organizacion = models.CharField(max_length=50, null=True, blank=True)
@@ -2024,6 +2132,7 @@ class Factura_de_compra(models.Model):
 	descripcion_5 = models.CharField(max_length=400,  null=True, blank=True)
 	descripcion_detallada = models.TextField(null=True, blank=True)
 	observacion = models.CharField(max_length=200,  null=True, blank=True)
+	cifra_total_en_palabras = models.CharField(max_length=300,  null=True, blank=True)
 	generado = models.BooleanField(default=False)
 
 
@@ -2101,6 +2210,19 @@ class Factura_de_compra(models.Model):
 		self.descripcion_4 = descripciones[3]
 		self.descripcion_5 = descripciones[4]
 		self.save()
+
+		if self.descripcion_detallada == 'No Registrado' or self.descripcion_detallada == '':
+			descripciones_detalle = []
+			for item in item_selecionados:
+				if item:
+					item_doc = Insumo.objects.get(codigo=item, org_creadora=self.org_creadora)
+					if item_doc.descripcion_detalle:
+						descripcion = '- %s\n' %(item_doc.descripcion_detalle)
+						descripciones_detalle.append(descripcion)
+			descrip_detail = ''
+			for descripcion in descripciones_detalle:
+				descrip_detail = descrip_detail + descripcion
+			self.descripcion_detallada = descrip_detail
 
 		unidadesmedida = []
 		for item in item_selecionados:
@@ -2206,49 +2328,62 @@ class Factura_de_compra(models.Model):
 		self.sub_total = self.valor_total_1 + self.valor_total_2 + self.valor_total_3 + self.valor_total_4 + self.valor_total_5
 
 
-		iva_item = []
-		indice = 0
-		for item in item_selecionados:
-			if item:
-				item_doc = Insumo.objects.get(codigo=item, org_creadora=self.org_creadora)
-				if item_doc.iva_compras == None:
-					item_doc.iva_compras = 0
-				iva = valorestotales[indice] * (item_doc.iva_compras/100)
-				iva_item.append(iva)
-			else:
-				iva_item.append(0)
-			indice += 1
-		self.iva_1 = iva_item[0]
-		self.iva_2 = iva_item[1]
-		self.iva_3 = iva_item[2]
-		self.iva_4 = iva_item[3]
-		self.iva_5 = iva_item[4]
-		self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
-		self.save()
-
-		if self.org_creadora.compras_consumidor_final == True:
-			ico_item = []
+		proveedor = Contacto.objects.get(nombre_legal=self.proveedor, relacion_activa="PD", org_creadora=self.org_creadora)
+		if proveedor.responsable_iva == 'SI':
+			numeros = ['1', '2', '3', '4']
+			tarifas_de_iva = [19, 5, 0, 0]
+			iva_item = []
 			indice = 0
 			for item in item_selecionados:
 				if item:
 					item_doc = Insumo.objects.get(codigo=item, org_creadora=self.org_creadora)
-					if item_doc.impuesto_consumo_compras == None:
-						item_doc.impuesto_consumo_compras = 0
-					ico = valorestotales[indice] * (item_doc.impuesto_consumo_compras/100)
-					ico_item.append(ico)
+					if item_doc.iva_compras:
+						tariva = 0
+						for numero in numeros:
+							if item_doc.iva_compras == numero:
+								iva = float(valorestotales[indice]) * (tarifas_de_iva[tariva]/100)
+								iva_item.append(int(iva))
+							tariva += 1
 				else:
-					ico_item.append(0)
+					iva_item.append(0)
 				indice += 1
-			self.ico_1 = ico_item[0]
-			self.ico_2 = ico_item[1]
-			self.ico_3 = ico_item[2]
-			self.ico_4 = ico_item[3]
-			self.ico_5 = ico_item[4]
-			self.ico_total = self.ico_1 + self.ico_2 + self.ico_3 + self.ico_4 + self.ico_5
+			self.iva_1 = iva_item[0]
+			self.iva_2 = iva_item[1]
+			self.iva_3 = iva_item[2]
+			self.iva_4 = iva_item[3]
+			self.iva_5 = iva_item[4]
+			self.iva_total = self.iva_1 + self.iva_2 + self.iva_3 + self.iva_4 + self.iva_5
 			self.save()
 		else:
-			self.ico_total = 0
+			self.iva_total = 0
 			self.save()
+
+
+		numeros = ['1', '2', '3', '4']
+		tarifas_de_ico = [16, 8, 4, 0]
+		ico_item = []
+		indice = 0
+		for item in item_selecionados:
+			if item:
+				item_doc = Insumo.objects.get(codigo=item, org_creadora=self.org_creadora)
+				if item_doc.impuesto_consumo_compras:
+					tarico = 0
+					for numero in numeros:
+						if item_doc.impuesto_consumo_compras == numero:
+							ico = float(valorestotales[indice]) * (tarifas_de_ico[tarico]/100)
+							ico_item.append(int(ico))
+						tarico += 1
+			else:
+				ico_item.append(0)
+			indice += 1
+		self.ico_1 = ico_item[0]
+		self.ico_2 = ico_item[1]
+		self.ico_3 = ico_item[2]
+		self.ico_4 = ico_item[3]
+		self.ico_5 = ico_item[4]
+		self.ico_total = self.ico_1 + self.ico_2 + self.ico_3 + self.ico_4 + self.ico_5
+		self.save()
+
 
 		item_selecionados = [self.item_1, self.item_2, self.item_3, self.item_4, self.item_5]
 		cantidades = [self.cantidad_1, self.cantidad_2, self.cantidad_3, self.cantidad_4, self.cantidad_5]
@@ -2266,50 +2401,44 @@ class Factura_de_compra(models.Model):
 			indice += 1
 
 
-		proveedor = Contacto.objects.get(nombre_legal=self.proveedor, relacion_activa="PD", org_creadora=self.org_creadora)
-		if proveedor.declarante_impuesto_renta == True:
-			if self.org_creadora.compras_practicar_reterenta == True:
-				if proveedor.gran_contribuyente == True:
-					self.reterenta = 0
-					self.save()
-				elif proveedor.regimen_tributario == '2' or proveedor.regimen_tributario == '0':
-					if self.org_creadora.regimen_tributario == '0':
-						self.reterenta = 0
-						self.save()
-					elif self.sub_total > proveedor.base_reterenta:
-						if proveedor.tarifa_reterenta == None:
-							proveedor.tarifa_reterenta = 0
-							self.reterenta = self.sub_total * (proveedor.tarifa_reterenta/100)
-							self.save()
-						else:
-							self.reterenta = self.sub_total * (proveedor.tarifa_reterenta/100)
-							self.save()
-					else:
-						self.reterenta = 0
-						self.save()
-				else:
-					self.reterenta = 0
-					self.save()
-			elif proveedor.autoretenedor_impuesto_renta == True:
-				if proveedor.naturaleza == '1':
-					if proveedor.tarifa_autoreterenta == None:
-						proveedor.tarifa_autoreterenta = 0
-						self.reterenta = self.sub_total * (proveedor.tarifa_autoreterenta/100)
-						self.save()
-					else:
-						self.reterenta = self.sub_total * (proveedor.tarifa_autoreterenta/100)
-						self.save()
-				else:
-					self.reterenta = 0
-					self.save()
+		if proveedor.compras_declarante_impuesto_renta == True or proveedor.compras_declarante_impuesto_renta == False:
+			if self.org_creadora.compras_practicar_reterenta == True and proveedor.compras_exento_de_reterenta == False and proveedor.compras_autoretenedor_impuesto_renta == False:
+				numeros = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16" ,"17", "18", "19", "20",
+				"21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40",
+				"41", "42", "43", "44", "45", "46", "47", "48"]
+				bases = [0,961000,0,961000,0,0,0,0,0,0,0,0,0,0,142000,0,142000,0,142000,961000,0,142000,0,142000,0,142000,0,142000,0,0,
+				961000,0,0,0,3276000,0,0,0,0,0,0,961000,0,0,5697000,0,0,0]
+				tarifas_de_reterenta = [0,2.5,2.5,3.5,3.5,1,0.1,10,11,3.5,6,10,10,11,1,1,2,2,3.5,3.5,3.5,4,4,6,6,1,1,2,2,4,3.5,3.5,7,4,1.5,1.5,0.75,
+				15,20,5,15,2,2,0.5,0.5,10,11,2.5]
+				indice = 0
+				reterentas = 0
+				for numero in numeros:
+					totalval = 0
+					bases_retefuenterenta = 0
+					for item in item_selecionados:
+						if item:
+							item_doc = Insumo.objects.get(codigo=item, org_creadora=self.org_creadora)
+							if item_doc.tarifa_reterenta:
+								if item_doc.tarifa_reterenta == numero:
+									bases_retefuenterenta = bases_retefuenterenta + valorestotales[totalval]
+						totalval = totalval + 1
+					if bases_retefuenterenta > bases[indice]:
+						reterentas = reterentas + (float(bases_retefuenterenta) * (tarifas_de_reterenta[indice]/100))
+					indice = indice + 1
+				self.reterenta = int(reterentas)
+				self.autoreterenta = 0
+				self.save()
 			else:
 				self.reterenta = 0
+				self.autoreterenta = 0
 				self.save()
 		else:
 			self.reterenta = 0
+			self.autoreterenta = 0
 			self.save()
 
-		if self.org_creadora.compras_practicar_reteica == True and proveedor.declarante_impuesto_ICA == True:
+
+		if self.org_creadora.compras_practicar_reteica == True:
 			if self.org_creadora.ciudad == proveedor.ciudad:
 				if proveedor.gran_contribuyente == True:
 					self.reteica = 0
@@ -2319,12 +2448,11 @@ class Factura_de_compra(models.Model):
 						self.reteica = 0
 						self.save()
 					else:
-						if proveedor.tarifa_reteica == None:
-							proveedor.tarifa_reteica = 0
-							self.reteica = self.sub_total * (proveedor.tarifa_reteica/1000)
+						if self.org_creadora.tarifa_practicar_reteica == None:
+							self.reteica = 0
 							self.save()
 						else:
-							self.reteica = self.sub_total * (proveedor.tarifa_reteica/1000)
+							self.reteica = self.sub_total * (self.org_creadora.tarifa_practicar_reteica/1000)
 							self.save()
 				else:
 					self.reteica = 0
@@ -2335,13 +2463,21 @@ class Factura_de_compra(models.Model):
 		else:
 			self.reteica = 0
 			self.save()
+	
 
-		if self.org_creadora.compras_practicar_reteiva == True:
-			if proveedor.regimen_tributario == '0' or proveedor.gran_contribuyente == True:
+		if self.org_creadora.gran_contribuyente == True:
+			self.reteiva = int(self.iva_total * 0.15)
+			self.save()
+		elif self.org_creadora.compras_practicar_reteiva_proveedores_regimen_comun and self.org_creadora.gran_contribuyente == False and self.org_creadora.responsable_iva == 'SI':
+			if proveedor.responsable_iva == 'SI' and proveedor.gran_contribuyente == False and proveedor.regimen_tributario == '2':
+				self.reteiva = int(self.iva_total * 0.15)
+				self.save()
+			else:
 				self.reteiva = 0
 				self.save()
-			elif proveedor.regimen_tributario == '2' and self.org_creadora.gran_contribuyente == True:
-				self.reteiva = self.iva_total * 0.15
+		elif self.org_creadora.compras_practicar_reteiva_proveedores_regimen_simple and self.org_creadora.regimen_tributario == '2' and self.org_creadora.responsable_iva == 'SI':
+			if proveedor.responsable_iva == 'SI' and proveedor.regimen_tributario == '0':
+				self.reteiva = int(self.iva_total * 0.15)
 				self.save()
 			else:
 				self.reteiva = 0
@@ -2349,6 +2485,7 @@ class Factura_de_compra(models.Model):
 		else:
 			self.reteiva = 0
 			self.save()
+
 
 		if self.anticipo == None:
 			self.anticipo = 0
@@ -2381,7 +2518,7 @@ class Factura_de_compra(models.Model):
 
 class Gastos_registro(models.Model):
 	numero_gasto = models.IntegerField(null=True, blank=True, default=1)
-	concepto_gasto = models.CharField(max_length=1, choices=CONCEPTO_GASTO)
+	concepto_gasto = models.CharField(max_length=1, choices=choices.CONCEPTO_GASTO)
 	descripcion_gasto = models.TextField(null=True, blank=True)
 	valor_gasto = models.DecimalField(max_digits=11, decimal_places=2)
 	fecha_emision = models.DateTimeField(null=True, blank=True)
@@ -2403,7 +2540,7 @@ class Gastos_registro(models.Model):
 
 class Crecimiento(models.Model):
 	nombre = models.CharField(max_length=50, null=True, blank=True)
-	metrica_crecimiento = models.CharField(max_length=1, choices=METRICA_CRECIMIENTO, null=True, blank=True)
+	metrica_crecimiento = models.CharField(max_length=1, choices=choices.METRICA_CRECIMIENTO, null=True, blank=True)
 	fecha_creacion = models.DateTimeField(null=True, blank=True)
 	fecha_inicio = models.DateField()
 	fecha_fin = models.DateField(null=True, blank=True)

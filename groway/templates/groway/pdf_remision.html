@@ -10,110 +10,151 @@
   		@page {
 	        size: letter portrait;
 	        @frame col1_frame {             /* Content frame 1 */
-	            -pdf-frame-content: logo_nit;
+	            -pdf-frame-content: logo;
+	            left: 25px; width: 550px; top: 20px; height: auto;
+	        }
+	        @frame col1_frame {             /* Content frame 1 */
+	            -pdf-frame-content: nombre;
 	            left: 30px; width: 550px; top: 50px; height: auto;
+	        }
+	        @frame col1_frame {             /* Content frame 1 */
+	            -pdf-frame-content: nit_datos;
+	            left: 30px; width: 550px; top: 100px; height: auto;
 	        }
 	        @frame col2_frame {             /* Content frame 2 */
 	            -pdf-frame-content: consec;
-	            left: 400px; width: 600px; top: 110px; height: auto;
+	            left: 450px; width: 600px; top: 90px; height: auto;
 	        }
 	        @frame col2_frame {             /* Content frame 2 */
 	            -pdf-frame-content: resol;
-	            left: 400px; width: 600px; top: 150px; height: auto;
+	            left: 450px; width: 600px; top: 120px; height: auto;
 	        }
 	        @frame info_frame {
 	        	-pdf-frame-content: info_cliente;
-	        	left: 20px; width: 770px; top: 285px; height: auto;
+	        	left: 20px; width: 770px; top: 220px; height: auto;
 	        }
 	        @frame info_frame {
 	        	-pdf-frame-content: referencia-documento;
-	        	left: 510px; width: 300px; top: 320px; height: auto;
+	        	left: 510px; width: 280px; top: 250px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: info_tabla1;
-	        	left: 25px; width: 760px; top: 470px; height: 400px;
+	        	left: 20px; width: 770px; top: 360px; height: 400px;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: detalle-documento;
-	        	left: 20px; width: 450px; bottom: 434px; height: auto;
+	        	left: 20px; width: 450px; bottom: 600px; height: auto;
 	        }
 	         @frame tabla_frame {
 	        	-pdf-frame-content: detalle-documento-moved;
-	        	left: 20px; width: 450px; bottom: 394px; height: auto;
+	        	left: 20px; width: 450px; bottom: 580px; height: auto;
 	        }
 	         @frame tabla_frame {
 	        	-pdf-frame-content: detalle-documento-moved-more;
-	        	left: 20px; width: 770px; bottom: 400px; height: auto;
+	        	left: 20px; width: 450px; bottom: 530px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: nota-documento;
-	        	left: 30px; width: 400px; bottom: 80px; height: auto;
+	        	left: 20px; width: 500px; bottom: 185px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: datos-transp;
+	        	left: 20px; width: 500px; bottom: 250px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: firmas_elaborador;
+	        	left: 150px; width: 200px; bottom: 90px; height: auto;
+	        }
+	        @frame tabla_frame {
+	        	-pdf-frame-content: firmas_recibido;
+	        	left: 450px; width: 200px; bottom: 90px; height: auto;
 	        }
 	        @frame footer_frame {
 	        	-pdf-frame-content: contact;
-	        	left: 160px; width: 500px; bottom: 40px; height: auto;
+	        	left: 20px; width: 760px; bottom: 20px; height: auto;
 	        }
     	}
     	p.nit {
-    		font-size: 13px;
+    		font-size: 10px;
     	}
     	h2.organizacion_nombre {
-    		font-size: 25px;
+    		font-size: 24px;
     	}
     	.consec {
     		text-align: center;
-    		font-size: 25px;
+    		font-size: 20px;
     		color: #BD0406;
     		padding-right: 240px;
     		padding-bottom: 0px;
     	}
     	.resol {
-    		font-size: 13px;
+    		font-size: 10px;
     		text-align: center;
     		padding-right: 240px;
     		padding-top: 0px;
     	}
     	.documento-info-cliente, .fecha {
-    		font-size: 13px;
+    		font-size: 10px;
     		padding-left: 10px;
     		border-bottom: solid 2px #C4CBB7;
+    	}
+    	.doc_references {
+    		font-size: 10px;
+    		padding-left: 50px;
     	}
     	.fecha p {
     		margin: 0px;
     	}
     	.documento-table1 th {
-    		font-size: 13px;
+    		font-size: 10px;
     	}
     	.documento-table1 td {
-    		font-size: 12px;
+    		font-size: 10px;
     		padding-top: 5px;
     		border-top: solid 2px #C4CBB7;
     	}
     	.detalle-items {
     		border-top: solid 2px #C4CBB7;
-    		border-bottom: solid 2px #C4CBB7;
-    		font-size: 14px;
+    		font-size: 10px;
     		padding-top: 5px;
     		padding-left: 10px;
     		padding-right: 10px;
     		text-align: justify;
     	}
+    	.nota-items {
+    		font-size: 10px;
+    		padding-top: 5px;
+    		padding-left: 10px;
+    		padding-right: 10px;
+    		text-align: justify;
+    	}
+    	.firmas_participantes {
+    		font-size: 10px;
+    		padding-top: 5px;
+    		padding-left: 10px;
+    		padding-right: 10px;
+    		text-align: center;
+    		border-top: solid 2px #000000;
+    	}
     	.contactenos {
     		text-align: center;
-    		font-size: 12px;
+    		font-size: 10px;
     	}
   	</style>
 </head>
 <body>
 	<div class="documento-detail">
 		<div class="documento-header">
-			<div id="logo_nit">
-				{% if orgactivas.logo_organizacion %}
+			{% if orgactivas.logo_organizacion %}
+			<div id="logo">
 				<img src="{{orgactivas.logo_organizacion.url}}" alt="Groway" width="300" height="60">
-				{% endif %}
-				{% if orgactivas.logo_organizacion == '' %}
+			{% endif %}
+			{% if orgactivas.logo_organizacion == '' %}
+			<div id="nombre">
 				<h2 class="organizacion_nombre">{{orgactivas.nombre_visible_cia}}</h2>
-				{% endif %}
+			{% endif %}
+			</div>
+			<div id="nit_datos">
 				<p class="nit">{{remision.org_creadora}}<br>{{remision.id_organizacion}}. {{remision.numero_id_organizacion}} - {{remision.numero_id_org_adicional}}<br>{{remision.dir_organizacion}}<br>Tel: {{remision.telefono_organizacion}}<br>{{remision.ciudad_organizacion}}, {{remision.departamento_organizacion}}</p>
 			</div>
 			<div class="consec_resol">
@@ -137,7 +178,7 @@
 			</div>
 		</div>
 		{% if remision.referencia_orden_compra != 'No Registrado' or remision.referencia_factura != 'No Registrado' or remision.referencia_otro_documento != 'No Registrado' %}
-		<div id="referencia-documento" class="doc_references" style="font-size: 14px;">
+		<div id="referencia-documento" class="doc_references">
 			<p>
 				{% if remision.referencia_factura != 'No Registrado' %}
 				<strong>Factura de Venta: </strong>{{remision.referencia_factura}}<br>
@@ -151,7 +192,6 @@
 			</p>
 		</div>
 		{% endif %}
-		{% if remision.descripcion_detallada != 'No Registrado' %}
 		{% if remision.item_3 == None and remision.item_4 == None %}
 		<div id="detalle-documento" class="detalle-items">
 		{% endif %}
@@ -161,21 +201,34 @@
 		{% if remision.item_4 != None %}
 		<div id="detalle-documento-moved-more" class="detalle-items">
 		{% endif %}
+		{% if remision.descripcion_detallada != 'No Registrado' %}
 			<p><strong>Descripción Detallada:</strong><br>{{remision.descripcion_detallada|linebreaksbr}}</p>
 		</div>
 		{% endif %}
+
 		{% if remision.observacion != 'No Registrado' %}
-		<div id="nota-documento" class="nota-items" style="font-size: 14px;">
+		<div id="nota-documento" class="nota-items">
 			<p><strong>Nota: </strong>{{remision.observacion}}</p>
 		</div>
 		{% endif %}
+		{% if remision.datos_transportador != 'No Registrado' %}
+		<div id="datos-transp" class="nota-items">
+			<p><strong>Datos del Transportador: </strong>{{remision.datos_transportador|linebreaksbr}}</p>
+		</div>
+		{% endif %}
+		<div id="firmas_elaborador" class="firmas_participantes">
+			<p><strong>Firma Elaborado por: </strong></p>
+		</div>
+		<div id="firmas_recibido" class="firmas_participantes">
+			<p><strong>Firma Recibido: </strong></p>
+		</div>
 		<div id="info_tabla1">
 			<div class="table-responsive">
 				<table class="documento-table1 table">
 					<thead>
 						<tr>
 							<th width="50">Ítem</th>
-							<th width="180">Descripción</th>
+							<th width="300">Descripción</th>
 							<th width="50">UM</th>
 							<th width="50">Cant.</th>
 						</tr>
@@ -183,14 +236,14 @@
 					<tbody>
 						<tr>
 							<td style="text-align: center;" class="valor-tabla">{{remision.item_1}}</td>
-							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{remision.descripcion_1}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{remision.descripcion_1}}</td>
 							<td style="text-align: center;" class="valor-tabla">{{remision.UM_1}}</td>
 							<td class="valor-tabla" align="right">{{remision.cantidad_1}}</td>
 						</tr>
 						{% if remision.item_2 != None %}
 						<tr>
 							<td style="text-align: center;" class="valor-tabla">{{remision.item_2}}</td>
-							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{remision.descripcion_2}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{remision.descripcion_2}}</td>
 							<td style="text-align: center;" class="valor-tabla">{{remision.UM_2}}</td>
 							<td class="valor-tabla" align="right">{{remision.cantidad_2}}</td>
 						</tr>
@@ -198,7 +251,7 @@
 						{% if remision.item_3 != None %}
 						<tr>
 							<td style="text-align: center;" class="valor-tabla">{{remision.item_3}}</td>
-							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{remision.descripcion_3}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{remision.descripcion_3}}</td>
 							<td style="text-align: center;" class="valor-tabla">{{remision.UM_3}}</td>
 							<td class="valor-tabla" align="right">{{remision.cantidad_3}}</td>
 						</tr>
@@ -206,7 +259,7 @@
 						{% if remision.item_4 != None %}
 						<tr>
 							<td style="text-align: center;" class="valor-tabla">{{remision.item_4}}</td>
-							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{remision.descripcion_4}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{remision.descripcion_4}}</td>
 							<td style="text-align: center;" class="valor-tabla">{{remision.UM_4}}</td>
 							<td class="valor-tabla" align="right">{{remision.cantidad_4}}</td>
 						</tr>
@@ -214,7 +267,7 @@
 						{% if remision.item_5 != None %}
 						<tr>
 							<td style="text-align: center;" class="valor-tabla">{{remision.item_5}}</td>
-							<td style="text-align: center; font-size: 11px;" class="valor-tabla">{{remision.descripcion_5}}</td>
+							<td style="text-align: center;" class="valor-tabla">{{remision.descripcion_5}}</td>
 							<td style="text-align: center;" class="valor-tabla">{{remision.UM_5}}</td>
 							<td class="valor-tabla" align="right">{{remision.cantidad_5}}</td>
 						</tr>
@@ -226,10 +279,10 @@
 		<div id="contact">
 			<div class="contactenos">
 				{% if orgactivas.email == None %}
-				<p>GROWAY, un software de SantiagoGeliz<br>www.linkedin.com/in/santiagogeliz</p>
+				<p>GROWAY, un software de SantiagoGeliz - www.linkedin.com/in/santiagogeliz</p>
 				{% endif %}
 				{% if orgactivas.email %}
-				<p>{{orgactivas.email}} {% if orgactivas.website %} / {{orgactivas.website}} {% endif %}</p>
+				<p>{{orgactivas.email}} {% if orgactivas.website %} - {{orgactivas.website}} {% endif %}</p>
 				{% endif %}
 			</div>
 		</div>

@@ -23,7 +23,8 @@ from .forms import OrganizacionForm, Consecutivo_documentoForm, Termino_de_pagoF
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
 from .models import Organizacion, Consecutivo_documento, Termino_de_pago, Factura_de_venta, Nota_credito, Nota_debito, Cotizacion, Remision, Factura_de_compra, Contacto, Categoria, Item, Insumo, Crecimiento, Gastos_registro
-from .models import DOCUMENTOS_IDENTIDAD, REGIMEN_TRIBUTARIO,NATURALEZA,RELACIONES,TIPO_CUENTA,UNIDADES_MEDIDA,TIPO_ITEM,TIPO_DE_DOCUMENTO,MONEDAS,MEDIOS_DE_PAGO,TIPO_IMPUESTO,CONCEPTO_NOTA_DEBITO,CONCEPTO_NOTA_CREDITO,DESTINO_ITEM,METRICA_CRECIMIENTO,CONCEPTO_GASTO,PAISES
+from . import choices
+from . import cifra_total_letras
 from django.http import HttpResponse
 from django.views.generic import View
 from django.template.loader import get_template
@@ -87,14 +88,14 @@ def reemplazardatos_organizacion(objeto):
 		objeto.compras_practicar_reterenta = "Aplica"
 	else:
 		objeto.compras_practicar_reterenta = "No Aplica"
-	if objeto.compras_consumidor_final == True:
-		objeto.compras_consumidor_final = "Aplica"
+	if objeto.compras_practicar_reteiva_proveedores_regimen_comun == True:
+		objeto.compras_practicar_reteiva_proveedores_regimen_comun = "Aplica"
 	else:
-		objeto.compras_consumidor_final = "No Aplica"
-	if objeto.compras_practicar_reteiva == True:
-		objeto.compras_practicar_reteiva = "Aplica"
+		objeto.compras_practicar_reteiva_proveedores_regimen_comun = "No Aplica"
+	if objeto.compras_practicar_reteiva_proveedores_regimen_simple == True:
+		objeto.compras_practicar_reteiva_proveedores_regimen_simple = "Aplica"
 	else:
-		objeto.compras_practicar_reteiva = "No Aplica"
+		objeto.compras_practicar_reteiva_proveedores_regimen_simple = "No Aplica"
 	if objeto.compras_practicar_reteica == True:
 		objeto.compras_practicar_reteica = "Aplica"
 	else:
@@ -107,20 +108,24 @@ def reemplazardatos_organizacion(objeto):
 		objeto.ventas_liquidar_autoretencion_renta = "Aplica"
 	else:
 		objeto.ventas_liquidar_autoretencion_renta = "No Aplica"
+	if objeto.ventas_liquidar_autorreterenta_clientes_regimen_simple == True:
+		objeto.ventas_liquidar_autorreterenta_clientes_regimen_simple = "Aplica"
+	else:
+		objeto.ventas_liquidar_autorreterenta_clientes_regimen_simple = "No Aplica"
 	if objeto.ventas_liquidar_reteica == True:
 		objeto.ventas_liquidar_reteica = "Aplica"
 	else:
 		objeto.ventas_liquidar_reteica = "No Aplica"
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.identificacion == llave:
 			objeto.identificacion = valor
-	for llave, valor in NATURALEZA:
-		if objeto.naturaleza == llave:
-			objeto.naturaleza = valor
-	for llave, valor in REGIMEN_TRIBUTARIO:
+	for llave, valor in choices.REGIMEN_TRIBUTARIO:
 		if objeto.regimen_tributario == llave:
 			objeto.regimen_tributario = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.RESPONSABLE_IVA:
+		if objeto.responsable_iva == llave:
+			objeto.responsable_iva = valor
+	for llave, valor in choices.PAISES:
 		if objeto.pais == llave:
 			objeto.pais = valor
 	return objeto
@@ -154,45 +159,52 @@ def reemplazardatos_contacto(objeto):
 		objeto.gran_contribuyente = "Aplica"
 	else:
 		objeto.gran_contribuyente = "No Aplica"
-	if objeto.liquidar_reterenta == True:
-		objeto.liquidar_reterenta = "Aplica"
+	if objeto.ventas_liquidar_reterenta == True:
+		objeto.ventas_liquidar_reterenta = "Aplica"
 	else:
-		objeto.liquidar_reterenta = "No Aplica"
-	if objeto.liquidar_reteica == True:
-		objeto.liquidar_reteica = "Aplica"
+		objeto.ventas_liquidar_reterenta = "No Aplica"
+	if objeto.ventas_liquidar_reteica == True:
+		objeto.ventas_liquidar_reteica = "Aplica"
 	else:
-		objeto.liquidar_reteica = "No Aplica"
-	if objeto.declarante_impuesto_renta == True:
-		objeto.declarante_impuesto_renta = "Aplica"
+		objeto.ventas_liquidar_reteica = "No Aplica"
+	if objeto.ventas_liquidar_reteiva_responsable_iva_regimen_comun == True:
+		objeto.ventas_liquidar_reteiva_responsable_iva_regimen_comun = "Aplica"
 	else:
-		objeto.declarante_impuesto_renta = "No Aplica"
-	if objeto.declarante_impuesto_ICA == True:
-		objeto.declarante_impuesto_ICA = "Aplica"
+		objeto.ventas_liquidar_reteiva_responsable_iva_regimen_comun = "No Aplica"
+	if objeto.ventas_liquidar_reteiva_responsable_iva_regimen_simple == True:
+		objeto.ventas_liquidar_reteiva_responsable_iva_regimen_simple = "Aplica"
 	else:
-		objeto.declarante_impuesto_ICA = "No Aplica"
-	if objeto.autoretenedor_impuesto_renta == True:
-		objeto.autoretenedor_impuesto_renta = "Aplica"
+		objeto.ventas_liquidar_reteiva_responsable_iva_regimen_simple = "No Aplica"
+	if objeto.compras_declarante_impuesto_renta == True:
+		objeto.compras_declarante_impuesto_renta = "Aplica"
 	else:
-		objeto.autoretenedor_impuesto_renta = "No Aplica"
-	if objeto.exento_de_reterenta == True:
-		objeto.exento_de_reterenta = "Aplica"
+		objeto.compras_declarante_impuesto_renta = "No Aplica"
+	if objeto.compras_autoretenedor_impuesto_renta == True:
+		objeto.compras_autoretenedor_impuesto_renta = "Aplica"
 	else:
-		objeto.exento_de_reterenta = "No Aplica"
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+		objeto.compras_autoretenedor_impuesto_renta = "No Aplica"
+	if objeto.compras_exento_de_reterenta == True:
+		objeto.compras_exento_de_reterenta = "Aplica"
+	else:
+		objeto.compras_exento_de_reterenta = "No Aplica"
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.identificacion == llave:
 			objeto.identificacion = valor
-	for llave, valor in NATURALEZA:
+	for llave, valor in choices.NATURALEZA:
 		if objeto.naturaleza == llave:
 			objeto.naturaleza = valor
-	for llave, valor in REGIMEN_TRIBUTARIO:
+	for llave, valor in choices.REGIMEN_TRIBUTARIO:
 		if objeto.regimen_tributario == llave:
 			objeto.regimen_tributario = valor
-	for llave, valor in RELACIONES:
+	for llave, valor in choices.RELACIONES:
 		if objeto.relacion_activa == llave:
 			objeto.relacion_activa = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais == llave:
 			objeto.pais = valor
+	for llave, valor in choices.RESPONSABLE_IVA:
+		if objeto.responsable_iva == llave:
+			objeto.responsable_iva = valor
 	return objeto
 def reemplazardatos_contactos(lista):
 	for objeto in lista:
@@ -202,7 +214,7 @@ def reemplazardatos_contactos(lista):
 def reemplazardatos_categoria(objeto):
 	if objeto.descripcion == None or objeto.descripcion == "":
 		objeto.descripcion = "No Registrado"
-	for llave, valor in DESTINO_ITEM:
+	for llave, valor in choices.DESTINO_ITEM:
 		if objeto.destino_item == llave:
 			objeto.destino_item = valor
 	return objeto
@@ -221,9 +233,18 @@ def reemplazardatos_insumo(objeto):
 	if objeto.descripcion_detalle == None or objeto.descripcion_detalle == "":
 		objeto.descripcion_detalle = "No Registrado"
 	objeto.precio_compra = moneyfmt(objeto.precio_compra)
-	for llave, valor in TIPO_ITEM:
+	for llave, valor in choices.TIPO_ITEM:
 		if objeto.tipo_item == llave:
 			objeto.tipo_item = valor
+	for llave, valor in choices.TARIFA_IVA:
+		if objeto.iva_compras == llave:
+			objeto.iva_compras = valor
+	for llave, valor in choices.TARIFA_ICO:
+		if objeto.impuesto_consumo_compras == llave:
+			objeto.impuesto_consumo_compras = valor
+	for llave, valor in choices.TARIFA_RETERENTA:
+		if objeto.tarifa_reterenta == llave:
+			objeto.tarifa_reterenta = valor
 	return objeto
 def reemplazardatos_insumos(lista):
 	for objeto in lista:
@@ -240,9 +261,18 @@ def reemplazardatos_item(objeto):
 	if objeto.descripcion_detalle == None or objeto.descripcion_detalle == "":
 		objeto.descripcion_detalle = "No Registrado"
 	objeto.precio_venta = moneyfmt(objeto.precio_venta)
-	for llave, valor in TIPO_ITEM:
+	for llave, valor in choices.TARIFA_IVA:
+		if objeto.iva_ventas == llave:
+			objeto.iva_ventas = valor
+	for llave, valor in choices.TARIFA_ICO:
+		if objeto.impuesto_consumo_ventas == llave:
+			objeto.impuesto_consumo_ventas = valor
+	for llave, valor in choices.TIPO_ITEM:
 		if objeto.tipo_item == llave:
 			objeto.tipo_item = valor
+	for llave, valor in choices.TARIFA_RETERENTA:
+		if objeto.tarifa_reterenta == llave:
+			objeto.tarifa_reterenta = valor
 	return objeto
 def reemplazardatos_items(lista):
 	for objeto in lista:
@@ -250,7 +280,7 @@ def reemplazardatos_items(lista):
 	return lista
 
 def reemplazardatos_consecutivo(objeto):
-	for llave, valor in TIPO_DE_DOCUMENTO:
+	for llave, valor in choices.TIPO_DE_DOCUMENTO:
 		if objeto.tipo_de_documento == llave:
 			objeto.tipo_de_documento = valor
 	return objeto
@@ -281,28 +311,28 @@ def reemplazardatos_cotizacion(objeto):
 		objeto.descripcion_detallada = "No Registrado"
 	if objeto.observacion == None or objeto.observacion == "":
 		objeto.observacion = "No Registrado"
-	for llave, valor in MEDIOS_DE_PAGO:
+	for llave, valor in choices.MEDIOS_DE_PAGO:
 		if objeto.medio_de_pago == llave:
 			objeto.medio_de_pago = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp1 == llave:
 			objeto.tipo_imp1 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp2 == llave:
 			objeto.tipo_imp2 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp3 == llave:
 			objeto.tipo_imp3 = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_cliente == llave:
 			objeto.id_cliente = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_organizacion == llave:
 			objeto.id_organizacion = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_cliente == llave:
 			objeto.pais_cliente = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_organizacion == llave:
 			objeto.pais_organizacion = valor
 	if objeto.valor_unitario_1:
@@ -400,28 +430,28 @@ def reemplazardatos_factura(objeto):
 		objeto.descripcion_detallada = "No Registrado"
 	if objeto.observacion == None or objeto.observacion == "":
 		objeto.observacion = "No Registrado"
-	for llave, valor in MEDIOS_DE_PAGO:
+	for llave, valor in choices.MEDIOS_DE_PAGO:
 		if objeto.medio_de_pago == llave:
 			objeto.medio_de_pago = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp1 == llave:
 			objeto.tipo_imp1 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp2 == llave:
 			objeto.tipo_imp2 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp3 == llave:
 			objeto.tipo_imp3 = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_cliente == llave:
 			objeto.id_cliente = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_organizacion == llave:
 			objeto.id_organizacion = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_cliente == llave:
 			objeto.pais_cliente = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_organizacion == llave:
 			objeto.pais_organizacion = valor
 	if objeto.valor_unitario_1:
@@ -507,28 +537,28 @@ def reemplazardatos_factura_comp(objeto):
 		objeto.descripcion_detallada = "No Registrado"
 	if objeto.observacion == None or objeto.observacion == "":
 		objeto.observacion = "No Registrado"
-	for llave, valor in MEDIOS_DE_PAGO:
+	for llave, valor in choices.MEDIOS_DE_PAGO:
 		if objeto.medio_de_pago == llave:
 			objeto.medio_de_pago = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp1 == llave:
 			objeto.tipo_imp1 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp2 == llave:
 			objeto.tipo_imp2 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp3 == llave:
 			objeto.tipo_imp3 = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_proveedor == llave:
 			objeto.id_proveedor = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_organizacion == llave:
 			objeto.id_organizacion = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_proveedor == llave:
 			objeto.pais_proveedor = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_organizacion == llave:
 			objeto.pais_organizacion = valor
 	if objeto.valor_unitario_1:
@@ -626,31 +656,31 @@ def reemplazardatos_credit_note(objeto):
 		objeto.descripcion_detallada = "No Registrado"
 	if objeto.observacion == None or objeto.observacion == "":
 		objeto.observacion = "No Registrado"
-	for llave, valor in MEDIOS_DE_PAGO:
+	for llave, valor in choices.MEDIOS_DE_PAGO:
 		if objeto.medio_de_pago == llave:
 			objeto.medio_de_pago = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp1 == llave:
 			objeto.tipo_imp1 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp2 == llave:
 			objeto.tipo_imp2 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp3 == llave:
 			objeto.tipo_imp3 = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_cliente == llave:
 			objeto.id_cliente = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_organizacion == llave:
 			objeto.id_organizacion = valor
-	for llave, valor in CONCEPTO_NOTA_CREDITO:
+	for llave, valor in choices.CONCEPTO_NOTA_CREDITO:
 		if objeto.concepto_nota_credito == llave:
 			objeto.concepto_nota_credito = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_cliente == llave:
 			objeto.pais_cliente = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_organizacion == llave:
 			objeto.pais_organizacion = valor
 	if objeto.valor_unitario_1:
@@ -752,31 +782,31 @@ def reemplazardatos_debit_note(objeto):
 		objeto.descripcion_detallada = "No Registrado"
 	if objeto.observacion == None or objeto.observacion == "":
 		objeto.observacion = "No Registrado"
-	for llave, valor in MEDIOS_DE_PAGO:
+	for llave, valor in choices.MEDIOS_DE_PAGO:
 		if objeto.medio_de_pago == llave:
 			objeto.medio_de_pago = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp1 == llave:
 			objeto.tipo_imp1 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp2 == llave:
 			objeto.tipo_imp2 = valor
-	for llave, valor in TIPO_IMPUESTO:
+	for llave, valor in choices.TIPO_IMPUESTO:
 		if objeto.tipo_imp3 == llave:
 			objeto.tipo_imp3 = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_cliente == llave:
 			objeto.id_cliente = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_organizacion == llave:
 			objeto.id_organizacion = valor
-	for llave, valor in CONCEPTO_NOTA_DEBITO:
+	for llave, valor in choices.CONCEPTO_NOTA_DEBITO:
 		if objeto.concepto_nota_debito == llave:
 			objeto.concepto_nota_debito = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_cliente == llave:
 			objeto.pais_cliente = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_organizacion == llave:
 			objeto.pais_organizacion = valor
 	if objeto.valor_unitario_1:
@@ -876,16 +906,16 @@ def reemplazardatos_remision(objeto):
 		objeto.datos_transportador = "No Registrado"
 	if objeto.observacion == None or objeto.observacion == "":
 		objeto.observacion = "No Registrado"
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_cliente == llave:
 			objeto.id_cliente = valor
-	for llave, valor in DOCUMENTOS_IDENTIDAD:
+	for llave, valor in choices.DOCUMENTOS_IDENTIDAD:
 		if objeto.id_organizacion == llave:
 			objeto.id_organizacion = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_cliente == llave:
 			objeto.pais_cliente = valor
-	for llave, valor in PAISES:
+	for llave, valor in choices.PAISES:
 		if objeto.pais_organizacion == llave:
 			objeto.pais_organizacion = valor
 	return objeto
@@ -895,7 +925,7 @@ def reemplazardatos_remisiones(lista):
 	return lista
 
 def reemplazardatos_reporte(objeto):
-	for llave, valor in METRICA_CRECIMIENTO:
+	for llave, valor in choices.METRICA_CRECIMIENTO:
 		if objeto.metrica_crecimiento == llave:
 			objeto.metrica_crecimiento = valor
 	if objeto.ventas_dia:
@@ -925,7 +955,7 @@ def reemplazardatos_reportes(lista):
 	return lista
 
 def reemplazardatos_gasto(objeto):
-	for llave, valor in CONCEPTO_GASTO:
+	for llave, valor in choices.CONCEPTO_GASTO:
 		if objeto.concepto_gasto == llave:
 			objeto.concepto_gasto = valor
 	if objeto.descripcion_gasto == None or objeto.descripcion_gasto == "":
@@ -953,6 +983,19 @@ def fetch_resources(uri, rel):
 	if not os.path.isfile(path):
 		raise Exception('media URI must start with %s or %s' % (sUrl, mUrl))
 	return path
+
+def imagevalidator(picture, w_limit, h_limit, kb_limit):
+	if not picture:
+		raise forms.ValidationError("No image!")
+	else:
+		w, h = get_image_dimensions(picture)
+		if w > w_limit:
+			raise ValidationError("The image is %s pixel wide. Max wide is %spx" %(w, w_limit))
+		if h > h_limit:
+			raise ValidationError("The image is %s pixel high. Max high is %spx" %(h, h_limit))
+		filesize = picture.size
+		if filesize > kb_limit*1024:
+			raise ValidationError("Max file size is %sKB" %(kb_limit))
 
 def last_three_objects(objetos):
 	tamaño = len(objetos)
@@ -2334,6 +2377,10 @@ def pdf_cotizacion(request, pk):
 	else:
 		consecutivo_fac = None
 	cotizacion = get_object_or_404(Cotizacion, pk=pk)
+	cifra_palabras = cifra_total_letras.numero_a_letras(cotizacion.saldo_pendiente)
+	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = cifra_palabras.upper()
+	cotizacion.cifra_total_en_palabras = cifra_palabras
 	cotizacion = reemplazardatos_cotizacion(cotizacion)
 	template = get_template('groway/pdf_cotizacion.html')
 	consec = cotizacion.consecutivo_interno
@@ -2407,6 +2454,27 @@ def generar_factura_cotiz(request, pk):
 		remisionesgeneradas.referencia_factura = nueva_factura.consecutivo_interno
 		remisionesgeneradas.save()
 	return redirect('detalle_factura_venta', pk=nueva_factura.pk)
+
+def duplicar_documento_cotiz(request, pk):
+	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
+	if orgactivas:
+		orgactivas = orgactivas.get(activa=True, administrador=request.user)
+	else:
+		orgactivas = None
+	cotizacion = get_object_or_404(Cotizacion, pk=pk)
+	nueva_cotizacion = cotizacion.duplicar_documento()
+	nueva_cotizacion.fecha_emision = timezone.now()
+	nueva_cotizacion.save()
+	nueva_cotizacion.auto_info_organizacion()
+	nueva_cotizacion.auto_info_cliente()
+	nueva_cotizacion.info_item()
+	nueva_cotizacion.calculo_item()
+	nueva_cotizacion.calculo_total_cotizacion()
+	nueva_cotizacion.auto_consecutivo()
+	nueva_cotizacion.tipo_impuestodoc()
+	nueva_cotizacion.generado = True
+	nueva_cotizacion.save()
+	return redirect('detalle_cotizacion', pk=nueva_cotizacion.pk)
 
 
 @login_required
@@ -2933,6 +3001,10 @@ def pdf_factura_venta(request, pk):
 	else:
 		consecutivo_fac = None
 	factura = get_object_or_404(Factura_de_venta, pk=pk)
+	cifra_palabras = cifra_total_letras.numero_a_letras(factura.saldo_pendiente)
+	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = cifra_palabras.upper()
+	factura.cifra_total_en_palabras = cifra_palabras
 	factura = reemplazardatos_factura(factura)
 	template = get_template('groway/pdf_factura_venta.html')
 	consec = factura.consecutivo_interno
@@ -3255,6 +3327,10 @@ def pdf_nota_credito(request, pk):
 	else:
 		consecutivo_fac = None
 	creditnote = get_object_or_404(Nota_credito, pk=pk)
+	cifra_palabras = cifra_total_letras.numero_a_letras(creditnote.saldo_pendiente)
+	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = cifra_palabras.upper()
+	creditnote.cifra_total_en_palabras = cifra_palabras
 	creditnote = reemplazardatos_credit_note(creditnote)
 	template = get_template('groway/pdf_nota_credito.html')
 	consec = creditnote.consecutivo_interno
@@ -3418,6 +3494,10 @@ def pdf_nota_debito(request, pk):
 	else:
 		consecutivo_fac = None
 	debitnote = get_object_or_404(Nota_debito, pk=pk)
+	cifra_palabras = cifra_total_letras.numero_a_letras(debitnote.saldo_pendiente)
+	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = cifra_palabras.upper()
+	debitnote.cifra_total_en_palabras = cifra_palabras
 	debitnote = reemplazardatos_debit_note(debitnote)
 	template = get_template('groway/pdf_nota_debito.html')
 	consec = debitnote.consecutivo_interno
@@ -3775,6 +3855,10 @@ def pdf_factura_compra(request, pk):
 	else:
 		orgactivas = None
 	factura_comp = get_object_or_404(Factura_de_compra, pk=pk)
+	cifra_palabras = cifra_total_letras.numero_a_letras(factura_comp.saldo_pendiente)
+	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = cifra_palabras.upper()
+	factura_comp.cifra_total_en_palabras = cifra_palabras
 	factura_comp = reemplazardatos_factura_comp(factura_comp)
 	template = get_template('groway/pdf_factura_compra.html')
 	consec = factura_comp.consecutivo_interno

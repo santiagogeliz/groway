@@ -44,10 +44,12 @@
         var link_volver = $(".volver-link");
         var mensaje_edicion = $(".mensaje-confirmacion-edicion-documento");
         var mensaje_generacion = $(".mensaje-confirmacion-generar-documento");
+        var mensaje_duplicar = $(".mensaje-confirmacion-duplicar-documento");
         var mensaje_generacion_fac = $(".mensaje-confirmacion-generar-documento-fac");
         var accion_editar = $(".accion-editar");
         var accion_remision = $(".accion-remision");
         var accion_factura = $(".accion-factura");
+        var accion_duplicar = $(".accion-duplicar");
         var respuesta_no = $(".respuesta-no");
   			var descripcion = $(".descripcion-dropdown");
   			var descripcion_form = $(".descripcion-form");
@@ -203,10 +205,14 @@
         accion_factura.click(function() {
           mensaje_generacion_fac.addClass("editar");
         });
+        accion_duplicar.click(function() {
+          mensaje_duplicar.addClass("editar");
+        });
         respuesta_no.click(function() {
           mensaje_edicion.removeClass("editar");
           mensaje_generacion.removeClass("editar");
           mensaje_generacion_fac.removeClass("editar");
+          mensaje_duplicar.removeClass("editar");
         });
   		});
   	</script>

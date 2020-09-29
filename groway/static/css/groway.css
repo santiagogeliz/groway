@@ -1252,7 +1252,7 @@ button.terminar-consec, button.siguiente-consec, button.siguiente-consec:visited
 	outline: none;
 }
 .mensaje-confirmacion-edicion-documento, .mensaje-confirmacion-generar-documento, .mensaje-confirmacion-generar-documento-fac,
- .mensaje-confirmacion-generar-remision, .mensaje-confirmacion-generar-ncredito, .mensaje-confirmacion-generar-ndebito, .mensaje-confirmacion-pagar-factura {
+ .mensaje-confirmacion-generar-remision, .mensaje-confirmacion-generar-ncredito, .mensaje-confirmacion-generar-ndebito, .mensaje-confirmacion-pagar-factura, .mensaje-confirmacion-duplicar-documento {
 	display: none;
 	text-align: center;
 	position: absolute;
@@ -1300,7 +1300,7 @@ button.terminar-consec, button.siguiente-consec, button.siguiente-consec:visited
 	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
 }
 .mensaje-confirmacion-edicion.editar, .mensaje-confirmacion-eliminacion.editar, .mensaje-confirmacion-edicion-documento.editar, .mensaje-confirmacion-generar-documento.editar, .mensaje-confirmacion-generar-documento-fac.editar,
-.mensaje-confirmacion-generar-remision.editar, .mensaje-confirmacion-generar-ncredito.editar, .mensaje-confirmacion-generar-ndebito.editar, .mensaje-confirmacion-pagar-factura.editar {
+.mensaje-confirmacion-generar-remision.editar, .mensaje-confirmacion-generar-ncredito.editar, .mensaje-confirmacion-generar-ndebito.editar, .mensaje-confirmacion-pagar-factura.editar, .mensaje-confirmacion-duplicar-documento.editar {
 	display: block;
 }
 a.respuesta-si {
@@ -3406,7 +3406,7 @@ button.crear_cuenta:focus {
 		margin-left: 240px;
 	}
 	.mensaje-confirmacion-edicion-documento, .mensaje-confirmacion-generar-documento, .mensaje-confirmacion-generar-documento-fac,
-	 .mensaje-confirmacion-generar-remision, .mensaje-confirmacion-generar-ncredito, .mensaje-confirmacion-generar-ndebito {
+	 .mensaje-confirmacion-generar-remision, .mensaje-confirmacion-generar-ncredito, .mensaje-confirmacion-generar-ndebito, .mensaje-confirmacion-duplicar-documento {
 		display: none;
 		text-align: center;
 		position: absolute;
@@ -3424,7 +3424,7 @@ button.crear_cuenta:focus {
 	}
 	.mensaje-confirmacion-edicion-documento h2, .mensaje-confirmacion-generar-documento h2, .mensaje-confirmacion-generar-documento-fac h2,
 	 .mensaje-confirmacion-generar-remision h2, .mensaje-confirmacion-generar-ncredito h2, .mensaje-confirmacion-generar-ndebito h2, 
-	 .mensaje-confirmacion-edicion h2, .mensaje-confirmacion-eliminacion h2 {
+	 .mensaje-confirmacion-edicion h2, .mensaje-confirmacion-eliminacion h2, .mensaje-confirmacion-duplicar-documento h2 {
 	 	font-size: 20px;
 	 }
 	.mensaje-confirmacion-edicion {
@@ -3460,7 +3460,7 @@ button.crear_cuenta:focus {
 		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.3);
 	}
 	.mensaje-confirmacion-edicion.editar, .mensaje-confirmacion-eliminacion.editar, .mensaje-confirmacion-edicion-documento.editar, .mensaje-confirmacion-generar-documento.editar, .mensaje-confirmacion-generar-documento-fac.editar,
-	.mensaje-confirmacion-generar-remision.editar, .mensaje-confirmacion-generar-ncredito.editar, .mensaje-confirmacion-generar-ndebito.editar {
+	.mensaje-confirmacion-generar-remision.editar, .mensaje-confirmacion-generar-ncredito.editar, .mensaje-confirmacion-generar-ndebito.editar, .mensaje-confirmacion-duplicar-documento.editar {
 		display: block;
 	}
 	a.respuesta-si {

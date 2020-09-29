@@ -21,6 +21,7 @@
 			{% if nohayconsecutivo_fve == 0 and facturasgeneradas == 0 %}
 			<a class="acciones-disable">Generar Factura</a>
 			{% endif %}
+			<a class="acciones accion-duplicar">Duplicar Documento</a>
 			<a class="acciones accion-pdf" href="{% url 'pdf_cotizacion' pk=cotizacion.pk %}" target="_blank">Generar PDF</a>
 		</div>
 		<div class="form-content-detalle-cotizacion">
@@ -364,6 +365,19 @@
 		<dir class="row botones-mensaje-edicion">
 			<div class="respuesta-si">
 				<a class="respuesta-si" href="{% url 'generar_factura_cotiz' pk=cotizacion.pk %}">Si</a>
+			</div>
+			<div class="respuesta-no">
+				<a class="respuesta-no">No</a>
+			</div>
+		</dir>
+	</div>
+	<div class="mensaje-confirmacion-duplicar-documento">
+		<h2><span class="glyphicon glyphicon-alert"></span> Duplicar Documento</h2>
+		<p>Se generará una nueva <strong>Cotización</strong> utilizando los datos de la Cotización actual.<br>
+		¿Desea duplicar este documento?</p>
+		<dir class="row botones-mensaje-edicion">
+			<div class="respuesta-si">
+				<a class="respuesta-si" href="{% url 'duplicar_documento_cotiz' pk=cotizacion.pk %}">Si</a>
 			</div>
 			<div class="respuesta-no">
 				<a class="respuesta-no">No</a>

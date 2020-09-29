@@ -4,48 +4,47 @@ from .models import Organizacion, Contacto, Categoria, Item, Insumo, Termino_de_
 class OrganizacionForm(forms.ModelForm):
 	class Meta:
 		model = Organizacion
-		fields = ("naturaleza","activad_economica","codigo_actividad_economica","regimen_tributario","identificacion","numero_identificacion","numero_id_adicional",
-			"nombre_legal","nombre_visible_cia","moneda_base","descripcion","logo_organizacion","direccion","ciudad","departamento","pais","cod_postal",
-			"persona_contacto","telefono","telefono_dos","email","website","numero_cuenta","tipo_cuenta","entidad_financiera","gran_contribuyente","declarante_impuesto_renta",
-			"compras_consumidor_final","compras_practicar_reterenta","compras_practicar_reteiva","compras_practicar_reteica","ventas_liquidar_reterenta","base_reterenta","tarifa_reterenta",
-			"ventas_liquidar_autoretencion_renta","tarifa_autoreterenta","ventas_liquidar_reteica","tarifa_reteica","administrador","activa")
+		fields = ("nombre_legal","identificacion","numero_identificacion","numero_id_adicional","activad_economica","codigo_actividad_economica",
+			"descripcion","logo_organizacion","nombre_visible_cia","moneda_base","direccion","ciudad","departamento","pais","cod_postal","persona_contacto",
+			"telefono","telefono_dos","email","website","numero_cuenta","tipo_cuenta","entidad_financiera","regimen_tributario","responsable_iva",
+			"gran_contribuyente","declarante_impuesto_renta","compras_practicar_reterenta","compras_practicar_reteiva_proveedores_regimen_comun",
+			"compras_practicar_reteiva_proveedores_regimen_simple","compras_practicar_reteica","tarifa_practicar_reteica","ventas_liquidar_reterenta",
+			"ventas_liquidar_autoretencion_renta","tarifa_autoreterenta","ventas_liquidar_autorreterenta_clientes_regimen_simple","ventas_liquidar_reteica",
+			"tarifa_liquidar_reteica","administrador","activa")
 		widgets = {
 			'codigo_actividad_economica': forms.TextInput(attrs={'placeholder': 'Código'}),
             'ciudad': forms.TextInput(attrs={'placeholder': 'Ciudad'}),
             'departamento': forms.TextInput(attrs={'placeholder': 'Departamento'}),
-            'base_reterenta': forms.NumberInput(attrs={'placeholder': 'Base Retención (COP)'}),
-            'tarifa_reterenta': forms.NumberInput(attrs={'placeholder': 'Tarifa Reterenta (%)'}),
-            'tarifa_autoreterenta': forms.NumberInput(attrs={'placeholder': 'Tarifa Autorretención (%)'}),
-            'tarifa_reteica': forms.NumberInput(attrs={'placeholder': 'Tarifa Reteica (Por Mil)'}),
+            'tarifa_practicar_reteica': forms.NumberInput(attrs={'placeholder': 'Tarifa Reteica (Por Mil)'}),
+            'tarifa_liquidar_reteica': forms.NumberInput(attrs={'placeholder': 'Tarifa Reteica (Por Mil)'}),
             }
             
 class ContactoForm(forms.ModelForm):
 	class Meta:
 		model = Contacto
-		fields = ("naturaleza","activad_economica","codigo_actividad_economica","regimen_tributario","identificacion","numero_identificacion","numero_id_adicional",
-			"nombre_legal","relacion_activa","consumidor_final","gran_contribuyente","liquidar_reterenta","liquidar_reteica","declarante_impuesto_renta","declarante_impuesto_ICA","autoretenedor_impuesto_renta","exento_de_reterenta",
-			"base_reterenta","tarifa_reterenta","tarifa_reteica","direccion","ciudad","departamento","pais","cod_postal",
-			"persona_contacto","persona_contacto_adicional","telefono","telefono_dos","email","numero_cuenta","tipo_cuenta","entidad_financiera","org_creadora")
+		fields = ("naturaleza","identificacion","numero_identificacion","numero_id_adicional","nombre_legal","activad_economica",
+			"codigo_actividad_economica","relacion_activa","consumidor_final","regimen_tributario","responsable_iva","gran_contribuyente",
+			"ventas_liquidar_reteiva_responsable_iva_regimen_comun","ventas_liquidar_reteiva_responsable_iva_regimen_simple","ventas_liquidar_reterenta",
+			"ventas_liquidar_reteica","compras_declarante_impuesto_renta","compras_autoretenedor_impuesto_renta","compras_exento_de_reterenta",
+			"direccion","ciudad","departamento","pais","cod_postal","persona_contacto","persona_contacto_adicional","telefono","telefono_dos",
+			"email","numero_cuenta","tipo_cuenta","entidad_financiera","org_creadora")
 		widgets = {
             'ciudad': forms.TextInput(attrs={'placeholder': 'Ciudad'}),
             'departamento': forms.TextInput(attrs={'placeholder': 'Departamento'}),
             'codigo_actividad_economica': forms.TextInput(attrs={'placeholder': 'Código'}),
-            'base_reterenta': forms.NumberInput(attrs={'placeholder': 'Base Retención (COP)'}),
-            'tarifa_reterenta': forms.NumberInput(attrs={'placeholder': 'Tarifa (%)'}),
-            'tarifa_reteica': forms.NumberInput(attrs={'placeholder': 'Tarifa Reteica (Por Mil)'}),
             }
 
 class InsumoForm(forms.ModelForm):
 	class Meta:
 		model = Insumo
 		fields =("imagen","categoria","codigo","tipo_item","descripcion","descripcion_detalle","codigo_barras","unidad_medida",
-			"precio_compra","iva_compras","impuesto_consumo_compras","cantidad","org_creadora")
+			"precio_compra","iva_compras","impuesto_consumo_compras","tarifa_reterenta","cantidad","org_creadora")
 		
 class ItemForm(forms.ModelForm):
 	class Meta:
 		model = Item
 		fields = ("imagen","categoria","codigo","tipo_item","descripcion","descripcion_detalle","codigo_barras","unidad_medida",
-			"precio_venta","iva_ventas","impuesto_consumo_ventas","cantidad","org_creadora")
+			"precio_venta","iva_ventas","impuesto_consumo_ventas","tarifa_reterenta","cantidad","org_creadora")
 
 class CategoriaForm(forms.ModelForm):
 	class Meta:
@@ -75,8 +74,8 @@ class CotizacionForm(forms.ModelForm):
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
-			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","generado")
+			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","autoreterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","cifra_total_en_palabras","anticipo","saldo_pendiente","generado")
 		widgets = {'referencia_orden_compra': forms.TextInput(attrs={'placeholder': 'Número'}),
 		'referencia_otro_documento': forms.TextInput(attrs={'placeholder': 'Documento: Número'}),
 		}
@@ -99,8 +98,8 @@ class Factura_de_ventaForm(forms.ModelForm):
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
-			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","generado","anulada","pagada")
+			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","autoreterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","cifra_total_en_palabras","anticipo","saldo_pendiente","generado","anulada","pagada")
 		widgets = {'referencia_orden_compra': forms.TextInput(attrs={'placeholder': 'Número'}),
 		'referencia_otro_documento': forms.TextInput(attrs={'placeholder': 'Documento: Número'}),
 		}
@@ -114,8 +113,8 @@ class Nota_creditoForm(forms.ModelForm):
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
-			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","concepto_nota_credito","item_1_afec","item_2_afec","item_3_afec","item_4_afec","item_5_afec","descuento_rebaja","saldo_total","generado","pagada")
+			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","autoreterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","cifra_total_en_palabras","anticipo","saldo_pendiente","concepto_nota_credito","item_1_afec","item_2_afec","item_3_afec","item_4_afec","item_5_afec","descuento_rebaja","saldo_total","generado","pagada")
 
 class Nota_debitoForm(forms.ModelForm):
 	class Meta:
@@ -126,8 +125,8 @@ class Nota_debitoForm(forms.ModelForm):
 			"cantidad_1","cantidad_2","cantidad_3","cantidad_4","cantidad_5","UM_1","UM_2","UM_3","UM_4","UM_5","valor_unitario_1","valor_unitario_2","valor_unitario_3","valor_unitario_4","valor_unitario_5",
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
-			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","concepto_nota_debito","cargo_interes","descripcion_cargo","saldo_total","generado","pagada")
+			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","autoreterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","cifra_total_en_palabras","anticipo","saldo_pendiente","concepto_nota_debito","cargo_interes","descripcion_cargo","saldo_total","generado","pagada")
 
 class Factura_de_compraForm(forms.ModelForm):
 	class Meta:
@@ -139,7 +138,7 @@ class Factura_de_compraForm(forms.ModelForm):
 			"porcentaje_descuento_1","porcentaje_descuento_2","porcentaje_descuento_3","porcentaje_descuento_4","porcentaje_descuento_5","valor_descuento_1","valor_descuento_2",
 			"valor_descuento_3","valor_descuento_4","valor_descuento_5","iva_1","iva_2","iva_3","iva_4","iva_5","ico_1","ico_2","ico_3","ico_4","ico_5","valor_total_1","valor_total_2","valor_total_3",
 			"valor_total_4","valor_total_5","iva_total","ico_total","reterenta","reteiva","reteica","sub_total","total_impuestos","total_retenciones","total_documento","descripcion_1","descripcion_2","descripcion_3",
-			"descripcion_4","descripcion_5","descripcion_detallada","observacion","anticipo","saldo_pendiente","generado")
+			"descripcion_4","descripcion_5","descripcion_detallada","observacion","cifra_total_en_palabras","anticipo","saldo_pendiente","generado")
 
 class Gastos_registroForm(forms.ModelForm):
 	class Meta:

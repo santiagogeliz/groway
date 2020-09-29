@@ -58,8 +58,12 @@
 	        	left: 20px; width: 450px; bottom: 314px; height: auto;
 	        }
 	        @frame tabla_frame {
+	        	-pdf-frame-content: cifra-letras;
+	        	left: 30px; width: 700px; bottom: 150px; height: auto;
+	        }
+	        @frame tabla_frame {
 	        	-pdf-frame-content: nota-documento;
-	        	left: 30px; width: 400px; bottom: 80px; height: auto;
+	        	left: 30px; width: 500px; bottom: 100px; height: auto;
 	        }
 	        @frame footer_frame {
 	        	-pdf-frame-content: contact;
@@ -94,25 +98,25 @@
     		margin: 0px;
     	}
     	.documento-table1 th {
-    		font-size: 13px;
+    		font-size: 11px;
     	}
     	.documento-table1 td {
-    		font-size: 12px;
+    		font-size: 11px;
     		padding-top: 5px;
     		border-top: solid 2px #C4CBB7;
     	}
     	.documento-table2 td, .documento-table2 th {
-    		font-size: 12px;
+    		font-size: 11px;
     		padding-top: 5px;
     		border-bottom: solid 2px #C4CBB7;
     	}
     	.documento-table2 th {
     		text-align: right;
     	}
-    	.detalle-items {
+    	.detalle-items, .nota-items {
     		border-top: solid 2px #C4CBB7;
     		border-bottom: solid 2px #C4CBB7;
-    		font-size: 14px;
+    		font-size: 11px;
     		padding-top: 5px;
     		padding-left: 10px;
     		padding-right: 10px;
@@ -153,7 +157,6 @@
 				Teléfono: {{factura_comp.telefono_proveedor}}</p>
 			</div>
 		</div>
-		{% if factura_comp.descripcion_detallada != 'No Registrado' %}
 		{% if factura_comp.item_3 == None and factura_comp.item_4 == None %}
 		<div id="detalle-documento" class="detalle-items">
 		{% endif %}
@@ -163,21 +166,26 @@
 		{% if factura_comp.item_4 != None %}
 		<div id="detalle-documento-moved-more" class="detalle-items">
 		{% endif %}
+		{% if factura_comp.descripcion_detallada != 'No Registrado' %}
 			<p><strong>Descripción Detallada:</strong><br>{{factura_comp.descripcion_detallada|linebreaksbr}}</p>
 		</div>
 		{% endif %}
+		
 		{% if factura_comp.observacion != 'No Registrado' %}
-		<div id="nota-documento" class="nota-items" style="font-size: 14px;">
+		<div id="nota-documento" class="nota-items">
 			<p><strong>Nota: </strong>{{factura_comp.observacion}}</p>
 		</div>
 		{% endif %}
+		<div id="cifra-letras" class="nota-items">
+			<p><strong>Valor en Letras: </strong>{{factura_comp.cifra_total_en_palabras}}</p>
+		</div>
 		<div id="info_tabla1">
 			<div class="table-responsive">
 				<table class="documento-table1 table">
 					<thead>
 						<tr>
 							<th width="50">Ítem</th>
-							<th width="180">Descripción</th>
+							<th width="300">Descripción</th>
 							<th width="50">UM</th>
 							<th width="50">Cant.</th>
 							<th width="110">Precio Unidad</th>

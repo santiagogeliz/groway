@@ -58,6 +58,7 @@ urlpatterns = [
 	re_path(r'^Documentos/Cotizaciones/pdf/(?P<pk>\d+)$', views.pdf_cotizacion, name='pdf_cotizacion'),
 	re_path(r'^Documentos/Cotizaciones/generar/remision/(?P<pk>\d+)$', views.generar_remision_cotiz, name='generar_remision_cotiz'),
 	re_path(r'^Documentos/Cotizaciones/generar/factura/venta/(?P<pk>\d+)$', views.generar_factura_cotiz, name='generar_factura_cotiz'),
+	re_path(r'^Documentos/Cotizaciones/duplicar/documento/(?P<pk>\d+)$', views.duplicar_documento_cotiz, name='duplicar_documento_cotiz'),
 	re_path(r'^Documentos/Remisiones$', views.remisiones, name='remisiones'),
 	re_path(r'^Documentos/Remisiones/detalle/(?P<pk>\d+)$', views.detalle_remision, name='detalle_remision'),
 	re_path(r'^Documentos/Remisiones/agregar/(?P<pk>\d+)$', views.agregar_datos_remision, name='agregar_datos_remision'),
