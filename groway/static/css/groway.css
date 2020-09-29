@@ -2459,7 +2459,9 @@ button.guardar-categoria {
 }
 
 .footer-info {
-	margin-left: 450px;
+	text-align: center;
+	font-size: 12px;
+
 }
 
 /* CSS para nuevo_usuario.html y login.html */
