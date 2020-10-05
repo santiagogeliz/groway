@@ -2462,8 +2462,8 @@ button.guardar-categoria {
 .logo-groway-completo {
 	margin-left: 1040px;
 }
-
-.footer-info {
+.footer-info p {
+	margin-top: 520px;
 	text-align: center;
 	font-size: 12px;
 
