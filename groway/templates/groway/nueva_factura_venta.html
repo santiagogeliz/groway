@@ -17,7 +17,7 @@
 				{% endif %}
 				{% if factura.terminos_de_pago == None %}
 				<div class="datos-gnles terminos_de_pago">
-					<label for="terminos_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Terminos de Pago</label>
+					<label for="terminos_de_pago">Terminos de Pago</label>
 					<div id="terminos_de_pago">
 						<select name="terminospago_fac" id="terminos_de_pago">
 							<option value="0">----------</option>
@@ -30,7 +30,7 @@
 				{% endif %}
 				{% if factura.terminos_de_pago != None %}
 				<div class="datos-gnles terminos_de_pago">
-					<label for="terminos_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Terminos de Pago</label>
+					<label for="terminos_de_pago">Terminos de Pago</label>
 					<div id="terminos_de_pago">
 						<input type="text" name="terminospago_fac" value="{{factura.terminos_de_pago}}">
 					</div>
@@ -44,12 +44,22 @@
 					</div>
 				</div>
 				{% endif %}
+				{% if factura.medio_de_pago == None %}
 				<div class="datos-gnles medio_de_pago">
-					<label for="medio_de_pago"><span class="glyphicon glyphicon-exclamation-sign" style="color: lightgreen;"></span> Medio de Pago</label>
+					<label for="medio_de_pago">Medio de Pago</label>
 					<div id="medio_de_pago">
 						{{form.medio_de_pago}}
 					</div>
 				</div>
+				{% endif %}
+				{% if factura.medio_de_pago != None %}
+				<div class="datos-gnles medio_de_pago">
+					<label for="medio_de_pago">Medio de Pago</label>
+					<div id="medio_de_pago">
+						<input type="text" name="mediospago_fac" value="{{factura.medio_de_pago}}">
+					</div>
+				</div>
+				{% endif %}
 			</div>
 			<div class="datos-participantes-observaciones">
 				{% if factura.cliente == None %}

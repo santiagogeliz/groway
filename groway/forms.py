@@ -27,7 +27,7 @@ class ContactoForm(forms.ModelForm):
 			"ventas_liquidar_reteiva_responsable_iva_regimen_comun","ventas_liquidar_reteiva_responsable_iva_regimen_simple","ventas_liquidar_reterenta",
 			"ventas_liquidar_reteica","compras_declarante_impuesto_renta","compras_autoretenedor_impuesto_renta","compras_exento_de_reterenta",
 			"direccion","ciudad","departamento","pais","cod_postal","persona_contacto","persona_contacto_adicional","telefono","telefono_dos",
-			"email","numero_cuenta","tipo_cuenta","entidad_financiera","org_creadora")
+			"email","numero_cuenta","tipo_cuenta","entidad_financiera","terminos_de_pago","medio_de_pago","org_creadora")
 		widgets = {
             'ciudad': forms.TextInput(attrs={'placeholder': 'Ciudad'}),
             'departamento': forms.TextInput(attrs={'placeholder': 'Departamento'}),

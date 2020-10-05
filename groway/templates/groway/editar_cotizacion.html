@@ -221,52 +221,6 @@
 						</tr>
 					</table>
 				</div>
-				<div class="total-documento-editar">
-					<table>
-						<tr>
-							<th style="text-align: right;">Sub Total: </th>
-							<td align="right" class="totales">{{form.sub_total}}</td>
-						</tr>
-						<tr>
-							<th style="text-align: right;">Total IVA: </th>
-							<td align="right" class="totales">{{form.iva_total}}</td>
-						</tr>
-						{% if cotizacion.ico_total %}
-						<tr>
-							<th style="text-align: right;">Total ICO: </th>
-							<td align="right" class="totales">{{form.ico_total}}</td>
-						</tr>
-						{% endif %}
-						{% if cotizacion.reterenta %}
-						<tr>
-							<th style="text-align: right;">- Reterenta: </th>
-							<td align="right" class="totales">{{form.reterenta}}</td>
-						</tr>
-						{% endif %}
-						{% if cotizacion.reteiva %}
-						<tr>
-							<th style="text-align: right;">- Reteiva: </th>
-							<td align="right" class="totales">{{form.reteiva}}</td>
-						</tr>
-						{% endif %}
-						{% if cotizacion.reteica %}
-						<tr>
-							<th style="text-align: right;">- Reteica: </th>
-							<td align="right" class="totales">{{form.reteica}}</td>
-						</tr>
-						{% endif %}
-						<tr>
-							<th style="text-align: right;">Total: </th>
-							<td align="right" class="totales">{{form.total_documento}}</td>
-						</tr>
-						{% if cotizacion.anticipo %}
-						<tr>
-							<th style="text-align: right; padding-top: 10px;">Saldo Pendiente: </th>
-							<td style="padding-top: 10px;" align="right" class="totales">{{form.saldo_pendiente}}</td>
-						</tr>
-						{% endif %}
-					</table>
-				</div>
 			</div>
 			<button type="submit" class="terminar terminar-edicion save">Terminar</button>
 		</div>

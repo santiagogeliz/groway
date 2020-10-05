@@ -151,6 +151,25 @@
 					</div>
 				</div>
 			</div>
+			<div class="termino-medio-pago">
+				<div class="info-bank terminos_de_pago">
+					<label for="persona_contacto_adicional">Término de Pago para el Cliente</label>
+					<div id="persona_contacto_adicional">
+						<select name="terminospago_cliente" id="terminos_de_pago">
+							<option value="0">----------</option>
+						{% for terminos in terminospago_cliente %}
+							<option value="{{terminos.descripcion}}">{{terminos.descripcion}}</option>
+						{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="info-bank medio_de_pago">
+					<label for="persona_contacto_adicional">Medio de Pago para el Cliente</label>
+					<div id="persona_contacto_adicional">
+						{{form.medio_de_pago}}
+					</div>
+				</div>
+			</div>
 			<button type="submit" class="terminar guardar-contacto save">Terminar</button>
 		</div>
 	</form>

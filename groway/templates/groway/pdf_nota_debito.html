@@ -213,6 +213,7 @@
 				<strong>Concepto Nota Crédito: </strong>{{debitnote.concepto_nota_debito}}
 			</p>
 		</div>
+		{% if debitnote.descripcion_detallada != 'No Registrado' %}
 		{% if debitnote.item_3 == None and debitnote.item_4 == None %}
 		<div id="detalle-documento" class="detalle-items">
 		{% endif %}
@@ -222,7 +223,6 @@
 		{% if debitnote.item_4 != None %}
 		<div id="detalle-documento-moved-more" class="detalle-items">
 		{% endif %}
-		{% if debitnote.descripcion_detallada != 'No Registrado' %}
 			<p><strong>Descripción Detallada:</strong><br>{{debitnote.descripcion_detallada|linebreaksbr}}</p>
 		</div>
 		{% endif %}

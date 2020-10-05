@@ -159,9 +159,6 @@
 			</div>
 			<div class="consec_resol">
 				<p class="consec" id="consec"><strong>Remisión</strong> {{remision.consecutivo_interno}}</p>
-				{% if consecutivo_fac %}
-				<p class="resol" id="resol">Autorización Numeración de Facturación: {{consecutivo_fac.aut_num_facturacion}}<br><strong>Desde:</strong> {{consecutivo_fac.fecha_inicio|date:"d/m/Y"}} <strong>Hasta:</strong> {{consecutivo_fac.fecha_fin|date:"d/m/Y"}}<br><strong>Prefijo:</strong> {{consecutivo_fac.pre_fijo}} <strong>del Nro.</strong> {{consecutivo_fac.num_inicio}} <strong>al Nro.</strong> {{consecutivo_fac.num_final}}</p>
-				{% endif %}
 			</div>
 		</div>
 		<div id="info_cliente">
@@ -192,6 +189,7 @@
 			</p>
 		</div>
 		{% endif %}
+		{% if remision.descripcion_detallada != 'No Registrado' %}
 		{% if remision.item_3 == None and remision.item_4 == None %}
 		<div id="detalle-documento" class="detalle-items">
 		{% endif %}
@@ -201,7 +199,6 @@
 		{% if remision.item_4 != None %}
 		<div id="detalle-documento-moved-more" class="detalle-items">
 		{% endif %}
-		{% if remision.descripcion_detallada != 'No Registrado' %}
 			<p><strong>Descripción Detallada:</strong><br>{{remision.descripcion_detallada|linebreaksbr}}</p>
 		</div>
 		{% endif %}

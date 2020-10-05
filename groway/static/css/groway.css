@@ -1602,8 +1602,8 @@ a.respuesta-no:active, a.respuesta-no:visited {
 	margin-right: 2px;
 	margin-top: 2px;
 }
-.medida input, .cantidad input, .descuento-porciento input, .producto-servicio select {
-	width: 51px;
+.medida input, .cantidad input, .descuento-porciento input, .producto-servicio select, .ingresar-producto-servicio-edit select {
+	width: 70px;
 	margin-right: 2px;
 	margin-top: 2px;
 }
@@ -1957,7 +1957,7 @@ a.enlace-documentos:active, a.enlace-documentos:visited {
 }
 /* CSS para organizacion.html, clientes.html y proveedores.html */
 
-.datos-generales-contacto, .datos-identificacion-contacto, .responsabilidades-fiscales, .personas-contacto {
+.datos-generales-contacto, .datos-identificacion-contacto, .responsabilidades-fiscales, .personas-contacto, .info-bancaria {
 	padding-bottom: 5px;
 	border-bottom: solid white;
 }
@@ -1969,7 +1969,7 @@ a.enlace-documentos:active, a.enlace-documentos:visited {
 	display: inline-block;
 	margin-right: 10px;
 }
-.datos-generales-contacto-detalle, .datos-identificacion-contacto-detalle, .responsabilidades-fiscales-detalle, .personas-contacto-detalle {
+.datos-generales-contacto-detalle, .datos-identificacion-contacto-detalle, .responsabilidades-fiscales-detalle, .personas-contacto-detalle, .info-bancaria-detalle {
 	padding-bottom: 5px;
 	border-bottom: solid white;
 }

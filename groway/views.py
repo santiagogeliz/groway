@@ -151,6 +151,10 @@ def reemplazardatos_contacto(objeto):
 		objeto.tipo_cuenta = "No Registrado"
 	if objeto.entidad_financiera == None:
 		objeto.entidad_financiera = "No Registrado"
+	if objeto.terminos_de_pago == None:
+		objeto.terminos_de_pago = "No Registrado"
+	if objeto.medio_de_pago == None:
+		objeto.medio_de_pago = "No Registrado"
 	if objeto.consumidor_final == True:
 		objeto.consumidor_final = "Aplica"
 	else:
@@ -205,6 +209,9 @@ def reemplazardatos_contacto(objeto):
 	for llave, valor in choices.RESPONSABLE_IVA:
 		if objeto.responsable_iva == llave:
 			objeto.responsable_iva = valor
+	for llave, valor in choices.MEDIOS_DE_PAGO:
+		if objeto.medio_de_pago == llave:
+			objeto.medio_de_pago = valor
 	return objeto
 def reemplazardatos_contactos(lista):
 	for objeto in lista:
@@ -1218,10 +1225,14 @@ def nuevo_cliente(request):
 	else:
 		orgactivas = None
 	nohayclientes = Contacto.objects.filter(relacion_activa="CL", org_creadora=orgactivas).count()
+	terminospago_cliente = Termino_de_pago.objects.filter(org_creadora=orgactivas).order_by('plazo_dias')
 	if request.method == "POST":
+		dic = request.POST
+		termin = dic["terminospago_cliente"]
 		form = ContactoForm(request.POST)
 		if form.is_valid():
 			contacto = form.save(commit=False)
+			contacto.terminos_de_pago = termin
 			contacto.relacion_activa = 'CL'
 			contacto.activa = True
 			contacto.org_creadora = orgactivas
@@ -1231,7 +1242,7 @@ def nuevo_cliente(request):
 		form = ContactoForm()
 	contactos = Contacto.objects.filter(relacion_activa="CL", org_creadora=orgactivas).order_by('nombre_legal')
 	contactos = reemplazardatos_contactos(contactos)
-	return render(request, 'groway/nuevo_cliente.html', {'form':form, 'orgactivas':orgactivas, 'contactos':contactos, 'nohayclientes':nohayclientes})
+	return render(request, 'groway/nuevo_cliente.html', {'form':form, 'orgactivas':orgactivas, 'contactos':contactos, 'nohayclientes':nohayclientes, 'terminospago_cliente':terminospago_cliente})
 
 def editar_contacto(request, pk):
 	orgactivas = Organizacion.objects.filter(activa=True, administrador=request.user)
@@ -1241,13 +1252,17 @@ def editar_contacto(request, pk):
 		orgactivas = None
 	nohayclientes = Contacto.objects.filter(relacion_activa="CL", org_creadora=orgactivas).count()
 	nohayproveedores = Contacto.objects.filter(relacion_activa="PD", org_creadora=orgactivas).count()
+	terminospago_cliente = Termino_de_pago.objects.filter(org_creadora=orgactivas).order_by('plazo_dias')
 	contacto = get_object_or_404(Contacto, pk=pk)
 	org_contacto = contacto.org_creadora
 	relacion_contacto = contacto.relacion_activa
 	if request.method == "POST":
+		dic = request.POST
+		termin = dic["terminospago_cliente"]
 		form = ContactoForm(request.POST, instance=contacto)
 		if form.is_valid():
 			contacto = form.save(commit=False)
+			contacto.terminos_de_pago = termin
 			contacto.relacion_activa = relacion_contacto
 			contacto.activa = True
 			contacto.org_creadora = org_contacto
@@ -1261,7 +1276,7 @@ def editar_contacto(request, pk):
 	if contacto.relacion_activa == "CL":
 		contactos = Contacto.objects.filter(relacion_activa="CL", org_creadora=orgactivas).order_by('nombre_legal')
 		contactos = reemplazardatos_contactos(contactos)
-		return render(request, 'groway/nuevo_cliente.html', {'form':form, 'orgactivas':orgactivas, 'contactos':contactos, 'contacto':contacto, 'nohayclientes':nohayclientes})
+		return render(request, 'groway/nuevo_cliente.html', {'form':form, 'orgactivas':orgactivas, 'contactos':contactos, 'contacto':contacto, 'nohayclientes':nohayclientes, 'terminospago_cliente':terminospago_cliente})
 	elif contacto.relacion_activa == "PD":
 		contactos = Contacto.objects.filter(relacion_activa="PD", org_creadora=orgactivas).order_by('nombre_legal')
 		contactos = reemplazardatos_contactos(contactos)
@@ -2092,7 +2107,12 @@ def nueva_cotizacion_ing(request):
 			cotizacion = form.save(commit=False)
 			cotizacion.org_creadora = orgactivas
 			cotizacion.vendedor = request.user
-			cotizacion.terminos_de_pago = termin
+			if termin == '0':
+				cotizacion.terminos_de_pago = 'Contado'
+			else:
+				cotizacion.terminos_de_pago = termin
+			if cotizacion.medio_de_pago == None:
+				cotizacion.medio_de_pago = 'Efectivo'
 			cotizacion.cliente = client
 			if item_1 != '0':
 				cotizacion.item_1 = item_1
@@ -2131,6 +2151,7 @@ def nueva_cotizacion_cal(request, pk):
 	nohayterminospago = Termino_de_pago.objects.filter(org_creadora=orgactivas).count()
 	nohaycotizaciones = Cotizacion.objects.filter(org_creadora=orgactivas, generado=True).count()
 	cotizacion = get_object_or_404(Cotizacion, pk=pk)
+	medio_pago = cotizacion.medio_de_pago
 	if request.method == "POST":
 		form = CotizacionForm(request.POST, instance=cotizacion)
 		dic = request.POST
@@ -2141,13 +2162,19 @@ def nueva_cotizacion_cal(request, pk):
 		item_3 = dic["items_3"]
 		item_4 = dic["items_4"]
 		item_5 = dic["items_5"]
+		form.medio_de_pago = cotizacion.medio_de_pago
 		if form.is_valid():
 			cotizacion = form.save(commit=False)
 			if cotizacion.cantidad_1:
 				cotizacion.org_creadora = orgactivas
 				cotizacion.fecha_emision = timezone.now()
 				cotizacion.vendedor = request.user
-				cotizacion.terminos_de_pago = termin
+				if termin == '0':
+					cotizacion.terminos_de_pago = 'Contado'
+				else:
+					cotizacion.terminos_de_pago = termin
+				if cotizacion.medio_de_pago == None:
+					cotizacion.medio_de_pago = medio_pago
 				cotizacion.cliente = client
 				if item_1 != '0':
 					cotizacion.item_1 = item_1
@@ -2220,7 +2247,12 @@ def atras_cotizacion(request, pk):
 			cotizacion = form.save(commit=False)
 			cotizacion.vendedor = request.user
 			cotizacion.org_creadora = orgactivas
-			cotizacion.terminos_de_pago = termin
+			if termin == '0':
+				cotizacion.terminos_de_pago = 'Contado'
+			else:
+				cotizacion.terminos_de_pago = termin
+			if cotizacion.medio_de_pago == None:
+				cotizacion.medio_de_pago = 'Efectivo'
 			cotizacion.cliente = client
 			if item_1 != '0':
 				cotizacion.item_1 = item_1
@@ -2260,6 +2292,7 @@ def editar_cotizacion(request, pk):
 	nohayterminospago = Termino_de_pago.objects.filter(org_creadora=orgactivas).count()
 	nohaycotizaciones = Cotizacion.objects.filter(org_creadora=orgactivas, generado=True).count()
 	cotizacion = get_object_or_404(Cotizacion, pk=pk)
+	medio_pago = cotizacion.medio_de_pago
 	consecutivo_cotizacion = cotizacion.consecutivo_interno
 	consecutivo_prefijo = cotizacion.consec_inter_prefijo
 	consecutivo_numero = cotizacion.consec_inter_numero
@@ -2284,18 +2317,33 @@ def editar_cotizacion(request, pk):
 			cotizacion.vendedor = vendedor
 			cotizacion.org_creadora = orgactivas
 			cotizacion.generado = True
-			cotizacion.terminos_de_pago = termin
+			if termin == '0':
+				cotizacion.terminos_de_pago = 'Contado'
+			else:
+				cotizacion.terminos_de_pago = termin
+			if cotizacion.medio_de_pago == None:
+				cotizacion.medio_de_pago = medio_pago
 			cotizacion.cliente = client
 			if item_1 != '0':
 				cotizacion.item_1 = item_1
+			else:
+				cotizacion.cantidad_1 = 0
 			if item_2 != '0':
 				cotizacion.item_2 = item_2
+			else:
+				cotizacion.cantidad_2 = 0
 			if item_3 != '0':
 				cotizacion.item_3 = item_3
+			else:
+				cotizacion.cantidad_3 = 0
 			if item_4 != '0':
 				cotizacion.item_4 = item_4
+			else:
+				cotizacion.cantidad_4 = 0
 			if item_5 != '0':
 				cotizacion.item_5 = item_5
+			else:
+				cotizacion.cantidad_5 = 0
 			cotizacion.info_item()
 			cotizacion.auto_info_organizacion()
 			cotizacion.auto_info_cliente()
@@ -2378,7 +2426,7 @@ def pdf_cotizacion(request, pk):
 		consecutivo_fac = None
 	cotizacion = get_object_or_404(Cotizacion, pk=pk)
 	cifra_palabras = cifra_total_letras.numero_a_letras(cotizacion.saldo_pendiente)
-	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = '%s (pesos colombianos)'%(cifra_palabras)
 	cifra_palabras = cifra_palabras.upper()
 	cotizacion.cifra_total_en_palabras = cifra_palabras
 	cotizacion = reemplazardatos_cotizacion(cotizacion)
@@ -2717,7 +2765,12 @@ def nueva_fac_ven_ing(request):
 			factura = form.save(commit=False)
 			factura.org_creadora = orgactivas
 			factura.vendedor = request.user
-			factura.terminos_de_pago = termin
+			if termin == '0':
+				factura.terminos_de_pago = 'Contado'
+			else:
+				factura.terminos_de_pago = termin
+			if factura.medio_de_pago == None:
+				factura.medio_de_pago = 'Efectivo'
 			factura.cliente = client
 			if item_1 != '0':
 				factura.item_1 = item_1
@@ -2756,6 +2809,7 @@ def nueva_fac_ven_cal(request, pk):
 	nohayterminospago = Termino_de_pago.objects.filter(org_creadora=orgactivas).count()
 	nohayfacturas = Factura_de_venta.objects.filter(org_creadora=orgactivas, generado=True).count()
 	factura = get_object_or_404(Factura_de_venta, pk=pk)
+	medio_pago = factura.medio_de_pago
 	if request.method == "POST":
 		form = Factura_de_ventaForm(request.POST, instance=factura)
 		dic = request.POST
@@ -2773,7 +2827,12 @@ def nueva_fac_ven_cal(request, pk):
 				factura.fecha_para_consec = timezone.now()
 				factura.fecha_emision = timezone.now()
 				factura.vendedor = request.user
-				factura.terminos_de_pago = termin
+				if termin == '0':
+					factura.terminos_de_pago = 'Contado'
+				else:
+					factura.terminos_de_pago = termin
+				if factura.medio_de_pago == None:
+					factura.medio_de_pago = medio_pago
 				factura.cliente = client
 				if item_1 != '0':
 					factura.item_1 = item_1
@@ -2785,12 +2844,12 @@ def nueva_fac_ven_cal(request, pk):
 					factura.item_4 = item_4
 				if item_5 != '0':
 					factura.item_5 = item_5
-				factura.auto_vencimiento()
 				factura.info_item()
 				factura.auto_info_organizacion()
 				factura.auto_info_cliente()
 				factura.calculo_item()
 				factura.calculo_total_factura()
+				factura.auto_vencimiento()
 				factura.save()
 				return redirect('nueva_fac_ven_cal', pk=factura.pk)
 			else:
@@ -2841,6 +2900,7 @@ def atras_fac_ven(request, pk):
 	nohayterminospago = Termino_de_pago.objects.filter(org_creadora=orgactivas).count()
 	nohayfacturas = Factura_de_venta.objects.filter(org_creadora=orgactivas, generado=True).count()
 	factura = get_object_or_404(Factura_de_venta, pk=pk)
+	medio_pago = factura.medio_de_pago
 	if request.method == "POST":
 		form = Factura_de_ventaForm(request.POST, instance=factura)
 		dic = request.POST
@@ -2855,7 +2915,12 @@ def atras_fac_ven(request, pk):
 			factura = form.save(commit=False)
 			factura.vendedor = request.user
 			factura.org_creadora = orgactivas
-			factura.terminos_de_pago = termin
+			if termin == '0':
+				factura.terminos_de_pago = 'Contado'
+			else:
+				factura.terminos_de_pago = termin
+			if factura.medio_de_pago == None:
+				factura.medio_de_pago = 'Efectivo'
 			factura.cliente = client
 			if item_1 != '0':
 				factura.item_1 = item_1
@@ -3002,7 +3067,7 @@ def pdf_factura_venta(request, pk):
 		consecutivo_fac = None
 	factura = get_object_or_404(Factura_de_venta, pk=pk)
 	cifra_palabras = cifra_total_letras.numero_a_letras(factura.saldo_pendiente)
-	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = '%s (pesos colombianos)'%(cifra_palabras)
 	cifra_palabras = cifra_palabras.upper()
 	factura.cifra_total_en_palabras = cifra_palabras
 	factura = reemplazardatos_factura(factura)
@@ -3328,7 +3393,7 @@ def pdf_nota_credito(request, pk):
 		consecutivo_fac = None
 	creditnote = get_object_or_404(Nota_credito, pk=pk)
 	cifra_palabras = cifra_total_letras.numero_a_letras(creditnote.saldo_pendiente)
-	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = '%s (pesos colombianos)'%(cifra_palabras)
 	cifra_palabras = cifra_palabras.upper()
 	creditnote.cifra_total_en_palabras = cifra_palabras
 	creditnote = reemplazardatos_credit_note(creditnote)
@@ -3495,7 +3560,7 @@ def pdf_nota_debito(request, pk):
 		consecutivo_fac = None
 	debitnote = get_object_or_404(Nota_debito, pk=pk)
 	cifra_palabras = cifra_total_letras.numero_a_letras(debitnote.saldo_pendiente)
-	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = '%s (pesos colombianos)'%(cifra_palabras)
 	cifra_palabras = cifra_palabras.upper()
 	debitnote.cifra_total_en_palabras = cifra_palabras
 	debitnote = reemplazardatos_debit_note(debitnote)
@@ -3783,14 +3848,24 @@ def editar_factura_comp(request, pk):
 			factura_comp.proveedor = prov
 			if item_1 != '0':
 				factura_comp.item_1 = item_1
+			else:
+				factura_comp.cantidad_1 = 0
 			if item_2 != '0':
 				factura_comp.item_2 = item_2
+			else:
+				factura_comp.cantidad_2 = 0
 			if item_3 != '0':
 				factura_comp.item_3 = item_3
+			else:
+				factura_comp.cantidad_3 = 0
 			if item_4 != '0':
 				factura_comp.item_4 = item_4
+			else:
+				factura_comp.cantidad_4 = 0
 			if item_5 != '0':
 				factura_comp.item_5 = item_5
+			else:
+				factura_comp.cantidad_5 = 0
 			factura_comp.info_item()
 			factura_comp.auto_info_organizacion()
 			factura_comp.auto_info_proveedor()
@@ -3856,7 +3931,7 @@ def pdf_factura_compra(request, pk):
 		orgactivas = None
 	factura_comp = get_object_or_404(Factura_de_compra, pk=pk)
 	cifra_palabras = cifra_total_letras.numero_a_letras(factura_comp.saldo_pendiente)
-	cifra_palabras = '%s pesos'%(cifra_palabras)
+	cifra_palabras = '%s (pesos colombianos)'%(cifra_palabras)
 	cifra_palabras = cifra_palabras.upper()
 	factura_comp.cifra_total_en_palabras = cifra_palabras
 	factura_comp = reemplazardatos_factura_comp(factura_comp)

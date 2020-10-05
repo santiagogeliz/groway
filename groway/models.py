@@ -1,6 +1,7 @@
 import math
 import pytz
 import locale
+import qrcode
 import numpy as np
 from datetime import date
 from datetime import datetime
@@ -108,6 +109,8 @@ class Contacto(models.Model):
 	numero_cuenta = models.IntegerField(null=True, blank=True)
 	tipo_cuenta = models.CharField(max_length=3, null=True, blank=True, choices=choices.TIPO_CUENTA)
 	entidad_financiera = models.CharField(max_length=50, null=True, blank=True)
+	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
 
 		
@@ -279,7 +282,7 @@ class Cotizacion(models.Model):
 	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO, null=True, blank=True)
 	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	vendedor = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
@@ -407,6 +410,13 @@ class Cotizacion(models.Model):
 		self.departamento_cliente = cliente.departamento
 		self.pais_cliente = cliente.pais
 		self.telefono_cliente = cliente.telefono
+		if cliente.terminos_de_pago:
+			self.terminos_de_pago = cliente.terminos_de_pago
+		if cliente.medio_de_pago:
+			self.medio_de_pago = cliente.medio_de_pago
+		for llave, valor in choices.MEDIOS_DE_PAGO:
+			if self.medio_de_pago == llave:
+				self.medio_de_pago = valor
 		self.save()
 
 	def info_item(self):
@@ -915,7 +925,7 @@ class Factura_de_venta(models.Model):
 	tipo_imp2 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	tipo_imp3 = models.CharField(max_length=2, choices=choices.TIPO_IMPUESTO, null=True, blank=True)
 	terminos_de_pago = models.CharField(max_length=300, null=True, blank=True)
-	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO)
+	medio_de_pago = models.CharField(max_length=2, choices=choices.MEDIOS_DE_PAGO, null=True, blank=True)
 	moneda = models.CharField(max_length=3, choices=choices.MONEDAS, null=True, blank=True)
 	vendedor = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True)
 	org_creadora = models.ForeignKey(Organizacion, on_delete=models.CASCADE, limit_choices_to={'activa':True}, null=True, blank=True)
@@ -1002,6 +1012,8 @@ class Factura_de_venta(models.Model):
 	descripcion_detallada = models.TextField(null=True, blank=True)
 	observacion = models.CharField(max_length=200,  null=True, blank=True)
 	cifra_total_en_palabras = models.CharField(max_length=300,  null=True, blank=True)
+	cufe = models.CharField(max_length=300,  null=True, blank=True)
+	imagen_qr = models.ImageField(max_length=100, null=True, blank=True)
 	generado = models.BooleanField(default=False)
 	anulada = models.BooleanField(default=False)
 	pagada = models.BooleanField(default=False)
@@ -1034,9 +1046,25 @@ class Factura_de_venta(models.Model):
 		terminos = Termino_de_pago.objects.get(descripcion=self.terminos_de_pago, org_creadora=self.org_creadora)
 		hoy = self.fecha_emision
 		dias = terminos.plazo_dias
+		if terminos == 'Contado':
+			dias = 0
 		plazo_dias = timedelta(days=dias)
 		self.fecha_vencimiento = hoy + plazo_dias
 		self.save()
+
+	def auto_codigo_qr(self):
+		qr = qrcode.QRCode(
+			version = 1,
+			error_correction = qrcode.constants.ERROR_CORRECT_H,
+			box_size = 10,
+			border = 4
+		)
+
+		info = self.cufe
+		qr.add_data(info)
+		qr.make(fit=True)
+		img = qr.make_image()
+		self.imagen_qr = img
 
 	def auto_info_organizacion(self):
 		self.id_organizacion = self.org_creadora.identificacion
@@ -1061,6 +1089,13 @@ class Factura_de_venta(models.Model):
 		self.departamento_cliente = cliente.departamento
 		self.pais_cliente = cliente.pais
 		self.telefono_cliente = cliente.telefono
+		if cliente.terminos_de_pago:
+			self.terminos_de_pago = cliente.terminos_de_pago
+		if cliente.medio_de_pago:
+			self.medio_de_pago = cliente.medio_de_pago
+		for llave, valor in choices.MEDIOS_DE_PAGO:
+			if self.medio_de_pago == llave:
+				self.medio_de_pago = valor
 		self.save()
 
 	def info_item(self):

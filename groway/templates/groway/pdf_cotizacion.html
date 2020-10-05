@@ -39,47 +39,47 @@
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: info_tabla1;
-	        	left: 25px; width: 760px; top: 360px; height: 400px;
+	        	left: 25px; width: 760px; top: 375px; height: 400px;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: info_tabla2;
-	        	left: 572px; width: 700px; bottom: 590px; height: auto;
+	        	left: 572px; width: 700px; bottom: 570px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: info_tabla2_moved;
-	        	left: 572px; width: 700px; bottom: 550px; height: auto;
+	        	left: 572px; width: 700px; bottom: 530px; height: auto;
 	        }
 	         @frame tabla_frame {
 	        	-pdf-frame-content: info_tabla2_moved-more;
-	        	left: 572px; width: 700px; bottom: 470px; height: auto;
+	        	left: 572px; width: 700px; bottom: 455px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: detalle-documento;
-	        	left: 20px; width: 450px; bottom: 565px; height: auto;
+	        	left: 20px; width: 450px; bottom: 545px; height: auto;
 	        }
 	         @frame tabla_frame {
 	        	-pdf-frame-content: detalle-documento-moved;
-	        	left: 20px; width: 450px; bottom: 525px; height: auto;
+	        	left: 20px; width: 450px; bottom: 505px; height: auto;
 	        }
 	         @frame tabla_frame {
 	        	-pdf-frame-content: detalle-documento-moved-more;
-	        	left: 20px; width: 450px; bottom: 445px; height: auto;
+	        	left: 20px; width: 450px; bottom: 430px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: cifra-letras;
-	        	left: 20px; width: 760px; bottom: 210px; height: auto;
+	        	left: 20px; width: 760px; bottom: 195px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: nota-documento;
-	        	left: 20px; width: 500px; bottom: 185px; height: auto;
+	        	left: 20px; width: 500px; bottom: 170px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: firmas_elaborador;
-	        	left: 150px; width: 200px; bottom: 90px; height: auto;
+	        	left: 150px; width: 200px; bottom: 80px; height: auto;
 	        }
 	        @frame tabla_frame {
 	        	-pdf-frame-content: firmas_recibido;
-	        	left: 450px; width: 200px; bottom: 90px; height: auto;
+	        	left: 450px; width: 200px; bottom: 80px; height: auto;
 	        }
 	        @frame footer_frame {
 	        	-pdf-frame-content: contact;
@@ -188,9 +188,6 @@
 			</div>
 			<div class="consec_resol">
 				<p class="consec" id="consec"><strong>Cotización</strong> {{cotizacion.consecutivo_interno}}</p>
-				{% if consecutivo_fac %}
-				<p class="resol" id="resol">Autorización Numeración de Facturación: {{consecutivo_fac.aut_num_facturacion}}<br><strong>Desde:</strong> {{consecutivo_fac.fecha_inicio|date:"d/m/Y"}} <strong>Hasta:</strong> {{consecutivo_fac.fecha_fin|date:"d/m/Y"}}<br><strong>Prefijo:</strong> {{consecutivo_fac.pre_fijo}} <strong>del Nro.</strong> {{consecutivo_fac.num_inicio}} <strong>al Nro.</strong> {{consecutivo_fac.num_final}}</p>
-				{% endif %}
 			</div>
 		</div>
 		<div id="info_cliente">
@@ -224,6 +221,7 @@
 			</p>
 		</div>
 		{% endif %}
+		{% if cotizacion.descripcion_detallada != 'No Registrado' %}
 		{% if cotizacion.item_3 == None and cotizacion.item_4 == None %}
 		<div id="detalle-documento" class="detalle-items">
 		{% endif %}
@@ -233,7 +231,6 @@
 		{% if cotizacion.item_4 != None %}
 		<div id="detalle-documento-moved-more" class="detalle-items">
 		{% endif %}
-		{% if cotizacion.descripcion_detallada != 'No Registrado' %}
 			<p><strong>Descripción Detallada:</strong><br>{{cotizacion.descripcion_detallada|linebreaksbr}}</p>
 		</div>
 		{% endif %}
