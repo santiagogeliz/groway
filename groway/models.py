@@ -1064,7 +1064,7 @@ class Factura_de_venta(models.Model):
 		qr.add_data(info)
 		qr.make(fit=True)
 		img = qr.make_image()
-		self.imagen_qr = img
+		img.save("%s.png"%(self.consecutivo_interno))
 
 	def auto_info_organizacion(self):
 		self.id_organizacion = self.org_creadora.identificacion

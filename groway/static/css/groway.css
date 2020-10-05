@@ -1602,8 +1602,13 @@ a.respuesta-no:active, a.respuesta-no:visited {
 	margin-right: 2px;
 	margin-top: 2px;
 }
-.medida input, .cantidad input, .descuento-porciento input, .producto-servicio select, .ingresar-producto-servicio-edit select {
+.producto-servicio select, .ingresar-producto-servicio-edit select {
 	width: 70px;
+	margin-right: 2px;
+	margin-top: 2px;
+}
+.medida input, .cantidad input, .descuento-porciento input {
+	width: 50px;
 	margin-right: 2px;
 	margin-top: 2px;
 }

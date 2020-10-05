@@ -2479,12 +2479,12 @@ def generar_factura_cotiz(request, pk):
 	nueva_factura.fecha_para_consec = date.today()
 	nueva_factura.fecha_emision = timezone.now()
 	nueva_factura.save()
-	nueva_factura.auto_vencimiento()
 	nueva_factura.auto_info_organizacion()
 	nueva_factura.auto_info_cliente()
 	nueva_factura.info_item()
 	nueva_factura.calculo_item()
 	nueva_factura.calculo_total_factura()
+	nueva_factura.auto_vencimiento()
 	nueva_factura.auto_consecutivo()
 	nueva_factura.tipo_impuestodoc()
 	if nueva_factura.consecutivo_interno == 'vencido':
