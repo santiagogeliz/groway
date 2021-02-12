@@ -1,6 +1,6 @@
 # Groway
 
-Groway es un software de facturación electrónica capaz de generar diversos documentos financieros como cotizaciones, referidos, notas de débito y crédito, etc.
+Groway es un software de facturación electrónica capaz de generar diversos documentos financieros como cotizaciones, notas de débito y crédito, etc.
 Una de las principales características de groway es que puede generar un gráfico que muestre la variación de las ventas en el período de tiempo establecido.
 
 Funciones:
