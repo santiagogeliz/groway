@@ -1,6 +1,15 @@
 # Groway
 
-Groway is a wepapp that helps you manage your business in an easy and practical way, with intuitive tools to create financial documents and giving you all the necessary information about the growth of your sales.
+Groway es un software de facturación electrónica capaz de generar diversos documentos financieros como cotizaciones, referidos, notas de débito y crédito, etc.
+Una de las principales características de groway es que puede generar un gráfico que muestre la variación de las ventas en el período de tiempo establecido.
 
-Groway is an electronic invoicing software capable of generating various financial documents such as quotes, referrals, debit and credit notes, etc. 
-One of the main characteristics of groway is that it can generate a graph showing the variaton of sales in the period of time set.
+Funciones:
+
+  - Organización: El usuario puede registrar una organización con todos sus datos de comerciales, legales y de contacto.
+  - Contactos: El usuario puede registrar contactos como clientes o proveedores.
+  - Ítems: El usuario puede registrar ítems con su información detallada y su precio de venta.
+  - Facturas: El usuario puede generar facturas para registrar las ventas a sus clientes.
+  - Cotizaciones: El usuario puede generar cotizaciones para sus clientes.
+  - Reporte de Crecimiento: El usuario puede generar un reporte de las ventas en el periodo de tiempo seleccionado incluyendo una representación gráfica.
+
+
